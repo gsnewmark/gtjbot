@@ -1,0 +1,8 @@
+pom.xml
+*jar
+/lib/
+/classes/
+/war/
+*.DS_Store/
+.lein-deps-sum
+*.sh
