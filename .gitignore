@@ -2,7 +2,8 @@ pom.xml
 *jar
 /lib/
 /classes/
-/war/
+/war/WEB-INF/lib/
+/war/WEB-INF/appengine-generated/
 *.DS_Store/
 .lein-deps-sum
 *.sh
