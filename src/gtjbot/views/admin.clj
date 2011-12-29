@@ -3,8 +3,7 @@
               [gtjbot.models.user :as user]
               [clojure.pprint :as pp])
     (:use [noir.core :only [defpage]]
-          [noir.response :only [redirect]]
-          [hiccup.core :only [html]]))
+          [noir.response :only [redirect]]))
 
 ;; Main page of admin panel
 (defpage "/admin/main" []

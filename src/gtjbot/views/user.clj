@@ -1,8 +1,6 @@
 (ns #^{:doc "Definitions of pages for basic users."} gtjbot.views.user
   (:require [gtjbot.views.common :as common])
   (:use [noir.core :only [defpage]]
-        [hiccup.core :only [html]]
-        [appengine-magic.services.user :only [current-user]]
         [gtjbot.models.user :only [save-user-to-ds]]
         [gtjbot.utils.user :only [get-user-nick]]))
 
