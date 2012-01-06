@@ -2,8 +2,10 @@
   (:require [appengine-magic.core :as gae]
             [noir.util.gae :as noir-gae]))
 
+;; load existing routes
 (require 'gtjbot.views.admin)
 (require 'gtjbot.views.user)
+(require 'gtjbot.views.xmpp)
 
-;; def the appengine app
+;; define the appengine app
 (gae/def-appengine-app gtjbot-app (noir-gae/gae-handler nil))

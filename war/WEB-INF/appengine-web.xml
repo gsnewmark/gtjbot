@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+
+  <application>gtjbot</application>
+  <version>2</version>
+  <static-files/>
+  <resource-files/>
+
+  <threadsafe>true</threadsafe>
+  
+  <inbound-services>
+    <service>xmpp_message</service>
+    <service>xmpp_presence</service>
+  </inbound-services>
+
+</appengine-web-app>

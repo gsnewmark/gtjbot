@@ -4,7 +4,7 @@
         [gtjbot.models.user :only [save-user-to-ds]]
         [gtjbot.utils.user :only [get-user-nick]]))
 
-;; Main page of site
+;; Main page of a site.
 (defpage "/" []
   (save-user-to-ds)
   (common/gh-layout
