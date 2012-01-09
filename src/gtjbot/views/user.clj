@@ -5,7 +5,7 @@
         [gtjbot.utils.user :only [get-user-nick]]))
 
 ;; Main page of a site.
-(defpage "/" []
+(defpage user-main "/" []
   (save-user-to-ds)
   (common/gh-layout
    [:h1 (str "Welcome to gtjbot, " (get-user-nick) "!")]
