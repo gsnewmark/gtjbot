@@ -4,6 +4,10 @@
   (:use [appengine-magic.services.user :only [current-user]]
         [gtjbot.utils.user :only [get-user-id get-user-email]]))
 
+;; Message sent to unsubscribed users who try to use bot.
+(def message-to-unsubscribed "You need to subscribe to an app in order to use this feature. More details could be found at http://gtjbot.appspot.com")
+
+;; Main entity of app - subscribed user.
 (ds/defentity GoogleUser [^:key id, user, mail])
 
 (defn save-user-to-ds
@@ -14,11 +18,11 @@
         (ds/save! (GoogleUser. id (current-user) (get-user-email))))))
 
 (defn get-gusers
-  "Retrieves a list of all GUsers saved in a DS."
+  "Retrieves a list of all GoogleUsers saved in a DS."
   [] (ds/query :kind GoogleUser))
 
 (defn get-users
-  "Retrieves a list of all Users saved as a GUsers in a DS."
+  "Retrieves a list of all Users saved as a GoogleUsers in a DS."
   [] (let [gusers (get-gusers)] (map #(:user %) gusers)))
   
 (defn check-user-by-id

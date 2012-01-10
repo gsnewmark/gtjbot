@@ -18,7 +18,7 @@
 
   <security-constraint>
     <web-resource-collection>
-      <url-pattern>/*</url-pattern>
+      <url-pattern>/user/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
       <role-name>*</role-name>
