@@ -9,8 +9,8 @@
 ;; Main page of a site for logged user.
 (defpage user-main "/user/" []
   (save-user-to-ds)
-  (let [links [(link-to (url-for index) "Main")
-               (link-to "/xmpp/register/" "Subscribe to a bot")]
+  (let [links [(link-to "/xmpp/register/" "Subscribe to a bot")
+               (link-to (url-for index) "Main")]
         links (if (user-admin?)
                 (conj links (link-to "/admin/main" "Admin Panel"))
                 links)]
@@ -23,7 +23,10 @@
 (defpage index "/" []
   (let [links (if (user-logged-in?)
                 [(link-to (url-for user-main) "Profile")]
-                [])]
+                [])
+        links (if (and (user-logged-in?) (user-admin?))
+                (conj links (link-to "/admin/main" "Admin Panel"))
+                links)]
     (common/layout
      :content [[:h1 "App is under construction."]]
      :links links)))
