@@ -6,7 +6,7 @@
 
 ;; Ribbon for a GitHub page
 (defpartial gh-ribbon [] [:a {:href "https://github.com/gsnewmark/gtjbot"}
-                          [:image {:style "position: absolute; top: 0; right: 0; border: 0;" :src "https://a248.e.akamai.net/assets.github.com/img/4c7dc970b89fd04b81c8e221ba88ff99a06c6b61/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67" :alt "Fork me on GitHub"}]])
+                          [:image {:style "position: absolute; top: 0; right: 0; border: 0;" :src "https://a248.e.akamai.net/assets.github.com/img/71eeaab9d563c2b3c590319b398dd35683265e85/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" :alt "Fork me on GitHub"}]])
 
 ;; Element of a list.
 (defpartial item [e] [:li e])
@@ -28,8 +28,10 @@
 (defpartial footer []
   [:div#templatemo_footer
    (link-to "https://twitter.com/#!/gsnewmark" "gsnewmark")
-   " | "
-   (link-to "http://www.templatemo.com" "Free CSS Templates")])
+   " | CSS template from "
+   (link-to "http://www.templatemo.com" "Free CSS Templates")
+   " | Color palette from "
+   (link-to "http://ethanschoonover.com/solarized" "Solarized")])
 
 ;; Basic block with main page content.
 (defpartial main-block [& content]
