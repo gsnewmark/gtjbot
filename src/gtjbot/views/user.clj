@@ -1,4 +1,5 @@
-(ns #^{:doc "Definitions of pages for basic users."} gtjbot.views.user
+;; ## Definitions of the pages for basic users
+(ns gtjbot.views.user
     (:require [gtjbot.views.common :as common])
     (:use [noir.core :only [defpage url-for]]
           [hiccup.page-helpers :only [link-to]]
@@ -6,8 +7,9 @@
           [gtjbot.utils.user :only [get-user-nick]]
           [appengine-magic.services.user :only [user-logged-in? user-admin?]]))
 
-;; Main page of a site for logged user.
-(defpage user-main "/user/" []
+
+;; Main page of a site for the logged user.
+(defpage user-main [:get "/user/"] []
   (save-user-to-ds)
   (let [links [(link-to "/xmpp/register/" "Subscribe to a bot")
                (link-to (url-for index) "Main")]
@@ -20,7 +22,7 @@
      :links links)))
 
 ;; Index page of a site.
-(defpage index "/" []
+(defpage index [:get "/"] []
   (let [links (if (user-logged-in?)
                 [(link-to (url-for user-main) "Profile")]
                 [])

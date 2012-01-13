@@ -1,3 +1,5 @@
+;; ## App's "entry" point
+;; Operations required by appengine-magic to create GAE-compatible servlet.
 (ns gtjbot.app_servlet
   (:gen-class :extends javax.servlet.http.HttpServlet)
   (:use gtjbot.core)
