@@ -1,4 +1,4 @@
-(defproject gtjbot "0.1.4-SNAPSHOT"
+(defproject gtjbot "0.1.6-SNAPSHOT"
             :description "An extensible XMPP bot for GAE."
             :dependencies [[org.clojure/clojure "1.3.0"]
                            [noir "1.2.1"]

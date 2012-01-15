@@ -2526,8 +2526,8 @@ $(document).ready(function() {
     ul.css('margin-top', '0px')
 
 })
-</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.1.4-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.2.1</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.3.1</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">appengine-magic</td><td class="dotted"><hr /></td><td class="dep-version">0.4.6-SNAPSHOT</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.6.1</td></tr><tr><td class="dep-name">lein-midje</td><td class="dotted"><hr /></td><td class="dep-version">1.0.7</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#gtjbot.core">gtjbot.core</a></li><li><a href="#gtjbot.models.user">gtjbot.models.user</a></li><li><a href="#gtjbot.utils.parser">gtjbot.utils.parser</a></li><li><a href="#gtjbot.utils.user">gtjbot.utils.user</a></li><li><a href="#gtjbot.utils.xmpp">gtjbot.utils.xmpp</a></li><li><a href="#gtjbot.views.common">gtjbot.views.common</a></li><li><a href="#gtjbot.views.user">gtjbot.views.user</a></li><li><a href="#gtjbot.views.admin">gtjbot.views.admin</a></li><li><a href="#gtjbot.views.xmpp">gtjbot.views.xmpp</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.core" name="gtjbot.core"><h1 class="project-name">gtjbot.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definition of an app</h2>
+</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.1.6-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.2.1</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.3.1</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">appengine-magic</td><td class="dotted"><hr /></td><td class="dep-version">0.4.6-SNAPSHOT</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.6.1</td></tr><tr><td class="dep-name">lein-midje</td><td class="dotted"><hr /></td><td class="dep-version">1.0.7</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#gtjbot.core">gtjbot.core</a></li><li><a href="#gtjbot.models.user">gtjbot.models.user</a></li><li><a href="#gtjbot.utils.parser">gtjbot.utils.parser</a></li><li><a href="#gtjbot.utils.user">gtjbot.utils.user</a></li><li><a href="#gtjbot.utils.xmpp">gtjbot.utils.xmpp</a></li><li><a href="#gtjbot.views.common">gtjbot.views.common</a></li><li><a href="#gtjbot.views.user">gtjbot.views.user</a></li><li><a href="#gtjbot.views.admin">gtjbot.views.admin</a></li><li><a href="#gtjbot.views.xmpp">gtjbot.views.xmpp</a></li><li><a href="#gtjbot.tests.core">gtjbot.tests.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.core" name="gtjbot.core"><h1 class="project-name">gtjbot.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definition of an app</h2>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.core
   (:require [appengine-magic.core :as gae]
             [noir.util.gae :as noir-gae])
@@ -2689,47 +2689,34 @@ and a message string.</p>
                                              &quot;95f3664366436642e706e67&quot;)
                                    :alt &quot;Fork me on GitHub&quot;}]])</pre></tr><tr><td class="docs"><p>Element of a HTML list.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defpartial item [e] [:li e])</pre></tr><tr><td class="docs"><p>HTML unordered list.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial u-list [elems] [:ul (map item elems)])</pre></tr><tr><td class="docs"><p>Basic sidebar with links (elems - list of links to show in menu).</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial links-sidebar [&amp; elems]
-  [:div#templatemo_sidebar
-   [:div#templatemo_header [:img {:src &quot;/img/logo.png&quot;}]]
-   [:ul.links
+</td><td class="codes" /><pre class="brush: clojure">(defpartial u-list [elems] [:ul (map item elems)])</pre></tr><tr><td class="docs"><p>Basic bar with logo and links (elems - list of links to show in menu).</p>
+</td><td class="codes" /><pre class="brush: clojure">(defpartial header [&amp; elems]
+  [:div#header
+   [:img {:src &quot;/img/logo.png&quot;}]
+   [:ul#menu
     (map item elems)
     [:li (if (user-logged-in?)
            (link-to (logout-url) &quot;Logout&quot;)
            (link-to (login-url :destination &quot;/user/&quot;) &quot;Login&quot;))]
-    [:li (link-to &quot;/doc.html&quot; &quot;App Documentation&quot;)]]])</pre></tr><tr><td class="docs"><p>Basic footer.</p>
+    [:li (link-to &quot;/doc.html&quot; &quot;Documentation&quot;)]]])</pre></tr><tr><td class="docs"><p>Basic footer.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defpartial footer []
-  [:div#templatemo_footer
+  [:div#footer
    (link-to &quot;https://twitter.com/#!/gsnewmark&quot; &quot;gsnewmark&quot;)
-   &quot; | CSS template from &quot;
-   (link-to &quot;http://www.templatemo.com&quot; &quot;Free CSS Templates&quot;)
-    [:li (if (user-logged-in?)
-           (link-to (logout-url) &quot;Logout&quot;)
-           (link-to (login-url :destination &quot;/user/&quot;) &quot;Login&quot;))]
-    [:li (link-to &quot;/doc.html&quot; &quot;App Documentation&quot;)]])</pre></tr><tr><td class="docs"><p>Basic footer.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial footer []
-  [:div#templatemo_footer
-   (link-to &quot;https://twitter.com/#!/gsnewmark&quot; &quot;gsnewmark&quot;)
-   &quot; | CSS template from &quot;
-   (link-to &quot;http://www.templatemo.com&quot; &quot;Free CSS Templates&quot;)
    &quot; | Color palette from &quot;
    (link-to &quot;http://ethanschoonover.com/solarized&quot; &quot;Solarized&quot;)])</pre></tr><tr><td class="docs"><p>Basic block with main page content.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defpartial main-block [&amp; content]
-  [:div#templatemo_main
-   [:div#content [:div.scroll [:div.scrollContainer [:div.panel content]]]]
-   (footer)])</pre></tr><tr><td class="docs"><p>Basic page layout.
+  [:div#content content])</pre></tr><tr><td class="docs"><p>Basic page layout.
 :links argument - links to put in a sidebar
 :content argument - content to put in a main block</p>
 </td><td class="codes" /><pre class="brush: clojure">(defpartial layout [&amp; {:keys [links content]}]
   (html5
    [:head
     [:title &quot;gtjbot&quot;]
-    (include-css &quot;/css/templatemo_style.css&quot;)
-    (include-css &quot;/css/coda-slider.css&quot;)]
-   [:body [:div#slider
-           (apply links-sidebar links)
-           (apply main-block content)]
+    (include-css &quot;/css/my.css&quot;)]
+   [:body [:div#container
+           (apply header links)
+           (apply main-block content)
+           (footer)]
     (gh-ribbon)]))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.user" name="gtjbot.views.user"><h1 class="project-name">gtjbot.views.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the pages for basic users</h2>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.views.user
     (:require [gtjbot.views.common :as common])
@@ -2783,5 +2770,17 @@ and a message string.</p>
   (redirect (url-for user-main)))</pre></tr><tr><td class="docs"><p>Main handler for incoming XMPP messages (sends an answer and returns OK status).</p>
 </td><td class="codes" /><pre class="brush: clojure">(defpage [:post &quot;/_ah/xmpp/message/chat/&quot;] {:keys [body from]}
   (send-message-to-subscribed [from] body)
-  (status 200 nil))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_gtjbot.core">gtjbot.core</li><li class="floating-toc-li" id="floating-toc_gtjbot.models.user">gtjbot.models.user</li><li class="floating-toc-li" id="floating-toc_gtjbot.utils.parser">gtjbot.utils.parser</li><li class="floating-toc-li" id="floating-toc_gtjbot.utils.user">gtjbot.utils.user</li><li class="floating-toc-li" id="floating-toc_gtjbot.utils.xmpp">gtjbot.utils.xmpp</li><li class="floating-toc-li" id="floating-toc_gtjbot.views.common">gtjbot.views.common</li><li class="floating-toc-li" id="floating-toc_gtjbot.views.user">gtjbot.views.user</li><li class="floating-toc-li" id="floating-toc_gtjbot.views.admin">gtjbot.views.admin</li><li class="floating-toc-li" id="floating-toc_gtjbot.views.xmpp">gtjbot.views.xmpp</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+  (status 200 nil))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.tests.core" name="gtjbot.tests.core"><h1 class="project-name">gtjbot.tests.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Main tests namespace</h2>
+
+<p>Bunch of tests for the bot (mainly its parser part).</p>
+</td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.tests.core
+  (:require [gtjbot.utils.parser :as parser])
+  (:use [midje.sweet]))</pre></tr><tr><td class="docs"><h2>Testing basic parser functionality</h2>
+</td><td class="codes" /></tr><tr><td class="docs"><p>Tests for a help message.</p>
+</td><td class="codes" /><pre class="brush: clojure">(fact (parser/generate-answer &quot;helloads&quot;) =&gt; parser/help-message)
+(fact (parser/generate-answer &quot;&quot;) =&gt; parser/help-message)</pre></tr><tr><td class="docs"><p>Tests for a greetings message.</p>
+</td><td class="codes" /><pre class="brush: clojure">(fact (parser/generate-answer &quot;hi&quot;) =&gt; &quot;Hello!&quot;)
+(fact (parser/generate-answer &quot;Hello, bot!! 1337&quot;) =&gt; &quot;Hello!&quot;)
+(fact (parser/generate-answer &quot;Hail&quot;) =&gt; &quot;Hello!&quot;)
+(fact (parser/generate-answer &quot;greetings... i think..&quot;) =&gt; &quot;Hello!&quot;)</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_gtjbot.core">gtjbot.core</li><li class="floating-toc-li" id="floating-toc_gtjbot.models.user">gtjbot.models.user</li><li class="floating-toc-li" id="floating-toc_gtjbot.utils.parser">gtjbot.utils.parser</li><li class="floating-toc-li" id="floating-toc_gtjbot.utils.user">gtjbot.utils.user</li><li class="floating-toc-li" id="floating-toc_gtjbot.utils.xmpp">gtjbot.utils.xmpp</li><li class="floating-toc-li" id="floating-toc_gtjbot.views.common">gtjbot.views.common</li><li class="floating-toc-li" id="floating-toc_gtjbot.views.user">gtjbot.views.user</li><li class="floating-toc-li" id="floating-toc_gtjbot.views.admin">gtjbot.views.admin</li><li class="floating-toc-li" id="floating-toc_gtjbot.views.xmpp">gtjbot.views.xmpp</li><li class="floating-toc-li" id="floating-toc_gtjbot.tests.core">gtjbot.tests.core</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
        SyntaxHighlighter.all()</script></body></html>
