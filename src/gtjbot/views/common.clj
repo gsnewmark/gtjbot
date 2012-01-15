@@ -22,16 +22,25 @@
 ;; HTML unordered list.
 (defpartial u-list [elems] [:ul (map item elems)])
 
+;; Fancy button to use for a link.
+(defpartial button [link text]
+  [:a {:href link} [:button text]])
+
+;; Basic header.
+(defpartial header [] [:div#header])
+
 ;; Basic bar with logo and links (elems - list of links to show in menu).
-(defpartial header [& elems]
-  [:div#header
-   [:img {:src "/img/logo.png"}]
-   [:ul#menu
-    (map item elems)
-    [:li (if (user-logged-in?)
-           (link-to (logout-url) "Logout")
-           (link-to (login-url :destination "/user/") "Login"))]
-    [:li (link-to "/doc.html" "Documentation")]]])
+(defpartial links-menu [& elems]
+  [:ul#menu
+   (map item elems)
+   [:li (link-to "/doc.html" "Documentation")]
+   [:li (if (user-logged-in?)
+          (link-to (logout-url) "Logout")
+          (link-to (login-url :destination "/user/") "Login"))]])
+
+;; Basic block with main page content.
+(defpartial main-block [& content]
+  [:div#content content])
 
 ;; Basic footer.
 (defpartial footer []
@@ -39,10 +48,6 @@
    (link-to "https://twitter.com/#!/gsnewmark" "gsnewmark")
    " | Color palette from "
    (link-to "http://ethanschoonover.com/solarized" "Solarized")])
-
-;; Basic block with main page content.
-(defpartial main-block [& content]
-  [:div#content content])
 
 ;; Basic page layout.
 ;; :links argument - links to put in a sidebar
@@ -53,9 +58,8 @@
     [:title "gtjbot"]
     (include-css "/css/my.css")]
    [:body [:div#container
-           (apply header links)
+           ;(header)
+           (apply links-menu links)
            (apply main-block content)
            (footer)]
     (gh-ribbon)]))
-
-

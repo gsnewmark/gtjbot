@@ -8,7 +8,14 @@ body {
   color: #93A1A1;
 }
 
-h1, h2, h3, h4, h5, h6 { color: #2AA198; text-align: center; }
+p {
+  text-align: justify;
+}
+
+h1, h2, h3, h4, h5, h6 { 
+  color: #2AA198; 
+  text-align: center; 
+}
 
 h1 {
   font-size: 1.8em;
@@ -54,18 +61,32 @@ hr {
   margin: 0 auto;
   width: 800px;
   padding: 20px;
+  position: relative;
+  overflow: auto;
 }
 
 #header {
-  width: 100%;
-  padding: 5px;
+  /*width: 200px;
+  padding: 5px;*/
+  margin-top: 10px;
+  margin-left: 10px;
+  width: 200px;
+  height: 220px;
+  text-align: center;
+  float: top;
+  background: url(/img/logo.png) no-repeat top left;
 }
 
 #content {
+  float: right;
+  width: 610px;
   padding: 10px;
+  word-wrap: break-word;
+  border-left: 1px solid #004655;
 }
 
 #footer {
+  clear: both;
   text-align: center;
   padding-top: 30px;
   font-style: italic;
@@ -73,19 +94,52 @@ hr {
 }
 
 #menu {
-  margin: 10px auto;
-  width: 600px;
-  border-top: 1px solid #004655;
-  border-bottom: 1px solid #004655;
+  float: left;
+  width: 150px;
+  /*border-left: 1px solid #004655;
+  border-right: 1px solid #004655;*/
   padding: 5px;
-  padding-left: 30px;
-  padding-right: 30px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 #menu li {
-  display: inline;
+  /*display: inline;*/
   margin-right: 10px;
   font-size: 1.2em;
   padding: 5px;
   list-style-type: none;
+  border-bottom: 1px solid #004655;
 }
+
+/* Button from a http://naioo.com/blog/css3-buttons-without-any-images/ */
+button {
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	-moz-box-shadow:0px 0px 2px rgba(0,0,0,0.4);
+	-webkit-box-shadow:0px 0px 2px rgba(0,0,0,0.4);
+
+	color:#93a1a1;
+	text-shadow:1px 1px 0px rgba(101,123,131,0.8);
+	border:1px solid rgba(0,0,0,0.5);
+	
+	background:-webkit-gradient(linear,0% 0%,0% 100%,from(#073642),to(#002b36));
+	background:-moz-linear-gradient(top,#073642,#002b36);
+
+	padding:5px 5px 5px 5px;
+}
+
+button:hover {
+	background:#586e75;
+}
+
+button:active, button:focus {
+	background:-webkit-gradient(linear,0% 100%,0% 0%,from(#073642),to(#002b36));
+	background:-moz-linear-gradient(bottom,#073642,#002b36);
+}
+
+button:disabled {
+	color:rgba(0,0,0,0.4);
+	text-shadow:1px 1px 0px rgba(255,255,255,0.5);
+	background:rgba(220,220,220,1);
+} 
