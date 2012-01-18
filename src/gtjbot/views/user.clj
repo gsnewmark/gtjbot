@@ -7,29 +7,48 @@
           [gtjbot.utils.user :only [get-user-nick]]
           [appengine-magic.services.user :only [user-logged-in? user-admin?]]))
 
+;; Index page of a site.
+(defpage index [:get "/"] []
+  (let [links (if (user-logged-in?)
+                (let [links [(link-to (url-for user-main) "Profile")]]
+                  (if (user-admin?)
+                    (conj links (link-to "/admin/main" "Admin Panel"))
+                    links))
+                [])
+        links (concat [(link-to (url-for index) "Main")] links)]
+    (common/layout
+     :content [[:h1 "App is still under construction."]
+               [:h2 "App Overview"]
+               [:p [:b "gtjbot"] " is a handy little informational bot that "
+                "you can use with your XMPP (e. g. Googtle Talk) client. "
+                "It's main feature is going to be a customizability - "
+                "you can choose which modules bot uses to 'talk' with you. "]
+               (when-not (user-logged-in?)
+                 [:p "More details could be found after "
+                  (common/login-link "logging in") "."])]
+     :links links)))
 
 ;; Main page of a site for the logged user.
-(defpage user-main [:get "/user/"] []
+(defpage user-main [:get "/user/profile"] []
   (save-user-to-ds)
-  (let [links [(link-to (url-for index) "Main")]
+  (let [links [(link-to (url-for index) "Main")
+               (link-to (url-for user-main) "Profile")]
         links (if (user-admin?)
                 (conj links (link-to "/admin/main" "Admin Panel"))
                 links)]
     (common/layout
-     :content [[:h1 (str "Welcome to gtjbot, " (get-user-nick) "!")]
-               [:p "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."]
-               (common/button "/xmpp/register/" "Subscribe to a bot")]
+     :content [[:h1 (str "Welcome to gtjbot customization page, "
+                         (get-user-nick) "!")]
+               [:h2 "Invitation"]
+               [:p "In order to use this bot, you have to accept a chat "
+                "invitation from it. This invitation could be send by "
+                "clicking the button below: "]
+               (common/button "/xmpp/register/" "Subscribe to a bot")
+               [:p "After this procedure you can start chatting with a "
+                "bot. You can find it in your XMPP client's contact list "
+                "under a nickname " [:b "gtjbot@appspot.com"]]
+               [:h2 "Bot Modules"]
+               [:p "Here you can choose wich modules the bot uses."]
+               [:h3 "Not yet available."]]
      :links links)))
 
-;; Index page of a site.
-(defpage index [:get "/"] []
-  (let [links (if (user-logged-in?)
-                [(link-to (url-for user-main) "Profile")]
-                [])
-        links (if (and (user-logged-in?) (user-admin?))
-                (conj links (link-to "/admin/main" "Admin Panel"))
-                links)]
-    (common/layout
-     :content [[:h1 "App is under construction."]
-               [:p "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."]]
-     :links links)))

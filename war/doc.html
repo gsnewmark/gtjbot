@@ -2526,7 +2526,7 @@ $(document).ready(function() {
     ul.css('margin-top', '0px')
 
 })
-</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.1.7-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
+</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.1.9-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
 </div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.2.1</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.3.1</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">appengine-magic</td><td class="dotted"><hr /></td><td class="dep-version">0.4.6-SNAPSHOT</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.6.1</td></tr><tr><td class="dep-name">lein-midje</td><td class="dotted"><hr /></td><td class="dep-version">1.0.7</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#gtjbot.core">gtjbot.core</a></li><li><a href="#gtjbot.models.user">gtjbot.models.user</a></li><li><a href="#gtjbot.utils.parser">gtjbot.utils.parser</a></li><li><a href="#gtjbot.utils.user">gtjbot.utils.user</a></li><li><a href="#gtjbot.utils.xmpp">gtjbot.utils.xmpp</a></li><li><a href="#gtjbot.views.common">gtjbot.views.common</a></li><li><a href="#gtjbot.views.user">gtjbot.views.user</a></li><li><a href="#gtjbot.views.admin">gtjbot.views.admin</a></li><li><a href="#gtjbot.views.xmpp">gtjbot.views.xmpp</a></li><li><a href="#gtjbot.tests.core">gtjbot.tests.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.core" name="gtjbot.core"><h1 class="project-name">gtjbot.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definition of an app</h2>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.core
   (:require [appengine-magic.core :as gae]
@@ -2680,31 +2680,36 @@ and a message string.</p>
         [hiccup.page-helpers :only [include-css html5 link-to]]
         [appengine-magic.services.user :only [logout-url login-url
                                               user-logged-in?]]))</pre></tr><tr><td class="docs"><p>Ribbon for a GitHub page</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial gh-ribbon [] [:a {:href &quot;https://github.com/gsnewmark/gtjbot&quot;}
-                          [:image {:style &quot;position: absolute; top: 0; right: 0; border: 0;&quot;
-                                   :src (str &quot;https://a248.e.akamai.net/assets.github.com/img/71&quot;
-                                             &quot;eeaab9d563c2b3c590319b398dd35683265e85/687474703a2&quot;
-                                             &quot;f2f73332e616d617a6f6e6177732e636f6d2f6769746875622&quot;
-                                             &quot;f726962626f6e732f666f726b6d655f72696768745f6772617&quot;
-                                             &quot;95f3664366436642e706e67&quot;)
-                                   :alt &quot;Fork me on GitHub&quot;}]])</pre></tr><tr><td class="docs"><p>Element of a HTML list.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defpartial gh-ribbon []
+  [:a {:href &quot;https://github.com/gsnewmark/gtjbot&quot;}
+   [:image
+    {:style &quot;position: absolute; top: 0; right: 0; border: 0;&quot;
+     :src (str &quot;https://a248.e.akamai.net/assets.github.com/img/71&quot;
+               &quot;eeaab9d563c2b3c590319b398dd35683265e85/687474703a2&quot;
+               &quot;f2f73332e616d617a6f6e6177732e636f6d2f6769746875622&quot;
+               &quot;f726962626f6e732f666f726b6d655f72696768745f6772617&quot;
+               &quot;95f3664366436642e706e67&quot;)
+     :alt &quot;Fork me on GitHub&quot;}]])</pre></tr><tr><td class="docs"><p>Element of a HTML list.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defpartial item [e] [:li e])</pre></tr><tr><td class="docs"><p>HTML unordered list.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defpartial u-list [elems] [:ul (map item elems)])</pre></tr><tr><td class="docs"><p>Fancy button to use for a link.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defpartial button [link text]
   [:a {:href link} [:button text]])</pre></tr><tr><td class="docs"><p>Basic header.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial header [] [:div#header])</pre></tr><tr><td class="docs"><p>Basic bar with logo and links (elems - list of links to show in menu).</p>
+</td><td class="codes" /><pre class="brush: clojure">(defpartial header [] [:div#header])</pre></tr><tr><td class="docs"><p>Login link.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defpartial login-link [text]
+  (link-to (login-url :destination &quot;/user/profile&quot;) text))</pre></tr><tr><td class="docs"><p>Logout link.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defpartial logout-link [text] (link-to (logout-url) text))</pre></tr><tr><td class="docs"><p>Basic bar with logo and links (elems - list of links to show in menu).</p>
 </td><td class="codes" /><pre class="brush: clojure">(defpartial links-menu [&amp; elems]
   [:ul#menu
    (map item elems)
    [:li (link-to &quot;/doc.html&quot; &quot;Documentation&quot;)]
    [:li (if (user-logged-in?)
-          (link-to (logout-url) &quot;Logout&quot;)
-          (link-to (login-url :destination &quot;/user/&quot;) &quot;Login&quot;))]])</pre></tr><tr><td class="docs"><p>Basic block with main page content.</p>
+          (logout-link &quot;Logout&quot;)
+          (login-link &quot;Login&quot;))]])</pre></tr><tr><td class="docs"><p>Basic block with main page content.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defpartial main-block [&amp; content]
   [:div#content content])</pre></tr><tr><td class="docs"><p>Basic footer.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defpartial footer []
   [:div#footer
-   (link-to &quot;https://twitter.com/#!/gsnewmark&quot; &quot;gsnewmark&quot;)
+   (link-to &quot;mailto:gildraug@gmail.com?subject=gtjbot&quot; &quot;gsnewmark&quot;)
    &quot; | Color palette from &quot;
    (link-to &quot;http://ethanschoonover.com/solarized&quot; &quot;Solarized&quot;)])</pre></tr><tr><td class="docs"><p>Basic page layout.
 :links argument - links to put in a sidebar
@@ -2713,7 +2718,7 @@ and a message string.</p>
   (html5
    [:head
     [:title &quot;gtjbot&quot;]
-    (include-css &quot;/css/my.css&quot;)]
+    (include-css &quot;/css/gtjbot.css&quot;)]
    [:body [:div#container
            ;(header)
            (apply links-menu links)
@@ -2726,28 +2731,47 @@ and a message string.</p>
           [hiccup.page-helpers :only [link-to]]
           [gtjbot.models.user :only [save-user-to-ds]]
           [gtjbot.utils.user :only [get-user-nick]]
-          [appengine-magic.services.user :only [user-logged-in? user-admin?]]))</pre></tr><tr><td class="docs"><p>Main page of a site for the logged user.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpage user-main [:get &quot;/user/&quot;] []
+          [appengine-magic.services.user :only [user-logged-in? user-admin?]]))</pre></tr><tr><td class="docs"><p>Index page of a site.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defpage index [:get &quot;/&quot;] []
+  (let [links (if (user-logged-in?)
+                (let [links [(link-to (url-for user-main) &quot;Profile&quot;)]]
+                  (if (user-admin?)
+                    (conj links (link-to &quot;/admin/main&quot; &quot;Admin Panel&quot;))
+                    links))
+                [])
+        links (concat [(link-to (url-for index) &quot;Main&quot;)] links)]
+    (common/layout
+     :content [[:h1 &quot;App is still under construction.&quot;]
+               [:h2 &quot;App Overview&quot;]
+               [:p [:b &quot;gtjbot&quot;] &quot; is a handy little informational bot that &quot;
+                &quot;you can use with your XMPP (e. g. Googtle Talk) client. &quot;
+                &quot;It's main feature is going to be a customizability - &quot;
+                &quot;you can choose which modules bot uses to 'talk' with you. &quot;]
+               (when-not (user-logged-in?)
+                 [:p &quot;More details could be found after &quot;
+                  (common/login-link &quot;logging in&quot;) &quot;.&quot;])]
+     :links links)))</pre></tr><tr><td class="docs"><p>Main page of a site for the logged user.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defpage user-main [:get &quot;/user/profile&quot;] []
   (save-user-to-ds)
-  (let [links [(link-to (url-for index) &quot;Main&quot;)]
+  (let [links [(link-to (url-for index) &quot;Main&quot;)
+               (link-to (url-for user-main) &quot;Profile&quot;)]
         links (if (user-admin?)
                 (conj links (link-to &quot;/admin/main&quot; &quot;Admin Panel&quot;))
                 links)]
     (common/layout
-     :content [[:h1 (str &quot;Welcome to gtjbot, &quot; (get-user-nick) &quot;!&quot;)]
-               [:p &quot;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&quot;]
-               (common/button &quot;/xmpp/register/&quot; &quot;Subscribe to a bot&quot;)]
-     :links links)))</pre></tr><tr><td class="docs"><p>Index page of a site.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpage index [:get &quot;/&quot;] []
-  (let [links (if (user-logged-in?)
-                [(link-to (url-for user-main) &quot;Profile&quot;)]
-                [])
-        links (if (and (user-logged-in?) (user-admin?))
-                (conj links (link-to &quot;/admin/main&quot; &quot;Admin Panel&quot;))
-                links)]
-    (common/layout
-     :content [[:h1 &quot;App is under construction.&quot;]
-               [:p &quot;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&quot;]]
+     :content [[:h1 (str &quot;Welcome to gtjbot customization page, &quot;
+                         (get-user-nick) &quot;!&quot;)]
+               [:h2 &quot;Invitation&quot;]
+               [:p &quot;In order to use this bot, you have to accept a chat &quot;
+                &quot;invitation from it. This invitation could be send by &quot;
+                &quot;clicking the button below: &quot;]
+               (common/button &quot;/xmpp/register/&quot; &quot;Subscribe to a bot&quot;)
+               [:p &quot;After this procedure you can start chatting with a &quot;
+                &quot;bot. You can find it in your XMPP client's contact list &quot;
+                &quot;under a nickname &quot; [:b &quot;gtjbot@appspot.com&quot;]]
+               [:h2 &quot;Bot Modules&quot;]
+               [:p &quot;Here you can choose wich modules the bot uses.&quot;]
+               [:h3 &quot;Not yet available.&quot;]]
      :links links)))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.admin" name="gtjbot.views.admin"><h1 class="project-name">gtjbot.views.admin</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the admin panel pages</h2>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.views.admin
   (:require [gtjbot.views.common :as common]
@@ -2761,7 +2785,8 @@ and a message string.</p>
              [:h2 &quot;Users list:&quot;]
              (common/u-list (user/get-users))]
    :links [(link-to (url-for user-views/index) &quot;Main&quot;)
-           (link-to (url-for user-views/user-main) &quot;Profile&quot;)]))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.xmpp" name="gtjbot.views.xmpp"><h1 class="project-name">gtjbot.views.xmpp</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the handlers for XMPP operations</h2>
+           (link-to (url-for user-views/user-main) &quot;Profile&quot;)
+           (link-to (url-for admin-panel) &quot;Admin Panel&quot;)]))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.xmpp" name="gtjbot.views.xmpp"><h1 class="project-name">gtjbot.views.xmpp</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the handlers for XMPP operations</h2>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.views.xmpp
   (:use [noir.core :only [defpage url-for]]
         [noir.response :only [redirect status]]

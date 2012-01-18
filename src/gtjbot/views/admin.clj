@@ -14,4 +14,5 @@
              [:h2 "Users list:"]
              (common/u-list (user/get-users))]
    :links [(link-to (url-for user-views/index) "Main")
-           (link-to (url-for user-views/user-main) "Profile")]))
+           (link-to (url-for user-views/user-main) "Profile")
+           (link-to (url-for admin-panel) "Admin Panel")]))
