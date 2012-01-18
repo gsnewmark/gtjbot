@@ -19,7 +19,7 @@
     (common/layout
      :content [[:h1 "App is still under construction."]
                [:h2 "App Overview"]
-               [:p [:b "gtjbot"] " is a handy little informational bot that "
+               [:p [:b "gtjbot"] " is a handy little information bot that "
                 "you can use with your XMPP (e. g. Googtle Talk) client. "
                 "It's main feature is going to be a customizability - "
                 "you can choose which modules bot uses to 'talk' with you. "]
