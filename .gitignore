@@ -7,3 +7,4 @@ pom.xml
 *.DS_Store/
 .lein-deps-sum
 *.sh
+/templatemo_284_mini_social/

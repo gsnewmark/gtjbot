@@ -1,0 +1,178 @@
+/* Based on Overtone's page style. */
+
+// Global color variables
+@body-color: rgb(0, 43, 54);
+@body-text-color: #93A1A1;
+
+@headings-color: #2AA198;
+@border-color: #004655;
+
+@link-color: #268BD2; 
+@link-hover-color: #859900;
+
+// Button color variables
+@shadow-color: rgba(0,0,0,0.4);
+@gradient-from-color: #073642;
+@gradient-to-color: #002b36;
+@disabled-shadow-color: rgba(255,255,255,0.5);
+@disabled-back-color: rgba(220,220,220,1);
+@text-color: #93a1a1;
+@text-shadow-color: rgba(101,123,131,0.8);
+
+// Style
+body {
+  margin-top: 0;
+  padding-top: 0;
+  background-color: @body-color;
+  font-family: Helvetica, Tahoma, Geneva, sans-serif;
+  color: @body-text-color;
+}
+
+p {
+  text-align: justify;
+  text-indent: 1.5em;
+  margin-bottom: 0em;
+  +p {
+    margin-top: 0.83em;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 { 
+  color: @headings-color; 
+  text-align: center; 
+}
+
+h1 {
+  font-size: 1.8em;
+  margin-bottom: 3px;
+  
+  .small {
+    font-size: 0.4em;
+  }
+  
+  a {
+    text-decoration: none
+  }
+}
+
+h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid @border-color;
+  padding-left: 5px;
+  text-align: left;
+}
+
+h3 {
+  font-size: 1.2em;
+}
+
+a {
+  color: @link-color;
+  text-decoration: none;
+
+  &:visited { }
+
+  &:hover {
+    color: @link-hover-color;
+  }
+}
+
+hr {
+  border: 0;
+  width: 80%;
+  border-bottom: 1px solid @border-color;
+}
+
+#container {
+  background-color: @body-color;
+  margin: 0 auto;
+  width: 800px;
+  padding: 20px;
+  position: relative;
+  overflow: auto;
+}
+
+header {
+  /*width: 200px;
+  padding: 5px;*/
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-bottom: 20px;
+  h1 {
+    font-size: 2.0em;
+    margin-bottom: 0px;
+  }
+  //width: 200px;
+  //height: 220px;
+  text-align: center;
+  float: top;
+  //background: url(/img/logo.png) no-repeat top left;
+}
+
+#content {
+  float: right;
+  width: 610px;
+  padding: 10px;
+  word-wrap: break-word;
+  border-left: 1px solid @border-color;
+}
+
+footer {
+  clear: both;
+  text-align: center;
+  padding-top: 30px;
+  font-style: italic;
+  font-size: 0.6em;
+}
+
+#menu {
+  float: left;
+  width: 150px;
+  padding: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  position: fixed;
+  
+  li {
+    /*display: inline;*/
+    margin-right: 10px;
+    font-size: 1.2em;
+    padding: 5px;
+    list-style-type: none;
+    border-bottom: 1px solid @border-color;
+  }
+}
+
+/* Button from a http://naioo.com/blog/css3-buttons-without-any-images/ */
+button {
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-box-shadow: 0px 0px 2px @shadow-color;
+    -webkit-box-shadow: 0px 0px 2px @shadow-color;
+
+    color: @text-color;
+    text-shadow: 1px 1px 0px @text-shadow-color;
+    border: 1px solid rgba(0,0,0,0.5);
+
+    background: -webkit-gradient(linear,0% 0%,0% 100%,from(@gradient-from-color),to(@gradient-to-color));
+    background: -moz-linear-gradient(top,@gradient-from-color,@gradient-to-color);
+
+    padding: 5px 5px 5px 5px;
+    
+    &:hover {
+      background: #586e75;
+      cursor: pointer;
+    }
+
+    &:active, &:focus {
+      background: -webkit-gradient(linear,0% 100%,0% 0%,from(@gradient-from-color),to(@gradient-to-color));
+      background: -moz-linear-gradient(bottom,@gradient-from-color,@gradient-to-color);
+    }
+
+    &:disabled {
+      color: @shadow-color;
+      text-shadow: 1px 1px 0px @disabled-shadow-color;
+      background: disabled-back-color;
+    } 
+}
+

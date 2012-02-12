@@ -1,7 +1,7 @@
 ;; ## Definitions of the elements common to all pages
 (ns gtjbot.views.common
   (:use [noir.core :only [defpartial]]
-        [hiccup.page-helpers :only [include-css html5 link-to]]
+        [hiccup.page-helpers :only [include-css include-js html5 link-to]]
         [appengine-magic.services.user :only [logout-url login-url
                                               user-logged-in?]]))
 
@@ -29,7 +29,7 @@
   [:a {:href link} [:button text]])
 
 ;; Basic header.
-(defpartial header [] [:div#header])
+(defpartial header [text] [:header [:h1 text]])
 
 ;; Login link.
 (defpartial login-link [text]
@@ -53,7 +53,7 @@
 
 ;; Basic footer.
 (defpartial footer []
-  [:div#footer
+  [:footer
    (link-to "mailto:gildraug@gmail.com?subject=gtjbot" "gsnewmark")
    " | Color palette from "
    (link-to "http://ethanschoonover.com/solarized" "Solarized")])
@@ -65,9 +65,10 @@
   (html5
    [:head
     [:title "gtjbot"]
-    (include-css "/css/gtjbot.css")]
+    [:link {:rel "stylesheet/less" :type "text/css" :href "/css/gtjbot.less"}]
+    (include-js "/js/less-1.2.1.min.js")]
    [:body [:div#container
-           ;(header)
+           (header "GTJBot - useful bot for your XMPP")
            (apply links-menu links)
            (apply main-block content)
            (footer)]
