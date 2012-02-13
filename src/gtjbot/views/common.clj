@@ -67,9 +67,10 @@
     [:title "gtjbot"]
     [:link {:rel "stylesheet/less" :type "text/css" :href "/css/gtjbot.less"}]
     (include-js "/js/less-1.2.1.min.js")]
-   [:body [:div#container
-           (header "GTJBot - useful bot for your XMPP")
-           (apply links-menu links)
-           (apply main-block content)
-           (footer)]
+   [:body
+    (header "GTJBot - useful bot for your XMPP")
+    [:div#container
+     (apply links-menu links)
+     (apply main-block content)]
+    (footer)
     (gh-ribbon)]))
