@@ -16,13 +16,14 @@
 (fact (parser/generate-answer "Hail") => "Hello!")
 (fact (parser/generate-answer "greetings... i think..") => "Hello!")
 
+;; Tests for a HTTP status code message.
 (tabular
  (future-fact "Meanings of HTTP status codes"
               (parser/generate-answer ?request) => ?meaning)
  ?request    ?meaning
- "200"       "OK\nStandard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
- "227"       "No such code."
- "301"       "Moved Permanently\nThis and all future requests should be directed to the given URI."
- "404"       "Not Found\nThe requested resource could not be found but may be available again in the future. Subsequent requests by the client are permissible."
- "502"       "Bad Gateway\nThe server was acting as a gateway or proxy and received an invalid response from the upstream server."
- "783"       "No such code.")
+ "httpsc 200"       "200 OK\nStandard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+ "httpsc 227"       "No such code."
+ "httpsc 301"       "301 Moved Permanently\nThis and all future requests should be directed to the given URI."
+ "httpsc 404"       "404 Not Found\nThe requested resource could not be found but may be available again in the future. Subsequent requests by the client are permissible."
+ "httpsc 502"       "502 Bad Gateway\nThe server was acting as a gateway or proxy and received an invalid response from the upstream server."
+ "httpsc 783"       "No such code.")
