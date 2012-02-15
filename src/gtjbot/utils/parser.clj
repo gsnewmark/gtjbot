@@ -6,10 +6,15 @@
 ;; If bot receives empty or malformed (incorrect command or arguments)
 ;; message it will send a help message to user.
 (ns gtjbot.utils.parser
-  [:require [clojure.string :as cs]])
+  [:require [clojure.string :as cs]]
+  [:use [appengine-magic.services.url-fetch :only [fetch]]])
 
 
 ;; ## Service functions
+
+;; Adds meta-data name and help to an object.
+(defmacro create-object-with-help [obj name help]
+  `(with-meta ~obj {:name ~name :help ~help}))
 
 (defn- retrieve-command
   "Retrieves 'command' word from the incoming message. 'Command' is a first word in a message."
@@ -50,18 +55,6 @@
   "Removes all occurrences of a HTML tag or a [...] from a given string."
   [string] (cs/replace string #"<.*?>|\[.*?\]" ""))
 
-;; ## Help message generator
-
-;; Help information.
-(def help-message (str "Please use one of those commands:\n"))
-
-;; Basic handler which generates a help message. Used when no other
-;; handler could produce an answer.
-(defrecord HelpMessage []
-  MessageHandler
-  (processable? [self message] true)
-  (generate-answer [self message] help-message))
-
 ;; ## Hello Reply
 
 ;; Sends greetings in return to user's ones.
@@ -75,12 +68,12 @@
 
 ;; ## HTTP Status Code Reply
 
-;; Helper functions fot HttpStatusCodeMessage
+;; Helper functions for HttpStatusCodeMessage
 
 ;; TODO implement this method (retrieve http status codes page from wiki)
 (defn- get-http-status-code-definitions
   "Retrieves page with HTTP status codes definitions."
-  [] "<dt><span id=\"100\"></span>100 Continue</dt><dd>This means that the server has received the request headers, and that the client should proceed to send the request body (in the case of a request for which a body needs to be sent; for example, a <a href=\"/wikipedia/en/wiki/POST_(HTTP)\" title=\"POST (HTTP)\">POST</a> request). If the request body is large, sending it to a server when a request has already been rejected based upon inappropriate headers is inefficient. To have a server check if the request could be accepted based on the request's headers alone, a client must send <code>Expect: 100-continue</code> as a header in its initial request<sup id=\"cite_ref-RFC_2616_1-1\" class=\"reference\"><a href=\"#cite_note-RFC_2616-1\"><span>[</span>2<span>]</span></a></sup> and check if a <code>100 Continue</code> status code is received in response before continuing (or receive <code>417 Expectation Failed</code> and not continue).<sup id=\"cite_ref-RFC_2616_1-2\" class=\"reference\"><a href=\"#cite_note-RFC_2616-1\"><span>[</span>2<span>]</span></a></sup></dd><dt><span id=\"509\"></span>509 Bandwidth Limit Exceeded (Apache bw/limited extension)</dt><dd>This status code, while used by many servers, is not specified in any RFCs.</dd>")
+  [] (String. (:content (fetch "https://secure.wikimedia.org/wikipedia/en/w/index.php?title=List_of_HTTP_status_codes&printable=yes" :headers {"User-Agent" "gtjbot"}))))
 
 (defn- get-http-status-code-meaning
   "Returns meaning of a given numeric HTTP status code."
@@ -102,12 +95,43 @@
   MessageHandler
   (processable? [self message] (check-command-word (re-pattern command-word) message))
   (generate-answer [self message]
-    (apply str (interpose "\n\n"
-                          (map get-http-status-code-meaning
-                               (retrieve-arguments message))))))
+    (let [reply  (apply str (interpose "\n\n"
+                           (map get-http-status-code-meaning
+                                (retrieve-arguments message))))]
+      (if (empty? reply)
+        "No argument is supplied."
+        reply))))
 
 ;; List with all 'main' message handlers instances.
-(def handlers-list [(HiMessage.) (HttpStatusCodeMessage. "httpsc")])
+(def handlers-list [(HiMessage.)
+                    (create-object-with-help
+                      (HttpStatusCodeMessage. "httpsc")
+                      "HTTP Status Code"
+                      (str "prints a description of a given HTTP status code. "
+                           "Arguments are either a one numeric status code "
+                           "or a list of the numeric status codes."))])
+
+;; ## Help message generator
+
+(defn get-help-message
+  "Generates help information for enabled plugins."
+  []
+  (str "Please use one of those commands:\n"
+       (apply str
+              (map
+               (fn [o] (let [meta-data (meta o)]
+                        (when (not (nil? meta-data))
+                          (str (:command-word o)
+                               " <args> - "
+                               (meta-data :help)))))
+               handlers-list))))
+
+;; Basic handler which generates a help message. Used when no other
+;; handler could produce an answer.
+(defrecord HelpMessage []
+  MessageHandler
+  (processable? [self message] true)
+  (generate-answer [self message] (get-help-message)))
 
 ;; ## Actual answer generation
 
@@ -119,5 +143,4 @@
     (if (empty? answers)
       (generate-answer (HelpMessage.) message)
       (apply str answers))))
-
 

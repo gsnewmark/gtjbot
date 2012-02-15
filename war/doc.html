@@ -2527,7 +2527,7 @@ $(document).ready(function() {
 
 })
 </script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.2.1-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.2.1</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2-SNAPSHOT</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">appengine-magic</td><td class="dotted"><hr /></td><td class="dep-version">0.4.6-SNAPSHOT</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.6.1</td></tr><tr><td class="dep-name">lein-midje</td><td class="dotted"><hr /></td><td class="dep-version">1.0.8</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#gtjbot.core">gtjbot.core</a></li><li><a href="#gtjbot.models.user">gtjbot.models.user</a></li><li><a href="#gtjbot.utils.parser">gtjbot.utils.parser</a></li><li><a href="#gtjbot.utils.user">gtjbot.utils.user</a></li><li><a href="#gtjbot.utils.xmpp">gtjbot.utils.xmpp</a></li><li><a href="#gtjbot.views.common">gtjbot.views.common</a></li><li><a href="#gtjbot.views.user">gtjbot.views.user</a></li><li><a href="#gtjbot.views.admin">gtjbot.views.admin</a></li><li><a href="#gtjbot.views.xmpp">gtjbot.views.xmpp</a></li><li><a href="#gtjbot.test.core">gtjbot.test.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.core" name="gtjbot.core"><h1 class="project-name">gtjbot.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definition of an app</h2>
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.2.1</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2-SNAPSHOT</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">appengine-magic</td><td class="dotted"><hr /></td><td class="dep-version">0.4.7</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.6.1</td></tr><tr><td class="dep-name">lein-midje</td><td class="dotted"><hr /></td><td class="dep-version">1.0.8</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#gtjbot.core">gtjbot.core</a></li><li><a href="#gtjbot.models.user">gtjbot.models.user</a></li><li><a href="#gtjbot.utils.parser">gtjbot.utils.parser</a></li><li><a href="#gtjbot.utils.user">gtjbot.utils.user</a></li><li><a href="#gtjbot.utils.xmpp">gtjbot.utils.xmpp</a></li><li><a href="#gtjbot.views.common">gtjbot.views.common</a></li><li><a href="#gtjbot.views.user">gtjbot.views.user</a></li><li><a href="#gtjbot.views.admin">gtjbot.views.admin</a></li><li><a href="#gtjbot.views.xmpp">gtjbot.views.xmpp</a></li><li><a href="#gtjbot.test.core">gtjbot.test.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.core" name="gtjbot.core"><h1 class="project-name">gtjbot.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definition of an app</h2>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.core
   (:require [appengine-magic.core :as gae]
             [noir.util.gae :as noir-gae])
@@ -2578,8 +2578,11 @@ pattern: [command] [optional arguments].
 If bot receives empty or malformed (incorrect command or arguments)
 message it will send a help message to user.</p>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.utils.parser
-  [:require [clojure.string :as cs]])</pre></tr><tr><td class="docs"><h2>Service functions</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Retrieves 'command' word from the incoming message. 'Command' is a first word in a message.</p>
+  [:require [clojure.string :as cs]]
+  [:use [appengine-magic.services.url-fetch :only [fetch]]])</pre></tr><tr><td class="docs"><h2>Service functions</h2>
+</td><td class="codes" /></tr><tr><td class="docs"><p>Adds meta-data name and help to an object.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defmacro create-object-with-help [obj name help]
+  `(with-meta ~obj {:name ~name :help ~help}))</pre></tr><tr><td class="docs"><p>Retrieves 'command' word from the incoming message. 'Command' is a first word in a message.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- retrieve-command
   [message] (let [results (re-matches #&quot;^([a-zA-Z]+)\s?.*$&quot; message)]
               (if (nil? results)
@@ -2607,14 +2610,7 @@ Protocol defines basic handler interface.</p>
   [matcher message]
   (not (nil? (re-matches matcher (retrieve-command message)))))</pre></tr><tr><td class="docs"><p>Removes all occurrences of a HTML tag or a [...] from a given string.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- sanitize-html-and-brackets
-  [string] (cs/replace string #&quot;&lt;.*?&gt;|\[.*?\]&quot; &quot;&quot;))</pre></tr><tr><td class="docs"><h2>Help message generator</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Help information.</p>
-</td><td class="codes" /><pre class="brush: clojure">(def help-message (str &quot;Please use one of those commands:\n&quot;))</pre></tr><tr><td class="docs"><p>Basic handler which generates a help message. Used when no other
-handler could produce an answer.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defrecord HelpMessage []
-  MessageHandler
-  (processable? [self message] true)
-  (generate-answer [self message] help-message))</pre></tr><tr><td class="docs"><h2>Hello Reply</h2>
+  [string] (cs/replace string #&quot;&lt;.*?&gt;|\[.*?\]&quot; &quot;&quot;))</pre></tr><tr><td class="docs"><h2>Hello Reply</h2>
 </td><td class="codes" /></tr><tr><td class="docs"><p>Sends greetings in return to user's ones.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defrecord HiMessage []
   MessageHandler
@@ -2623,12 +2619,12 @@ handler could produce an answer.</p>
      #&quot;[hH]ello[\.\s\?\!]*|[Hh]i[\.\s\?\!]*|[Gg]reetings[\.\s\?\!]*|[Hh]ail[\.\s\?\!]*&quot;
      message))
   (generate-answer [self message] &quot;Hello!&quot;))</pre></tr><tr><td class="docs"><h2>HTTP Status Code Reply</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Helper functions fot HttpStatusCodeMessage</p>
+</td><td class="codes" /></tr><tr><td class="docs"><p>Helper functions for HttpStatusCodeMessage</p>
 </td><td class="codes" /></tr><tr><td class="docs"><p>Retrieves page with HTTP status codes definitions.</p>
 
 <p>TODO implement this method (retrieve http status codes page from wiki)</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- get-http-status-code-definitions
-  [] &quot;&lt;dt&gt;&lt;span id=\&quot;100\&quot;&gt;&lt;/span&gt;100 Continue&lt;/dt&gt;&lt;dd&gt;This means that the server has received the request headers, and that the client should proceed to send the request body (in the case of a request for which a body needs to be sent; for example, a &lt;a href=\&quot;/wikipedia/en/wiki/POST_(HTTP)\&quot; title=\&quot;POST (HTTP)\&quot;&gt;POST&lt;/a&gt; request). If the request body is large, sending it to a server when a request has already been rejected based upon inappropriate headers is inefficient. To have a server check if the request could be accepted based on the request's headers alone, a client must send &lt;code&gt;Expect: 100-continue&lt;/code&gt; as a header in its initial request&lt;sup id=\&quot;cite_ref-RFC_2616_1-1\&quot; class=\&quot;reference\&quot;&gt;&lt;a href=\&quot;#cite_note-RFC_2616-1\&quot;&gt;&lt;span&gt;[&lt;/span&gt;2&lt;span&gt;]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt; and check if a &lt;code&gt;100 Continue&lt;/code&gt; status code is received in response before continuing (or receive &lt;code&gt;417 Expectation Failed&lt;/code&gt; and not continue).&lt;sup id=\&quot;cite_ref-RFC_2616_1-2\&quot; class=\&quot;reference\&quot;&gt;&lt;a href=\&quot;#cite_note-RFC_2616-1\&quot;&gt;&lt;span&gt;[&lt;/span&gt;2&lt;span&gt;]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;&lt;/dd&gt;&lt;dt&gt;&lt;span id=\&quot;509\&quot;&gt;&lt;/span&gt;509 Bandwidth Limit Exceeded (Apache bw/limited extension)&lt;/dt&gt;&lt;dd&gt;This status code, while used by many servers, is not specified in any RFCs.&lt;/dd&gt;&quot;)</pre></tr><tr><td class="docs"><p>Returns meaning of a given numeric HTTP status code.</p>
+  [] (String. (:content (fetch &quot;https://secure.wikimedia.org/wikipedia/en/w/index.php?title=List_of_HTTP_status_codes&amp;printable=yes&quot; :headers {&quot;User-Agent&quot; &quot;gtjbot&quot;}))))</pre></tr><tr><td class="docs"><p>Returns meaning of a given numeric HTTP status code.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- get-http-status-code-meaning
   [code] (let [source-page (get-http-status-code-definitions)
                definition-html
@@ -2646,10 +2642,36 @@ handler could produce an answer.</p>
   MessageHandler
   (processable? [self message] (check-command-word (re-pattern command-word) message))
   (generate-answer [self message]
-    (apply str (interpose &quot;\n\n&quot;
-                          (map get-http-status-code-meaning
-                               (retrieve-arguments message))))))</pre></tr><tr><td class="docs"><p>List with all 'main' message handlers instances.</p>
-</td><td class="codes" /><pre class="brush: clojure">(def handlers-list [(HiMessage.) (HttpStatusCodeMessage. &quot;httpsc&quot;)])</pre></tr><tr><td class="docs"><h2>Actual answer generation</h2>
+    (let [reply  (apply str (interpose &quot;\n\n&quot;
+                           (map get-http-status-code-meaning
+                                (retrieve-arguments message))))]
+      (if (empty? reply)
+        &quot;No argument is supplied.&quot;
+        reply))))</pre></tr><tr><td class="docs"><p>List with all 'main' message handlers instances.</p>
+</td><td class="codes" /><pre class="brush: clojure">(def handlers-list [(HiMessage.)
+                    (create-object-with-help
+                      (HttpStatusCodeMessage. &quot;httpsc&quot;)
+                      &quot;HTTP Status Code&quot;
+                      (str &quot;prints a description of a given HTTP status code. &quot;
+                           &quot;Arguments are either a one numeric status code &quot;
+                           &quot;or a list of the numeric status codes.&quot;))])</pre></tr><tr><td class="docs"><h2>Help message generator</h2>
+</td><td class="codes" /></tr><tr><td class="docs"><p>Generates help information for enabled plugins.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defn get-help-message
+  []
+  (str &quot;Please use one of those commands:\n&quot;
+       (apply str
+              (map
+               (fn [o] (let [meta-data (meta o)]
+                        (when (not (nil? meta-data))
+                          (str (:command-word o)
+                               &quot; &lt;args&gt; - &quot;
+                               (meta-data :help)))))
+               handlers-list))))</pre></tr><tr><td class="docs"><p>Basic handler which generates a help message. Used when no other
+handler could produce an answer.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defrecord HelpMessage []
+  MessageHandler
+  (processable? [self message] true)
+  (generate-answer [self message] (get-help-message)))</pre></tr><tr><td class="docs"><h2>Actual answer generation</h2>
 </td><td class="codes" /></tr><tr><td class="docs"><p>Generates answer to an incoming message using existing message handlers. If none of the 'main' handlers could produce a message then help is generated.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn generate-answer
   [message]
