@@ -73,7 +73,14 @@
 ;; TODO implement this method (retrieve http status codes page from wiki)
 (defn- get-http-status-code-definitions
   "Retrieves page with HTTP status codes definitions."
-  [] (String. (:content (fetch "https://secure.wikimedia.org/wikipedia/en/w/index.php?title=List_of_HTTP_status_codes&printable=yes" :headers {"User-Agent" "gtjbot"}))))
+  []
+  (String.
+   (:content
+    (fetch
+     (str
+      "https://secure.wikimedia.org/wikipedia/en/w/index.php?"
+      "title=List_of_HTTP_status_codes&printable=yes")
+     :headers {"User-Agent" "gtjbot"}))))
 
 (defn- get-http-status-code-meaning
   "Returns meaning of a given numeric HTTP status code."
@@ -83,7 +90,7 @@
                  (re-pattern
                   (str "<dt><span id=\""
                        code
-                       "\"></span>(.*?)</dt><dd>(.*?)</dd>"))
+                       "\"></span>(.*?)</dt>\n<dd>(.*?)</dd>"))
                  source-page))]
            (if (nil? definition-html)
              (str code " - No such code.")
