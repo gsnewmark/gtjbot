@@ -55,6 +55,24 @@
   "Removes all occurrences of a HTML tag or a [...] from a given string."
   [string] (cs/replace string #"<.*?>|\[.*?\]" ""))
 
+(defn- generate-answer-using-function
+  "Generates answer for a given message using a given function."
+  [message answer-generator]
+  (let [arguments (retrieve-arguments message)]
+    (if (empty? arguments)
+      "No argument is supplied."
+      (apply str (interpose "\n\n" (map answer-generator arguments))))))
+
+(defn- retrieve-contents-of-page
+  "Retrieves content of a given HTTP page."
+  [link]
+  (String. (:content (fetch link :headers {"User-Agent" "gtjbot"}))))
+
+(defn- find-first-matched
+  "Retrieves first match (if any) of a given pattern (as string) on a given page."
+  [pattern-string page]
+  (first (re-seq (re-pattern pattern-string) page)))
+
 ;; ## Hello Reply
 
 ;; Sends greetings in return to user's ones.
@@ -70,44 +88,68 @@
 
 ;; Helper functions for HttpStatusCodeMessage
 
-;; TODO implement this method (retrieve http status codes page from wiki)
 (defn- get-http-status-code-definitions
   "Retrieves page with HTTP status codes definitions."
   []
-  (String.
-   (:content
-    (fetch
-     (str
-      "https://secure.wikimedia.org/wikipedia/en/w/index.php?"
-      "title=List_of_HTTP_status_codes&printable=yes")
-     :headers {"User-Agent" "gtjbot"}))))
+  (retrieve-contents-of-page
+   (str "https://secure.wikimedia.org/wikipedia/en/w/index.php?"
+        "title=List_of_HTTP_status_codes&printable=yes")))
 
 (defn- get-http-status-code-meaning
   "Returns meaning of a given numeric HTTP status code."
   [code] (let [source-page (get-http-status-code-definitions)
                definition-html
-               (first (re-seq
-                 (re-pattern
-                  (str "<dt><span id=\""
-                       code
-                       "\"></span>(.*?)</dt>\n<dd>(.*?)</dd>"))
-                 source-page))]
+               (find-first-matched
+                (str "<dt><span id=\""
+                     code
+                     "\"></span>(.*?)</dt>\n<dd>(.*?)</dd>")
+                source-page)]
            (if (nil? definition-html)
              (str code " - No such code.")
              (sanitize-html-and-brackets
               (str (definition-html 1) "\n" (definition-html 2))))))
+
+;; 'Replier' itself
 
 ;; Gives a description of a given numeric HTTP status code.
 (defrecord HttpStatusCodeMessage [command-word]
   MessageHandler
   (processable? [self message] (check-command-word (re-pattern command-word) message))
   (generate-answer [self message]
-    (let [reply  (apply str (interpose "\n\n"
-                           (map get-http-status-code-meaning
-                                (retrieve-arguments message))))]
-      (if (empty? reply)
-        "No argument is supplied."
-        reply))))
+    (generate-answer-using-function message get-http-status-code-meaning)))
+
+;; ## Current Weather Reply
+
+;; Helper functions for a CurrentWeatherMessage
+
+(defn- get-page-with-city-woeid
+  "Returns a HTML page with given city's WOEID on it."
+  (retrieve-contents-of-page
+   (str "http://sigizmund.info/woeidinfo/?woeid="
+        (sanitize-html-and-brackets city))))
+;;<h3>Texas (Town)</h3>WOEID: 1105939
+(defn- get-woeid-for-city
+  "Returns WOEID for a given city."
+  [city]
+  (let [page-with-woeid (get-page-with-city-woeid city)]
+    (get-first-matched "<h3>.*?</h3>WOEID: (d+?)" page-with-woeid)))
+
+(defn- get-weather-for-city
+  "Returns a weather report summary for a given city."
+  [city]
+  (let [woeid (get-woeid-for-city city)]
+    woeid))
+
+;; 'Replier' itself
+
+;; Gives a current weather for a specified city.
+(defrecord CurrentWeatherMessage [command-word]
+  MessageHandler
+  (processable? [self message] (check-command-word (re-pattern command-word) message))
+  (generate-answer [self message]
+    (generate-answer-using-function message get-weather-for-city)))
+
+;; ## Currently enabled reply plugins
 
 ;; List with all 'main' message handlers instances.
 (def handlers-list [(HiMessage.)
