@@ -153,7 +153,7 @@
   "Returns a XML page with a forecast for a given WOEID (optional second argument specifies whether temperature must be in a Fahrenheits)."
   ([woeid] (get-weather-page-for-city woeid false))
   ([woeid isFahrenheit]
-     (if (= woeid 0)
+     (if (not (= woeid 0))
        (let [units (if (true? isFahrenheit) "f" "c")
              link (str "http://weather.yahooapis.com/forecastrss?w="
                        woeid "&u=" units)]
