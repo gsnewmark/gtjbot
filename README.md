@@ -6,6 +6,7 @@ Deployed example: http://gtjbot.appspot.com
 
 ## Existing bot commands
 **httpsc <args>** - returns definition of a given numeric HTTP status code.
+
 **weather <args>** - returns short forecast for a given city 
                      (using Yahoo! Weather).
 
