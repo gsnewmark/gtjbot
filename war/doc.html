@@ -2536,7 +2536,8 @@ $(document).ready(function() {
 </td><td class="codes" /><pre class="brush: clojure">(require 'gtjbot.views.admin)
 (require 'gtjbot.views.user)
 (require 'gtjbot.views.xmpp)</pre></tr><tr><td class="docs"><p>Define the appengine app from noir handler (GAE-compatible one).</p>
-</td><td class="codes" /><pre class="brush: clojure">(gae/def-appengine-app gtjbot-app (wrap-multipart-params (wrap-params (noir-gae/gae-handler nil))))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.models.user" name="gtjbot.models.user"><h1 class="project-name">gtjbot.models.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>GoogleUser entity</h2>
+</td><td class="codes" /><pre class="brush: clojure">(gae/def-appengine-app gtjbot-app (wrap-multipart-params (wrap-params (noir-gae/gae-handler nil))))
+(require '[appengine-magic.core :as ae])</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.models.user" name="gtjbot.models.user"><h1 class="project-name">gtjbot.models.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>GoogleUser entity</h2>
 
 <p>Definition of user model used in app and functions to use with it.</p>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.models.user
@@ -2591,7 +2592,7 @@ message it will send a help message to user.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- retrieve-arguments
   [message] (let [results (re-matches #&quot;[a-zA-Z]+\s?(.*)&quot; message)
                   args-string (if (nil? results) &quot;&quot; (results 1))]
-              (filter #(not (= % &quot;&quot;)) (seq (. args-string split &quot; &quot;)))))</pre></tr><tr><td class="docs"><h2>Message handlers protocol</h2>
+              (filter #(not (= % &quot;&quot;)) (seq (. args-string split &quot;, &quot;)))))</pre></tr><tr><td class="docs"><h2>Message handlers protocol</h2>
 
 <p>Message handler is a function that generates answer based on the
 incoming message.
@@ -2610,7 +2611,25 @@ Protocol defines basic handler interface.</p>
   [matcher message]
   (not (nil? (re-matches matcher (retrieve-command message)))))</pre></tr><tr><td class="docs"><p>Removes all occurrences of a HTML tag or a [...] from a given string.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- sanitize-html-and-brackets
-  [string] (cs/replace string #&quot;&lt;.*?&gt;|\[.*?\]&quot; &quot;&quot;))</pre></tr><tr><td class="docs"><h2>Hello Reply</h2>
+  [string] (cs/replace string #&quot;&lt;.*?&gt;|\[.*?\]&quot; &quot;&quot;))</pre></tr><tr><td class="docs"><p>Generates answer for a given message using a given function.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defn- generate-answer-using-function
+  [message answer-generator]
+  (let [arguments (retrieve-arguments message)]
+    (if (empty? arguments)
+      &quot;No argument is supplied.&quot;
+      (cs/join &quot;\n\n&quot;
+               (map
+                #(let [arg (cs/trim %)]
+                   (if (empty? arg)
+                     &quot;Empty argument.&quot;
+                     (answer-generator arg)))
+                arguments)))))</pre></tr><tr><td class="docs"><p>Retrieves content of a given HTTP page.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defn- retrieve-contents-of-page
+  [link]
+  (String. (:content (fetch link :headers {&quot;User-Agent&quot; &quot;gtjbot&quot;}))))</pre></tr><tr><td class="docs"><p>Retrieves first match (if any) of a given pattern (as string) on a given page.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defn- get-first-matched
+  [pattern-string page]
+  (first (re-seq (re-pattern pattern-string) page)))</pre></tr><tr><td class="docs"><h2>Hello Reply</h2>
 </td><td class="codes" /></tr><tr><td class="docs"><p>Sends greetings in return to user's ones.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defrecord HiMessage []
   MessageHandler
@@ -2621,59 +2640,115 @@ Protocol defines basic handler interface.</p>
   (generate-answer [self message] &quot;Hello!&quot;))</pre></tr><tr><td class="docs"><h2>HTTP Status Code Reply</h2>
 </td><td class="codes" /></tr><tr><td class="docs"><p>Helper functions for HttpStatusCodeMessage</p>
 </td><td class="codes" /></tr><tr><td class="docs"><p>Retrieves page with HTTP status codes definitions.</p>
-
-<p>TODO implement this method (retrieve http status codes page from wiki)</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- get-http-status-code-definitions
   []
-  (String.
-   (:content
-    (fetch
-     (str
-      &quot;https://secure.wikimedia.org/wikipedia/en/w/index.php?&quot;
-      &quot;title=List_of_HTTP_status_codes&amp;printable=yes&quot;)
-     :headers {&quot;User-Agent&quot; &quot;gtjbot&quot;}))))</pre></tr><tr><td class="docs"><p>Returns meaning of a given numeric HTTP status code.</p>
+  (retrieve-contents-of-page
+   (str &quot;https://secure.wikimedia.org/wikipedia/en/w/index.php?&quot;
+        &quot;title=List_of_HTTP_status_codes&amp;printable=yes&quot;)))</pre></tr><tr><td class="docs"><p>Returns meaning of a given numeric HTTP status code.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- get-http-status-code-meaning
   [code] (let [source-page (get-http-status-code-definitions)
                definition-html
-               (first (re-seq
-                 (re-pattern
-                  (str &quot;&lt;dt&gt;&lt;span id=\&quot;&quot;
-                       code
-                       &quot;\&quot;&gt;&lt;/span&gt;(.*?)&lt;/dt&gt;\n&lt;dd&gt;(.*?)&lt;/dd&gt;&quot;))
-                 source-page))]
+               (get-first-matched
+                (str &quot;&lt;dt&gt;&lt;span id=\&quot;&quot;
+                     code
+                     &quot;\&quot;&gt;&lt;/span&gt;(.*?)&lt;/dt&gt;\n&lt;dd&gt;(.*?)&lt;/dd&gt;&quot;)
+                source-page)]
            (if (nil? definition-html)
              (str code &quot; - No such code.&quot;)
              (sanitize-html-and-brackets
-              (str (definition-html 1) &quot;\n&quot; (definition-html 2))))))</pre></tr><tr><td class="docs"><p>Gives a description of a given numeric HTTP status code.</p>
+              (str (definition-html 1) &quot;\n&quot; (definition-html 2))))))</pre></tr><tr><td class="docs"><p>'Replier' itself</p>
+</td><td class="codes" /></tr><tr><td class="docs"><p>Gives a description of a given numeric HTTP status code.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defrecord HttpStatusCodeMessage [command-word]
   MessageHandler
-  (processable? [self message] (check-command-word (re-pattern command-word) message))
+  (processable? [self message]
+    (check-command-word (re-pattern command-word) message))
   (generate-answer [self message]
-    (let [reply  (apply str (interpose &quot;\n\n&quot;
-                           (map get-http-status-code-meaning
-                                (retrieve-arguments message))))]
-      (if (empty? reply)
-        &quot;No argument is supplied.&quot;
-        reply))))</pre></tr><tr><td class="docs"><p>List with all 'main' message handlers instances.</p>
+    (generate-answer-using-function message get-http-status-code-meaning)))</pre></tr><tr><td class="docs"><h2>Current Weather Reply</h2>
+</td><td class="codes" /></tr><tr><td class="docs"><p>Helper functions for a CurrentWeatherMessage</p>
+</td><td class="codes" /></tr><tr><td class="docs"><p>Returns a HTML page with given city's WOEID on it.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defn- get-page-with-city-woeid
+  [city]
+  (if (empty? city)
+    &quot;error&quot;
+    (retrieve-contents-of-page
+     (str &quot;http://sigizmund.info/woeidinfo/?woeid=&quot;
+          (cs/replace (sanitize-html-and-brackets city) &quot; &quot; &quot;+&quot;)))))</pre></tr><tr><td class="docs"><p>Returns WOEID for a given city.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defn- get-woeid-for-city
+  [city]
+  (let [page-with-woeid (get-page-with-city-woeid city)
+        woeid-search-result
+        (get-first-matched &quot;&lt;h3&gt;.*?&lt;/h3&gt;WOEID: (\\d+)&quot; page-with-woeid)]
+    (if (nil? woeid-search-result)
+      0
+      (woeid-search-result 1))))</pre></tr><tr><td class="docs"><p>Returns a XML page with a forecast for a given WOEID (optional second argument specifies whether temperature must be in a Fahrenheits).</p>
+</td><td class="codes" /><pre class="brush: clojure">(defn- get-weather-page-for-city
+  ([woeid] (get-weather-page-for-city woeid false))
+  ([woeid isFahrenheit]
+     (if (= woeid 0)
+       (let [units (if (true? isFahrenheit) &quot;f&quot; &quot;c&quot;)
+             link (str &quot;http://weather.yahooapis.com/forecastrss?w=&quot;
+                       woeid &quot;&amp;u=&quot; units)]
+         (retrieve-contents-of-page link))
+       &quot;error&quot;)))</pre></tr><tr><td class="docs"><p>Extracts string with a forecast from a source page.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defn- extract-forecast-string
+  [source]
+  (let [forecast-html
+        (get-first-matched &quot;(Current Conditions:.*?)&lt;br /&gt;&lt;br /&gt;&lt;a&quot;
+                           (cs/replace source &quot;\n&quot; &quot;&quot;))]
+    (if (nil? forecast-html)
+      &quot;City not found.&quot;
+      (sanitize-html-and-brackets
+       (cs/replace
+        (cs/replace (forecast-html 1) #&quot;(&lt;[bB][rR]\s?/&gt;){2}&quot; &quot;\n&quot;)
+        #&quot;&lt;[bB][rR]\s?/&gt;&quot; &quot;\n&quot;)))))</pre></tr><tr><td class="docs"><p>Returns a weather report summary for a given city.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defn- get-weather-for-city
+  [city]
+  (let [woeid (get-woeid-for-city city)
+        forecast-source (get-weather-page-for-city woeid)
+        forecast (extract-forecast-string forecast-source)
+        proper-city-name (cs/join &quot; &quot; (map cs/capitalize (cs/split city #&quot;\s&quot;)))]
+    (str &quot;Weather for &quot; proper-city-name &quot; from Yahoo!\n&quot; forecast)))</pre></tr><tr><td class="docs"><p>'Replier' itself</p>
+</td><td class="codes" /></tr><tr><td class="docs"><p>Gives a current weather for a specified city.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defrecord CurrentWeatherMessage [command-word]
+  MessageHandler
+  (processable? [self message]
+    (check-command-word (re-pattern command-word) message))
+  (generate-answer [self message]
+    (generate-answer-using-function message get-weather-for-city)))</pre></tr><tr><td class="docs"><h2>Currently enabled reply plugins</h2>
+</td><td class="codes" /></tr><tr><td class="docs"><p>List with all 'main' message handlers instances.</p>
 </td><td class="codes" /><pre class="brush: clojure">(def handlers-list [(HiMessage.)
                     (create-object-with-help
                       (HttpStatusCodeMessage. &quot;httpsc&quot;)
                       &quot;HTTP Status Code&quot;
                       (str &quot;prints a description of a given HTTP status code. &quot;
                            &quot;Arguments are either a one numeric status code &quot;
-                           &quot;or a list of the numeric status codes.&quot;))])</pre></tr><tr><td class="docs"><h2>Help message generator</h2>
+                           &quot;or a list of the numeric status codes &quot;
+                           &quot;(separated by commas).&quot;))
+                    (create-object-with-help
+                      (CurrentWeatherMessage. &quot;weather&quot;)
+                      &quot;Current Weather&quot;
+                      (str &quot; prints short weather report for a give &quot;
+                           &quot;area/areas. Arguments are either a one &quot;
+                           &quot;geographic are or a bunch of such &quot;
+                           &quot;(separated by commas). Provide as much &quot;
+                           &quot;info about small area as possible for most &quot;
+                           &quot;accurate results (e.g., &quot;
+                           &quot;\&quot;kiyevka russia novosibirsk oblast\&quot; for small &quot;
+                           &quot;town near Novosibirsk, but for capital of Ukraine &quot;
+                           &quot;simply \&quot;Kyiv\&quot; is enough.&quot;))])</pre></tr><tr><td class="docs"><h2>Help message generator</h2>
 </td><td class="codes" /></tr><tr><td class="docs"><p>Generates help information for enabled plugins.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn get-help-message
   []
   (str &quot;Please use one of those commands:\n&quot;
-       (apply str
-              (map
-               (fn [o] (let [meta-data (meta o)]
-                        (when (not (nil? meta-data))
-                          (str (:command-word o)
-                               &quot; &lt;args&gt; - &quot;
-                               (meta-data :help)))))
-               handlers-list))))</pre></tr><tr><td class="docs"><p>Basic handler which generates a help message. Used when no other
+       (cs/trim-newline
+        (cs/join &quot;\n\n&quot;
+                 (map
+                  (fn [o] (let [meta-data (meta o)]
+                           (when (not (nil? meta-data))
+                             (str (:command-word o)
+                                  &quot; &lt;args&gt; - &quot;
+                                  (meta-data :help)))))
+                  handlers-list)))))</pre></tr><tr><td class="docs"><p>Basic handler which generates a help message. Used when no other
 handler could produce an answer.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defrecord HelpMessage []
   MessageHandler

@@ -12,5 +12,5 @@
 (require 'gtjbot.views.xmpp)
 
 ;; Define the appengine app from noir handler (GAE-compatible one).
-(gae/def-appengine-app gtjbot-app (wrap-multipart-params (wrap-params (noir-gae/gae-handler nil))))
-
+(gae/def-appengine-app gtjbot-app
+  (wrap-multipart-params (wrap-params (noir-gae/gae-handler nil))))

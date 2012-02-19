@@ -27,7 +27,7 @@
   "Retrieves list of command's arguments from the incoming message. Arguments are all words in a message except first."
   [message] (let [results (re-matches #"[a-zA-Z]+\s?(.*)" message)
                   args-string (if (nil? results) "" (results 1))]
-              (filter #(not (= % "")) (seq (. args-string split " ")))))
+              (filter #(not (= % "")) (seq (. args-string split ", ")))))
 
 ;; ## Message handlers protocol
 ;; Message handler is a function that generates answer based on the
@@ -61,14 +61,21 @@
   (let [arguments (retrieve-arguments message)]
     (if (empty? arguments)
       "No argument is supplied."
-      (apply str (interpose "\n\n" (map answer-generator arguments))))))
+      (cs/join "\n\n"
+               (map
+                #(let [arg (cs/trim %)]
+                   (if (empty? arg)
+                     "Empty argument."
+                     (answer-generator arg)))
+                arguments)))))
 
+; TODO try to cache requested pages (memcache?)
 (defn- retrieve-contents-of-page
   "Retrieves content of a given HTTP page."
   [link]
   (String. (:content (fetch link :headers {"User-Agent" "gtjbot"}))))
 
-(defn- find-first-matched
+(defn- get-first-matched
   "Retrieves first match (if any) of a given pattern (as string) on a given page."
   [pattern-string page]
   (first (re-seq (re-pattern pattern-string) page)))
@@ -99,7 +106,7 @@
   "Returns meaning of a given numeric HTTP status code."
   [code] (let [source-page (get-http-status-code-definitions)
                definition-html
-               (find-first-matched
+               (get-first-matched
                 (str "<dt><span id=\""
                      code
                      "\"></span>(.*?)</dt>\n<dd>(.*?)</dd>")
@@ -114,7 +121,8 @@
 ;; Gives a description of a given numeric HTTP status code.
 (defrecord HttpStatusCodeMessage [command-word]
   MessageHandler
-  (processable? [self message] (check-command-word (re-pattern command-word) message))
+  (processable? [self message]
+    (check-command-word (re-pattern command-word) message))
   (generate-answer [self message]
     (generate-answer-using-function message get-http-status-code-meaning)))
 
@@ -124,28 +132,63 @@
 
 (defn- get-page-with-city-woeid
   "Returns a HTML page with given city's WOEID on it."
-  (retrieve-contents-of-page
-   (str "http://sigizmund.info/woeidinfo/?woeid="
-        (sanitize-html-and-brackets city))))
-;;<h3>Texas (Town)</h3>WOEID: 1105939
+  [city]
+  (if (empty? city)
+    "error"
+    (retrieve-contents-of-page
+     (str "http://sigizmund.info/woeidinfo/?woeid="
+          (cs/replace (sanitize-html-and-brackets city) " " "+")))))
+
 (defn- get-woeid-for-city
   "Returns WOEID for a given city."
   [city]
-  (let [page-with-woeid (get-page-with-city-woeid city)]
-    (get-first-matched "<h3>.*?</h3>WOEID: (d+?)" page-with-woeid)))
+  (let [page-with-woeid (get-page-with-city-woeid city)
+        woeid-search-result
+        (get-first-matched "<h3>.*?</h3>WOEID: (\\d+)" page-with-woeid)]
+    (if (nil? woeid-search-result)
+      0
+      (woeid-search-result 1))))
+
+(defn- get-weather-page-for-city
+  "Returns a XML page with a forecast for a given WOEID (optional second argument specifies whether temperature must be in a Fahrenheits)."
+  ([woeid] (get-weather-page-for-city woeid false))
+  ([woeid isFahrenheit]
+     (if (= woeid 0)
+       (let [units (if (true? isFahrenheit) "f" "c")
+             link (str "http://weather.yahooapis.com/forecastrss?w="
+                       woeid "&u=" units)]
+         (retrieve-contents-of-page link))
+       "error")))
+
+(defn- extract-forecast-string
+  "Extracts string with a forecast from a source page."
+  [source]
+  (let [forecast-html
+        (get-first-matched "(Current Conditions:.*?)<br /><br /><a"
+                           (cs/replace source "\n" ""))]
+    (if (nil? forecast-html)
+      "City not found."
+      (sanitize-html-and-brackets
+       (cs/replace
+        (cs/replace (forecast-html 1) #"(<[bB][rR]\s?/>){2}" "\n")
+        #"<[bB][rR]\s?/>" "\n")))))
 
 (defn- get-weather-for-city
   "Returns a weather report summary for a given city."
   [city]
-  (let [woeid (get-woeid-for-city city)]
-    woeid))
+  (let [woeid (get-woeid-for-city city)
+        forecast-source (get-weather-page-for-city woeid)
+        forecast (extract-forecast-string forecast-source)
+        proper-city-name (cs/join " " (map cs/capitalize (cs/split city #"\s")))]
+    (str "Weather for " proper-city-name " from Yahoo!\n" forecast)))
 
 ;; 'Replier' itself
 
 ;; Gives a current weather for a specified city.
 (defrecord CurrentWeatherMessage [command-word]
   MessageHandler
-  (processable? [self message] (check-command-word (re-pattern command-word) message))
+  (processable? [self message]
+    (check-command-word (re-pattern command-word) message))
   (generate-answer [self message]
     (generate-answer-using-function message get-weather-for-city)))
 
@@ -158,7 +201,20 @@
                       "HTTP Status Code"
                       (str "prints a description of a given HTTP status code. "
                            "Arguments are either a one numeric status code "
-                           "or a list of the numeric status codes."))])
+                           "or a list of the numeric status codes "
+                           "(separated by commas)."))
+                    (create-object-with-help
+                      (CurrentWeatherMessage. "weather")
+                      "Current Weather"
+                      (str " prints a short weather report for a give "
+                           "area/areas. Arguments are either a one "
+                           "geographic are or a bunch of such "
+                           "(separated by commas). Provide as much "
+                           "info about small area as possible for most "
+                           "accurate results (e.g., "
+                           "\"kiyevka russia novosibirsk oblast\" for small "
+                           "town near Novosibirsk, but for capital of Ukraine "
+                           "simply \"Kyiv\" is enough)."))])
 
 ;; ## Help message generator
 
@@ -166,14 +222,15 @@
   "Generates help information for enabled plugins."
   []
   (str "Please use one of those commands:\n"
-       (apply str
-              (map
-               (fn [o] (let [meta-data (meta o)]
-                        (when (not (nil? meta-data))
-                          (str (:command-word o)
-                               " <args> - "
-                               (meta-data :help)))))
-               handlers-list))))
+       (cs/trim-newline
+        (cs/join "\n\n"
+                 (map
+                  (fn [o] (let [meta-data (meta o)]
+                           (when (not (nil? meta-data))
+                             (str (:command-word o)
+                                  " <args> - "
+                                  (meta-data :help)))))
+                  handlers-list)))))
 
 ;; Basic handler which generates a help message. Used when no other
 ;; handler could produce an answer.
