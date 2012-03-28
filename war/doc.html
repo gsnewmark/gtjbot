@@ -2526,7 +2526,7 @@ $(document).ready(function() {
     ul.css('margin-top', '0px')
 
 })
-</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.3.0-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
+</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.3.1-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
 </div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.2.1</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2-SNAPSHOT</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">appengine-magic</td><td class="dotted"><hr /></td><td class="dep-version">0.4.7</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.6.1</td></tr><tr><td class="dep-name">lein-midje</td><td class="dotted"><hr /></td><td class="dep-version">1.0.8</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#gtjbot.core">gtjbot.core</a></li><li><a href="#gtjbot.models.user">gtjbot.models.user</a></li><li><a href="#gtjbot.utils.parser">gtjbot.utils.parser</a></li><li><a href="#gtjbot.utils.user">gtjbot.utils.user</a></li><li><a href="#gtjbot.utils.xmpp">gtjbot.utils.xmpp</a></li><li><a href="#gtjbot.views.common">gtjbot.views.common</a></li><li><a href="#gtjbot.views.user">gtjbot.views.user</a></li><li><a href="#gtjbot.views.admin">gtjbot.views.admin</a></li><li><a href="#gtjbot.views.xmpp">gtjbot.views.xmpp</a></li><li><a href="#gtjbot.test.core">gtjbot.test.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.core" name="gtjbot.core"><h1 class="project-name">gtjbot.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definition of an app</h2>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.core
   (:require [appengine-magic.core :as gae]
@@ -2546,16 +2546,19 @@ $(document).ready(function() {
         [gtjbot.utils.user :only [get-user-id get-user-email]]))</pre></tr><tr><td class="docs"><p>Message sent to unsubscribed users who try to use a bot.</p>
 </td><td class="codes" /><pre class="brush: clojure">(def message-to-unsubscribed (str &quot;You need to subscribe to an app in order to use this&quot;
 &quot; feature. More details could be found at http://gtjbot.appspot.com&quot;))</pre></tr><tr><td class="docs"><p>Main entity of an app - subscribed user. Consists of user's unique
-identifier, user itself (instance of Google's User class) and
-user's mail (for easier filtering).</p>
-</td><td class="codes" /><pre class="brush: clojure">(ds/defentity GoogleUser [^:key id, user, mail])</pre></tr><tr><td class="docs"><p>Saves current user to a DataStore (if it not presented in it already).
+identifier, user itself (instance of Google's User class), user's
+mail (for easier filtering) and string with message handlers list.</p>
+</td><td class="codes" /><pre class="brush: clojure">(ds/defentity GoogleUser [^:key id, user, mail, handlers])</pre></tr><tr><td class="docs"><p>Saves current user to a DataStore (if it not presented in it already).
 Returns user just created from a current user's ID or retrieves user saved
 in a DataStore earlier.</p>
+
+<p>TODO correct handlers list</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn save-user-to-ds
   []
   (let [id (get-user-id)]
     (or (ds/retrieve GoogleUser id)
-        (ds/save! (GoogleUser. id (current-user) (get-user-email))))))</pre></tr><tr><td class="docs"><p>Retrieves a list of all GoogleUsers saved in a DS.</p>
+        (ds/save! (GoogleUser. id (current-user) (get-user-email)
+                               &quot;HttpStatusCodeMessage httpsc; CurrentWeatherMessage weather&quot;)))))</pre></tr><tr><td class="docs"><p>Retrieves a list of all GoogleUsers saved in a DS.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn get-gusers
   [] (ds/query :kind GoogleUser))</pre></tr><tr><td class="docs"><p>Retrieves a list of all Users (User class instances) saved as a
 GoogleUsers in a DS.</p>
@@ -2570,7 +2573,13 @@ GoogleUsers in a DS.</p>
   ([] (check-user-by-mail (get-user-email)))
   ([mail] (if (empty? (ds/query :kind GoogleUser :filter (= :mail mail)))
             false
-            true)))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.parser" name="gtjbot.utils.parser"><h1 class="project-name">gtjbot.utils.parser</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>XMPP message parsing</h2>
+            true)))</pre></tr><tr><td class="docs"><p>Returns list of handlers user wishes to use for a given user.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defn get-users-handlers
+  ([] (get-users-handlers (current-user)))
+  ([user] (let [user (ds/retrieve GoogleUser (get-user-id user))]
+            (if (nil? user)
+              nil
+              (:handlers user)))))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.parser" name="gtjbot.utils.parser"><h1 class="project-name">gtjbot.utils.parser</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>XMPP message parsing</h2>
 
 <p>A set of functions to process incoming XMPP messages (requests) and
 generate answers for them.
@@ -2580,7 +2589,8 @@ If bot receives empty or malformed (incorrect command or arguments)
 message it will send a help message to user.</p>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.utils.parser
   [:require [clojure.string :as cs]]
-  [:use [appengine-magic.services.url-fetch :only [fetch]]])</pre></tr><tr><td class="docs"><h2>Service functions</h2>
+  [:use [appengine-magic.services.url-fetch :only [fetch]]
+        [gtjbot.models.user :only [get-users-handlers]]])</pre></tr><tr><td class="docs"><h2>Service functions</h2>
 </td><td class="codes" /></tr><tr><td class="docs"><p>Adds meta-data name and help to an object.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defmacro create-object-with-help [obj name help]
   `(with-meta ~obj {:name ~name :help ~help}))</pre></tr><tr><td class="docs"><p>Retrieves 'command' word from the incoming message. 'Command' is a first word in a message.</p>
@@ -2727,7 +2737,7 @@ Protocol defines basic handler interface.</p>
                     (create-object-with-help
                       (CurrentWeatherMessage. &quot;weather&quot;)
                       &quot;Current Weather&quot;
-                      (str &quot; prints a short weather report for a give &quot;
+                      (str &quot; prints a short weather report for a given &quot;
                            &quot;area/areas. Arguments are either a one &quot;
                            &quot;geographic are or a bunch of such &quot;
                            &quot;(separated by commas). Provide as much &quot;
@@ -2753,14 +2763,20 @@ handler could produce an answer.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defrecord HelpMessage []
   MessageHandler
   (processable? [self message] true)
-  (generate-answer [self message] (get-help-message)))</pre></tr><tr><td class="docs"><h2>Actual answer generation</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Generates answer to an incoming message using existing message handlers. If none of the 'main' handlers could produce a message then help is generated.</p>
+  (generate-answer [self message] (get-help-message)))</pre></tr><tr><td class="docs"><p>Transforms string with user's handlers' names to actual handlers list.</p>
+
+<h2>Actual answer generation</h2>
+</td><td class="codes" /><pre class="brush: clojure">(defn- generate-handlers-list-from-string
+  [handlers-string]
+  (let [handlers (cs/split handlers-string #&quot;; &quot;)]
+    (cs/join &quot; ~ &quot; handlers)))</pre></tr><tr><td class="docs"><p>Generates answer to an incoming message using existing message handlers. If none of the 'main' handlers could produce a message then help is generated.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn generate-answer
   [message]
   (let [applicable-handlers (filter #(processable? % message) handlers-list)
         answers (map #(generate-answer % message) applicable-handlers)]
     (if (empty? answers)
-      (generate-answer (HelpMessage.) message)
+      ;(generate-answer (HelpMessage.) message)
+      (generate-handlers-list-from-string (get-users-handlers))
       (apply str answers))))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.user" name="gtjbot.utils.user"><h1 class="project-name">gtjbot.utils.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Wrappers around Google's User java class</h2>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.utils.user
   (:use [appengine-magic.services.user :only [current-user]]))</pre></tr><tr><td class="docs"><p>Returns ID of a specified user (or current user if no argument

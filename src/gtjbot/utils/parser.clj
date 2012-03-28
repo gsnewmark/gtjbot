@@ -7,7 +7,8 @@
 ;; message it will send a help message to user.
 (ns gtjbot.utils.parser
   [:require [clojure.string :as cs]]
-  [:use [appengine-magic.services.url-fetch :only [fetch]]])
+  [:use [appengine-magic.services.url-fetch :only [fetch]]
+        [gtjbot.models.user :only [get-users-handlers]]])
 
 
 ;; ## Service functions
@@ -206,7 +207,7 @@
                     (create-object-with-help
                       (CurrentWeatherMessage. "weather")
                       "Current Weather"
-                      (str " prints a short weather report for a give "
+                      (str " prints a short weather report for a given "
                            "area/areas. Arguments are either a one "
                            "geographic are or a bunch of such "
                            "(separated by commas). Provide as much "
@@ -241,12 +242,30 @@
 
 ;; ## Actual answer generation
 
+;; TODO move this to different section and refactor
+;; TODO must accept not only plain strings, but also functions that
+;; produce strings
+(defn record-factory [recordname]
+  "Creates a factory for a given Record type."
+  (let [recordclass ^Class (resolve (symbol recordname))
+        max-arg-count (apply max (map #(count (.getParameterTypes %))
+                                      (.getConstructors recordclass)))
+        args (map #(symbol (str "x" %)) (range (- max-arg-count 2)))]
+    (eval `(fn [~@args] (~(symbol (str "->" recordname)) ~@args)))))
+
+(defn- generate-handlers-list-from-string
+  "Transforms string with user's handlers' names to actual handlers list."
+  [handlers-string]
+  (let [handlers (cs/split handlers-string #"; ")]
+    ()))
+
 (defn generate-answer
   "Generates answer to an incoming message using existing message handlers. If none of the 'main' handlers could produce a message then help is generated."
   [message]
   (let [applicable-handlers (filter #(processable? % message) handlers-list)
         answers (map #(generate-answer % message) applicable-handlers)]
     (if (empty? answers)
-      (generate-answer (HelpMessage.) message)
+      ;(generate-answer (HelpMessage.) message)
+      (generate-handlers-list-from-string (get-users-handlers))
       (apply str answers))))
 

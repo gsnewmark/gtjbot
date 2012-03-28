@@ -11,10 +11,11 @@
 " feature. More details could be found at http://gtjbot.appspot.com"))
 
 ;; Main entity of an app - subscribed user. Consists of user's unique
-;; identifier, user itself (instance of Google's User class) and
-;; user's mail (for easier filtering).
-(ds/defentity GoogleUser [^:key id, user, mail])
+;; identifier, user itself (instance of Google's User class), user's
+;; mail (for easier filtering) and string with message handlers list.
+(ds/defentity GoogleUser [^:key id, user, mail, handlers])
 
+;; TODO correct handlers list
 (defn save-user-to-ds
   "Saves current user to a DataStore (if it not presented in it already).
 Returns user just created from a current user's ID or retrieves user saved
@@ -22,7 +23,8 @@ in a DataStore earlier."
   []
   (let [id (get-user-id)]
     (or (ds/retrieve GoogleUser id)
-        (ds/save! (GoogleUser. id (current-user) (get-user-email))))))
+        (ds/save! (GoogleUser. id (current-user) (get-user-email)
+                               "HttpStatusCodeMessage httpsc; CurrentWeatherMessage weather")))))
 
 (defn get-gusers
   "Retrieves a list of all GoogleUsers saved in a DS."
@@ -46,3 +48,11 @@ GoogleUsers in a DS."
   ([mail] (if (empty? (ds/query :kind GoogleUser :filter (= :mail mail)))
             false
             true)))
+
+(defn get-users-handlers
+  "Returns list of handlers user wishes to use for a given user."
+  ([] (get-users-handlers (current-user)))
+  ([user] (let [user (ds/retrieve GoogleUser (get-user-id user))]
+            (if (nil? user)
+              nil
+              (:handlers user)))))

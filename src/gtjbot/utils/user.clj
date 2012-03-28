@@ -20,3 +20,4 @@
  is supplied)."
   ([] (get-user-nick (current-user)))
   ([user] (. user getNickname)))
+
