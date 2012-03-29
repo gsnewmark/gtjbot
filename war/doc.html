@@ -2526,7 +2526,7 @@ $(document).ready(function() {
     ul.css('margin-top', '0px')
 
 })
-</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.3.1-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
+</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.4.0-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
 </div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.2.1</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2-SNAPSHOT</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">appengine-magic</td><td class="dotted"><hr /></td><td class="dep-version">0.4.7</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.6.1</td></tr><tr><td class="dep-name">lein-midje</td><td class="dotted"><hr /></td><td class="dep-version">1.0.8</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#gtjbot.core">gtjbot.core</a></li><li><a href="#gtjbot.models.user">gtjbot.models.user</a></li><li><a href="#gtjbot.utils.parser">gtjbot.utils.parser</a></li><li><a href="#gtjbot.utils.user">gtjbot.utils.user</a></li><li><a href="#gtjbot.utils.xmpp">gtjbot.utils.xmpp</a></li><li><a href="#gtjbot.views.common">gtjbot.views.common</a></li><li><a href="#gtjbot.views.user">gtjbot.views.user</a></li><li><a href="#gtjbot.views.admin">gtjbot.views.admin</a></li><li><a href="#gtjbot.views.xmpp">gtjbot.views.xmpp</a></li><li><a href="#gtjbot.test.core">gtjbot.test.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.core" name="gtjbot.core"><h1 class="project-name">gtjbot.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definition of an app</h2>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.core
   (:require [appengine-magic.core :as gae]
@@ -2558,7 +2558,8 @@ in a DataStore earlier.</p>
   (let [id (get-user-id)]
     (or (ds/retrieve GoogleUser id)
         (ds/save! (GoogleUser. id (current-user) (get-user-email)
-                               &quot;Current Weather - weather&quot;)))))</pre></tr><tr><td class="docs"><p>Retrieves a list of all GoogleUsers saved in a DS.</p>
+                               (str &quot;HTTP Status Code - httpsc; &quot;
+                                    &quot;Current Weather - weather&quot;))))))</pre></tr><tr><td class="docs"><p>Retrieves a list of all GoogleUsers saved in a DS.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn get-gusers
   [] (ds/query :kind GoogleUser))</pre></tr><tr><td class="docs"><p>Retrieves a list of all Users (User class instances) saved as a
 GoogleUsers in a DS.</p>
@@ -2595,12 +2596,12 @@ message it will send a help message to user.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defmacro create-object-with-help [obj name help]
   `(with-meta ~obj {:name ~name :help ~help}))</pre></tr><tr><td class="docs"><p>Retrieves 'command' word from the incoming message. 'Command' is a first word in a message.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- retrieve-command
-  [message] (let [results (re-matches #&quot;^([a-zA-Z]+)\s?.*$&quot; message)]
+  [message] (let [results (re-matches #&quot;^([a-zA-Z0-9]+)\s?.*$&quot; message)]
               (if (nil? results)
                 &quot;&quot;
                 (last results))))</pre></tr><tr><td class="docs"><p>Retrieves list of command's arguments from the incoming message. Arguments are all words in a message except first.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- retrieve-arguments
-  [message] (let [results (re-matches #&quot;[a-zA-Z]+\s?(.*)&quot; message)
+  [message] (let [results (re-matches #&quot;[a-zA-Z0-9]+\s?(.*)&quot; message)
                   args-string (if (nil? results) &quot;&quot; (results 1))]
               (filter #(not (= % &quot;&quot;)) (seq (. args-string split &quot;, &quot;)))))</pre></tr><tr><td class="docs"><h2>Message handlers protocol</h2>
 
@@ -2616,10 +2617,11 @@ Protocol defines basic handler interface.</p>
   ;; Generates answer based on an incoming message. Returns nil if a
   ;; given handler can't process message.
   (generate-answer [self message]))</pre></tr><tr><td class="docs"><h2>Helper functions for reply building</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Checks whether the command word contains the given word(s) (i. e. matcher).</p>
+</td><td class="codes" /></tr><tr><td class="docs"><p>Checks whether the command word contains the given word.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- check-command-word
-  [matcher message]
-  (not (nil? (re-matches matcher (retrieve-command message)))))</pre></tr><tr><td class="docs"><p>Removes all occurrences of a HTML tag or a [...] from a given string.</p>
+  [command-word message]
+  (not (nil? (re-matches (re-pattern (str &quot;^&quot; command-word &quot;$&quot;))
+                         (retrieve-command message)))))</pre></tr><tr><td class="docs"><p>Removes all occurrences of a HTML tag or a [...] from a given string.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- sanitize-html-and-brackets
   [string] (cs/replace string #&quot;&lt;.*?&gt;|\[.*?\]&quot; &quot;&quot;))</pre></tr><tr><td class="docs"><p>Generates answer for a given message using a given function.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- generate-answer-using-function
@@ -2671,7 +2673,7 @@ Protocol defines basic handler interface.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defrecord HttpStatusCodeMessage [command-word]
   MessageHandler
   (processable? [self message]
-    (check-command-word (re-pattern command-word) message))
+    (check-command-word command-word message))
   (generate-answer [self message]
     (generate-answer-using-function message get-http-status-code-meaning)))</pre></tr><tr><td class="docs"><h2>Current Weather Reply</h2>
 </td><td class="codes" /></tr><tr><td class="docs"><p>Helper functions for a CurrentWeatherMessage</p>
@@ -2722,7 +2724,7 @@ Protocol defines basic handler interface.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defrecord CurrentWeatherMessage [command-word]
   MessageHandler
   (processable? [self message]
-    (check-command-word (re-pattern command-word) message))
+    (check-command-word command-word message))
   (generate-answer [self message]
     (generate-answer-using-function message get-weather-for-city)))</pre></tr><tr><td class="docs"><h2>Currently enabled reply plugins</h2>
 </td><td class="codes" /></tr><tr><td class="docs"><p>List with all 'main' message handlers instances.</p>
@@ -2744,7 +2746,7 @@ Protocol defines basic handler interface.</p>
                            &quot;accurate results (e.g., &quot;
                            &quot;\&quot;kiyevka russia novosibirsk oblast\&quot; for small &quot;
                            &quot;town near Novosibirsk, but for capital of Ukraine &quot;
-                           &quot;simply \&quot;Kyiv\&quot; is enough).&quot;))])</pre></tr><tr><td class="docs"><p>Removes handlers which names aren't present in a handlers-string form a handlers-list.</p>
+                           &quot;simply \&quot;Kyiv\&quot; is enough).&quot;))])</pre></tr><tr><td class="docs"><p>Removes handlers which names aren't present in a handlers-string from a handlers-list, sets handler's command word to one specified in a handlers-string.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- generate-user-handlers
   [handlers-string handlers-list]
   (if (nil? handlers-string)
@@ -2754,7 +2756,9 @@ Protocol defines basic handler interface.</p>
                     (cs/split handlers-string #&quot;; &quot;)))
           user-commands
           (map #(second (cs/split % #&quot; \- &quot;)) (cs/split handlers-string #&quot;; &quot;))]
-      (map #(assoc %1 :command-word %2) (filter #(contains? user-handlers (:name (meta %))) handlers-list) user-commands))))</pre></tr><tr><td class="docs"><h2>Help message generator</h2>
+      (map #(assoc %1 :command-word %2)
+           (filter #(contains? user-handlers (:name (meta %))) handlers-list)
+           user-commands))))</pre></tr><tr><td class="docs"><h2>Help message generator</h2>
 </td><td class="codes" /></tr><tr><td class="docs"><p>Generates help information for enabled plugins.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn get-help-message
   [handlers]
@@ -2775,11 +2779,9 @@ Protocol defines basic handler interface.</p>
         (conj (generate-user-handlers (get-user-handlers) handlers-list)
               (HiMessage.))
         applicable-handlers (filter #(processable? % message) user-handlers)
-        answers (map #(generate-answer % message) applicable-handlers)
-        ]
+        answers (map #(generate-answer % message) applicable-handlers)]
     (if (empty? answers)
-      (apply  user-handlers)
-      ;(get-help-message user-handlers)
+      (get-help-message user-handlers)
       (apply str answers))))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.user" name="gtjbot.utils.user"><h1 class="project-name">gtjbot.utils.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Wrappers around Google's User java class</h2>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.utils.user
   (:use [appengine-magic.services.user :only [current-user]]))</pre></tr><tr><td class="docs"><p>Returns ID of a specified user (or current user if no argument

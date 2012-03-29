@@ -19,14 +19,14 @@
 
 (defn- retrieve-command
   "Retrieves 'command' word from the incoming message. 'Command' is a first word in a message."
-  [message] (let [results (re-matches #"^([a-zA-Z]+)\s?.*$" message)]
+  [message] (let [results (re-matches #"^([a-zA-Z0-9]+)\s?.*$" message)]
               (if (nil? results)
                 ""
                 (last results))))
 
 (defn- retrieve-arguments
   "Retrieves list of command's arguments from the incoming message. Arguments are all words in a message except first."
-  [message] (let [results (re-matches #"[a-zA-Z]+\s?(.*)" message)
+  [message] (let [results (re-matches #"[a-zA-Z0-9]+\s?(.*)" message)
                   args-string (if (nil? results) "" (results 1))]
               (filter #(not (= % "")) (seq (. args-string split ", ")))))
 
@@ -48,9 +48,10 @@
 ;; ## Helper functions for reply building
 
 (defn- check-command-word
-  "Checks whether the command word contains the given word(s) (i. e. matcher)."
-  [matcher message]
-  (not (nil? (re-matches matcher (retrieve-command message)))))
+  "Checks whether the command word contains the given word."
+  [command-word message]
+  (not (nil? (re-matches (re-pattern (str "^" command-word "$"))
+                         (retrieve-command message)))))
 
 (defn- sanitize-html-and-brackets
   "Removes all occurrences of a HTML tag or a [...] from a given string."
@@ -123,7 +124,7 @@
 (defrecord HttpStatusCodeMessage [command-word]
   MessageHandler
   (processable? [self message]
-    (check-command-word (re-pattern command-word) message))
+    (check-command-word command-word message))
   (generate-answer [self message]
     (generate-answer-using-function message get-http-status-code-meaning)))
 
@@ -189,7 +190,7 @@
 (defrecord CurrentWeatherMessage [command-word]
   MessageHandler
   (processable? [self message]
-    (check-command-word (re-pattern command-word) message))
+    (check-command-word command-word message))
   (generate-answer [self message]
     (generate-answer-using-function message get-weather-for-city)))
 
@@ -217,7 +218,7 @@
                            "simply \"Kyiv\" is enough)."))])
 
 (defn- generate-user-handlers
-  "Removes handlers which names aren't present in a handlers-string form a handlers-list."
+  "Removes handlers which names aren't present in a handlers-string from a handlers-list, sets handler's command word to one specified in a handlers-string."
   [handlers-string handlers-list]
   (if (nil? handlers-string)
     handlers-list
@@ -226,7 +227,9 @@
                     (cs/split handlers-string #"; ")))
           user-commands
           (map #(second (cs/split % #" \- ")) (cs/split handlers-string #"; "))]
-      (map #(assoc %1 :command-word %2) (filter #(contains? user-handlers (:name (meta %))) handlers-list) user-commands))))
+      (map #(assoc %1 :command-word %2)
+           (filter #(contains? user-handlers (:name (meta %))) handlers-list)
+           user-commands))))
 
 ;; ## Help message generator
 
@@ -253,10 +256,8 @@
         (conj (generate-user-handlers (get-user-handlers) handlers-list)
               (HiMessage.))
         applicable-handlers (filter #(processable? % message) user-handlers)
-        answers (map #(generate-answer % message) applicable-handlers)
-        ]
+        answers (map #(generate-answer % message) applicable-handlers)]
     (if (empty? answers)
-      (apply  user-handlers)
-      ;(get-help-message user-handlers)
+      (get-help-message user-handlers)
       (apply str answers))))
 

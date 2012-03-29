@@ -24,7 +24,8 @@ in a DataStore earlier."
   (let [id (get-user-id)]
     (or (ds/retrieve GoogleUser id)
         (ds/save! (GoogleUser. id (current-user) (get-user-email)
-                               "Current Weather - weather")))))
+                               (str "HTTP Status Code - httpsc; "
+                                    "Current Weather - weather"))))))
 
 (defn get-gusers
   "Retrieves a list of all GoogleUsers saved in a DS."
