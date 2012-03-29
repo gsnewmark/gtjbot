@@ -8,7 +8,7 @@
 (ns gtjbot.utils.parser
   [:require [clojure.string :as cs]]
   [:use [appengine-magic.services.url-fetch :only [fetch]]
-        [gtjbot.models.user :only [get-users-handlers]]])
+        [gtjbot.models.user :only [get-user-handlers]]])
 
 
 ;; ## Service functions
@@ -90,7 +90,7 @@
     (check-command-word
      #"[hH]ello[\.\s\?\!]*|[Hh]i[\.\s\?\!]*|[Gg]reetings[\.\s\?\!]*|[Hh]ail[\.\s\?\!]*"
      message))
-  (generate-answer [self message] "Hello!"))
+  (generate-answer [self _] "Hello!"))
 
 ;; ## HTTP Status Code Reply
 
@@ -196,8 +196,7 @@
 ;; ## Currently enabled reply plugins
 
 ;; List with all 'main' message handlers instances.
-(def handlers-list [(HiMessage.)
-                    (create-object-with-help
+(def handlers-list [(create-object-with-help
                       (HttpStatusCodeMessage. "httpsc")
                       "HTTP Status Code"
                       (str "prints a description of a given HTTP status code. "
@@ -217,11 +216,23 @@
                            "town near Novosibirsk, but for capital of Ukraine "
                            "simply \"Kyiv\" is enough)."))])
 
+(defn- generate-user-handlers
+  "Removes handlers which names aren't present in a handlers-string form a handlers-list."
+  [handlers-string handlers-list]
+  (if (nil? handlers-string)
+    handlers-list
+    (let [user-handlers
+          (set (map #(first (cs/split % #" \- "))
+                    (cs/split handlers-string #"; ")))
+          user-commands
+          (map #(second (cs/split % #" \- ")) (cs/split handlers-string #"; "))]
+      (map #(assoc %1 :command-word %2) (filter #(contains? user-handlers (:name (meta %))) handlers-list) user-commands))))
+
 ;; ## Help message generator
 
 (defn get-help-message
   "Generates help information for enabled plugins."
-  []
+  [handlers]
   (str "Please use one of those commands:\n"
        (cs/trim-newline
         (cs/join "\n\n"
@@ -231,41 +242,21 @@
                              (str (:command-word o)
                                   " <args> - "
                                   (meta-data :help)))))
-                  handlers-list)))))
-
-;; Basic handler which generates a help message. Used when no other
-;; handler could produce an answer.
-(defrecord HelpMessage []
-  MessageHandler
-  (processable? [self message] true)
-  (generate-answer [self message] (get-help-message)))
+                  handlers)))))
 
 ;; ## Actual answer generation
-
-;; TODO move this to different section and refactor
-;; TODO must accept not only plain strings, but also functions that
-;; produce strings
-(defn record-factory [recordname]
-  "Creates a factory for a given Record type."
-  (let [recordclass ^Class (resolve (symbol recordname))
-        max-arg-count (apply max (map #(count (.getParameterTypes %))
-                                      (.getConstructors recordclass)))
-        args (map #(symbol (str "x" %)) (range (- max-arg-count 2)))]
-    (eval `(fn [~@args] (~(symbol (str "->" recordname)) ~@args)))))
-
-(defn- generate-handlers-list-from-string
-  "Transforms string with user's handlers' names to actual handlers list."
-  [handlers-string]
-  (let [handlers (cs/split handlers-string #"; ")]
-    ()))
 
 (defn generate-answer
   "Generates answer to an incoming message using existing message handlers. If none of the 'main' handlers could produce a message then help is generated."
   [message]
-  (let [applicable-handlers (filter #(processable? % message) handlers-list)
-        answers (map #(generate-answer % message) applicable-handlers)]
+  (let [user-handlers
+        (conj (generate-user-handlers (get-user-handlers) handlers-list)
+              (HiMessage.))
+        applicable-handlers (filter #(processable? % message) user-handlers)
+        answers (map #(generate-answer % message) applicable-handlers)
+        ]
     (if (empty? answers)
-      ;(generate-answer (HelpMessage.) message)
-      (generate-handlers-list-from-string (get-users-handlers))
+      (apply  user-handlers)
+      ;(get-help-message user-handlers)
       (apply str answers))))
 

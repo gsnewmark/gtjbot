@@ -24,7 +24,7 @@ in a DataStore earlier."
   (let [id (get-user-id)]
     (or (ds/retrieve GoogleUser id)
         (ds/save! (GoogleUser. id (current-user) (get-user-email)
-                               "HttpStatusCodeMessage httpsc; CurrentWeatherMessage weather")))))
+                               "Current Weather - weather")))))
 
 (defn get-gusers
   "Retrieves a list of all GoogleUsers saved in a DS."
@@ -49,9 +49,9 @@ GoogleUsers in a DS."
             false
             true)))
 
-(defn get-users-handlers
+(defn get-user-handlers
   "Returns list of handlers user wishes to use for a given user."
-  ([] (get-users-handlers (current-user)))
+  ([] (get-user-handlers (current-user)))
   ([user] (let [user (ds/retrieve GoogleUser (get-user-id user))]
             (if (nil? user)
               nil

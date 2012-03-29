@@ -2558,7 +2558,7 @@ in a DataStore earlier.</p>
   (let [id (get-user-id)]
     (or (ds/retrieve GoogleUser id)
         (ds/save! (GoogleUser. id (current-user) (get-user-email)
-                               &quot;HttpStatusCodeMessage httpsc; CurrentWeatherMessage weather&quot;)))))</pre></tr><tr><td class="docs"><p>Retrieves a list of all GoogleUsers saved in a DS.</p>
+                               &quot;Current Weather - weather&quot;)))))</pre></tr><tr><td class="docs"><p>Retrieves a list of all GoogleUsers saved in a DS.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn get-gusers
   [] (ds/query :kind GoogleUser))</pre></tr><tr><td class="docs"><p>Retrieves a list of all Users (User class instances) saved as a
 GoogleUsers in a DS.</p>
@@ -2574,8 +2574,8 @@ GoogleUsers in a DS.</p>
   ([mail] (if (empty? (ds/query :kind GoogleUser :filter (= :mail mail)))
             false
             true)))</pre></tr><tr><td class="docs"><p>Returns list of handlers user wishes to use for a given user.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn get-users-handlers
-  ([] (get-users-handlers (current-user)))
+</td><td class="codes" /><pre class="brush: clojure">(defn get-user-handlers
+  ([] (get-user-handlers (current-user)))
   ([user] (let [user (ds/retrieve GoogleUser (get-user-id user))]
             (if (nil? user)
               nil
@@ -2590,7 +2590,7 @@ message it will send a help message to user.</p>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.utils.parser
   [:require [clojure.string :as cs]]
   [:use [appengine-magic.services.url-fetch :only [fetch]]
-        [gtjbot.models.user :only [get-users-handlers]]])</pre></tr><tr><td class="docs"><h2>Service functions</h2>
+        [gtjbot.models.user :only [get-user-handlers]]])</pre></tr><tr><td class="docs"><h2>Service functions</h2>
 </td><td class="codes" /></tr><tr><td class="docs"><p>Adds meta-data name and help to an object.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defmacro create-object-with-help [obj name help]
   `(with-meta ~obj {:name ~name :help ~help}))</pre></tr><tr><td class="docs"><p>Retrieves 'command' word from the incoming message. 'Command' is a first word in a message.</p>
@@ -2647,7 +2647,7 @@ Protocol defines basic handler interface.</p>
     (check-command-word
      #&quot;[hH]ello[\.\s\?\!]*|[Hh]i[\.\s\?\!]*|[Gg]reetings[\.\s\?\!]*|[Hh]ail[\.\s\?\!]*&quot;
      message))
-  (generate-answer [self message] &quot;Hello!&quot;))</pre></tr><tr><td class="docs"><h2>HTTP Status Code Reply</h2>
+  (generate-answer [self _] &quot;Hello!&quot;))</pre></tr><tr><td class="docs"><h2>HTTP Status Code Reply</h2>
 </td><td class="codes" /></tr><tr><td class="docs"><p>Helper functions for HttpStatusCodeMessage</p>
 </td><td class="codes" /></tr><tr><td class="docs"><p>Retrieves page with HTTP status codes definitions.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn- get-http-status-code-definitions
@@ -2726,8 +2726,7 @@ Protocol defines basic handler interface.</p>
   (generate-answer [self message]
     (generate-answer-using-function message get-weather-for-city)))</pre></tr><tr><td class="docs"><h2>Currently enabled reply plugins</h2>
 </td><td class="codes" /></tr><tr><td class="docs"><p>List with all 'main' message handlers instances.</p>
-</td><td class="codes" /><pre class="brush: clojure">(def handlers-list [(HiMessage.)
-                    (create-object-with-help
+</td><td class="codes" /><pre class="brush: clojure">(def handlers-list [(create-object-with-help
                       (HttpStatusCodeMessage. &quot;httpsc&quot;)
                       &quot;HTTP Status Code&quot;
                       (str &quot;prints a description of a given HTTP status code. &quot;
@@ -2745,10 +2744,20 @@ Protocol defines basic handler interface.</p>
                            &quot;accurate results (e.g., &quot;
                            &quot;\&quot;kiyevka russia novosibirsk oblast\&quot; for small &quot;
                            &quot;town near Novosibirsk, but for capital of Ukraine &quot;
-                           &quot;simply \&quot;Kyiv\&quot; is enough).&quot;))])</pre></tr><tr><td class="docs"><h2>Help message generator</h2>
+                           &quot;simply \&quot;Kyiv\&quot; is enough).&quot;))])</pre></tr><tr><td class="docs"><p>Removes handlers which names aren't present in a handlers-string form a handlers-list.</p>
+</td><td class="codes" /><pre class="brush: clojure">(defn- generate-user-handlers
+  [handlers-string handlers-list]
+  (if (nil? handlers-string)
+    handlers-list
+    (let [user-handlers
+          (set (map #(first (cs/split % #&quot; \- &quot;))
+                    (cs/split handlers-string #&quot;; &quot;)))
+          user-commands
+          (map #(second (cs/split % #&quot; \- &quot;)) (cs/split handlers-string #&quot;; &quot;))]
+      (map #(assoc %1 :command-word %2) (filter #(contains? user-handlers (:name (meta %))) handlers-list) user-commands))))</pre></tr><tr><td class="docs"><h2>Help message generator</h2>
 </td><td class="codes" /></tr><tr><td class="docs"><p>Generates help information for enabled plugins.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn get-help-message
-  []
+  [handlers]
   (str &quot;Please use one of those commands:\n&quot;
        (cs/trim-newline
         (cs/join &quot;\n\n&quot;
@@ -2758,25 +2767,19 @@ Protocol defines basic handler interface.</p>
                              (str (:command-word o)
                                   &quot; &lt;args&gt; - &quot;
                                   (meta-data :help)))))
-                  handlers-list)))))</pre></tr><tr><td class="docs"><p>Basic handler which generates a help message. Used when no other
-handler could produce an answer.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defrecord HelpMessage []
-  MessageHandler
-  (processable? [self message] true)
-  (generate-answer [self message] (get-help-message)))</pre></tr><tr><td class="docs"><p>Transforms string with user's handlers' names to actual handlers list.</p>
-
-<h2>Actual answer generation</h2>
-</td><td class="codes" /><pre class="brush: clojure">(defn- generate-handlers-list-from-string
-  [handlers-string]
-  (let [handlers (cs/split handlers-string #&quot;; &quot;)]
-    (cs/join &quot; ~ &quot; handlers)))</pre></tr><tr><td class="docs"><p>Generates answer to an incoming message using existing message handlers. If none of the 'main' handlers could produce a message then help is generated.</p>
+                  handlers)))))</pre></tr><tr><td class="docs"><h2>Actual answer generation</h2>
+</td><td class="codes" /></tr><tr><td class="docs"><p>Generates answer to an incoming message using existing message handlers. If none of the 'main' handlers could produce a message then help is generated.</p>
 </td><td class="codes" /><pre class="brush: clojure">(defn generate-answer
   [message]
-  (let [applicable-handlers (filter #(processable? % message) handlers-list)
-        answers (map #(generate-answer % message) applicable-handlers)]
+  (let [user-handlers
+        (conj (generate-user-handlers (get-user-handlers) handlers-list)
+              (HiMessage.))
+        applicable-handlers (filter #(processable? % message) user-handlers)
+        answers (map #(generate-answer % message) applicable-handlers)
+        ]
     (if (empty? answers)
-      ;(generate-answer (HelpMessage.) message)
-      (generate-handlers-list-from-string (get-users-handlers))
+      (apply  user-handlers)
+      ;(get-help-message user-handlers)
       (apply str answers))))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.user" name="gtjbot.utils.user"><h1 class="project-name">gtjbot.utils.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Wrappers around Google's User java class</h2>
 </td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.utils.user
   (:use [appengine-magic.services.user :only [current-user]]))</pre></tr><tr><td class="docs"><p>Returns ID of a specified user (or current user if no argument
