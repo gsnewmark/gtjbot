@@ -5,6 +5,9 @@
   (:use [appengine-magic.services.user :only [current-user]]
         [gtjbot.utils.user :only [get-user-id get-user-email]]))
 
+;; String with all existing handlers (default setting for new users).
+(def default-handlers (str "HTTP Status Code - httpsc; "
+                           "Current Weather - weather"))
 
 ;; Message sent to unsubscribed users who try to use a bot.
 (def message-to-unsubscribed (str "You need to subscribe to an app in order to use this"
@@ -24,8 +27,7 @@ in a DataStore earlier."
   (let [id (get-user-id)]
     (or (ds/retrieve GoogleUser id)
         (ds/save! (GoogleUser. id (current-user) (get-user-email)
-                               (str "HTTP Status Code - httpsc; "
-                                    "Current Weather - weather"))))))
+                               default-handlers)))))
 
 (defn get-gusers
   "Retrieves a list of all GoogleUsers saved in a DS."
@@ -57,3 +59,11 @@ GoogleUsers in a DS."
             (if (nil? user)
               nil
               (:handlers user)))))
+
+(defn update-user-handlers
+  "Saves a given string as a user's new handlers."
+  ([handlers-string] (update-user-handlers (current-user) handlers-string))
+  ([user handlers-string] (let [user (ds/retrieve GoogleUser (get-user-id user))]
+                            (if (nil? user)
+                              nil
+                              (ds/save! (assoc user :handlers handlers-string))))))

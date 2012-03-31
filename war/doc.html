@@ -34,7 +34,7 @@
   height: auto !important;
   left: auto !important;
   line-height: 1.1em !important;
-  margin: 0 !important;
+/*  margin: 0 !important; */
   outline: 0 !important;
   overflow: visible !important;
   padding: 0 !important;
@@ -226,10 +226,6 @@
   color: black !important;
 }
 </style><style type="text/css">.syntaxhighlighter{overflow:hidden !important;}</style><style type="text/css">/**
- * SyntaxHighlighter
- * http://alexgorbatchev.com/SyntaxHighlighter
- *
- * SyntaxHighlighter is donationware. If you are using it, please donate.
  * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
  *
  * @version
@@ -339,9 +335,6 @@
   color: red !important;
 }
 
-.syntaxhighlighter .keyword {
-  font-weight: bold !important;
-}
 .syntaxhighlighter .xml .keyword {
   color: #3f7f7f !important;
   font-weight: normal !important;
@@ -353,7 +346,43 @@
   font-style: italic !important;
   color: #2a00ff !important;
 }
-</style><style type="text/css">html{margin:0;padding:0;}h1{margin:0;padding:0;}h2{margin:0;padding:0;}h3{margin:0;padding:0;}h4{margin:0;padding:0;}a{color:#261A3B;}a:visited{color:#261A3B;}</style><style type="text/css">.header{margin-top:30px;}h1.project-name{font-size:34px;display:inline;}h2.project-version{font-size:18px;margin-top:0;display:inline;margin-left:10px;}.toc-link{font-size:12px;margin-left:10px;color:#252519;text-decoration:none;}.toc-link:hover{color:#5050A6;}.toc h1{font-size:34px;margin:0;}.docs-header{border-bottom:dotted #aaa 1px;padding-bottom:10px;margin-bottom:25px;}.toc h1{font-size:24px;}.toc{border-bottom:solid #bbb 1px;margin-bottom:40px;}.toc ul{margin-left:20px;padding-left:0px;padding-top:0;margin-top:0;}.toc li{list-style-type:none;padding-left:0;}.dependencies{}.dependencies table{font-size:16px;width:99.99%;border:none;margin-left:20px;}.dependencies td{padding-right:20px;;white-space:nowrap;}.dependencies .dotted{width:99%;}.dependencies .dotted hr{margin-bottom:-6px;noshade:noshade;border-top:none;color:transparent;border-left:none;border-bottom:dotted #bbb 1px;border-right:none;background-color:transparent;height:0;}.dependencies .dep-version{text-align:right;}.plugins ul{margin-left:20px;padding-left:0px;padding-top:0;margin-top:0;}.plugins li{list-style-type:none;padding-left:0;}.header p{margin-left:20px;}</style><style type="text/css">#floating-toc{position:fixed;top:10px;right:20px;height:20px;overflow:hidden;text-align:right;}#floating-toc li{list-style-type:none;margin:0;padding:0;}</style><style type="text/css">body{margin:0;padding:0;font-family:'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;;font-size:16px;color:#252519;}h1{font-size:20px;margin-top:0;}a.anchor{text-decoration:none;color:#252519;}a.anchor:hover{color:#5050A6;}table{border-spacing:0;border-bottom:solid #ddd 1px;;margin-bottom:10px;}code{display:inline;}p{margin-top:8px;}tr{margin:0px;padding:0px;}td.docs{width:410px;max-width:410px;vertical-align:top;margin:0px;padding-left:55px;padding-right:20px;border:none;}td.docs pre{font-size:12px;overflow:hidden;}td.codes{border:none;margin:0px;padding-left:20px;width:55%;border-left:solid #E5E5EE 1px;font-size:10pt;vertical-align:top;overflow:hidden;background-color:#F5F5FF;}td.spacer{padding-bottom:40px;}pre code{display:block;padding:4px;}code{background-color:ghostWhite;border:solid #DEDEDE 1px;padding-left:3px;padding-right:3px;font-size:14px;}.syntaxhighlighter code{font-size:13px;}.footer{text-align:center;}</style><script type="text/javascript">/*!
+
+.clojure.syntaxhighlighter .invalid { 
+   background-color: #FAA !important;
+}
+
+.clojure.syntaxhighlighter .quoted {      
+    font-style: italic !important;
+}
+
+.syntaxhighlighter .clojure.variable,
+.syntaxhighlighter .clojure.symbol,
+.syntaxhighlighter .clojure.value
+{
+    color: #006060 !important;
+}
+
+.syntaxhighlighter .clojure.string {
+    color: #55B !important;
+}
+
+.syntaxhighlighter .clojure.functions {
+    color: black !important;
+}
+
+.syntaxhighlighter .clojure.color1 {
+    color: #666 !important;
+}
+
+.syntaxhighlighter .clojure.color3 {
+    color: #900 !important;
+}
+
+.syntaxhighlighter .clojure.constants {
+    color: #1A734D !important;
+}
+
+</style><style type="text/css">html{margin:0;padding:0;}h1{margin:0;padding:0;}h2{margin:0;padding:0;}h3{margin:0;padding:0;}h4{margin:0;padding:0;}a{color:#261A3B;}a:visited{color:#261A3B;}</style><style type="text/css">.header{margin-top:30px;}h1.project-name{display:inline;font-size:34px;}h2.project-version{display:inline;margin-left:10px;margin-top:0;font-size:18px;}.toc-link{margin-left:10px;color:#252519;font-size:12px;text-decoration:none;}.toc-link:hover{color:#5050A6;}.toc h1{margin:0;font-size:34px;}.docs-header{margin-bottom:25px;padding-bottom:10px;border-bottom:dotted #aaa 1px;}.toc h1{font-size:24px;}.toc{margin-bottom:40px;border-bottom:solid #bbb 1px;}.toc ul{padding-left:0px;margin-left:20px;margin-top:0;padding-top:0;}.toc li{padding-left:0;list-style-type:none;}.dependencies{}.dependencies table{border:none;width:99.99%;margin-left:20px;font-size:16px;}.dependencies td{padding-right:20px;;white-space:nowrap;}.dependencies .dotted{width:99%;}.dependencies .dotted hr{margin-bottom:-6px;noshade:noshade;border-top:none;color:transparent;border-left:none;border-bottom:dotted #bbb 1px;border-right:none;background-color:transparent;height:0;}.dependencies .dep-version{text-align:right;}.plugins ul{padding-left:0px;margin-left:20px;margin-top:0;padding-top:0;}.plugins li{padding-left:0;list-style-type:none;}.header p{margin-left:20px;}</style><style type="text/css">#floating-toc{position:fixed;text-align:right;overflow:hidden;top:10px;right:20px;height:20px;}#floating-toc li{margin:0;padding:0;list-style-type:none;}</style><style type="text/css">body{margin:0;padding:0;color:#252519;font-size:16px;background-color:#F5F5FF;font-family:'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;;}h1{margin-top:0;font-size:20px;}a.anchor{color:#252519;text-decoration:none;}a.anchor:hover{color:#5050A6;}table{margin-bottom:10px;border-bottom:solid #ddd 1px;;border-spacing:0;}code{display:inline;}p{margin-top:8px;}tr{margin:0px;padding:0px;}td.docs{border:none;margin:0px;padding-left:55px;width:410px;padding-right:20px;vertical-align:top;max-width:410px;background-color:#FFF;}td.docs pre{font-size:12px;overflow:hidden;}td.codes{border:none;margin:0px;padding-left:20px;width:55%;border-left:solid #E5E5EE 1px;font-size:10pt;vertical-align:top;overflow:hidden;background-color:#F5F5FF;}td.spacer{padding-bottom:40px;}pre code{display:block;padding:4px;}code{border:solid #DEDEDE 1px;padding-left:3px;padding-right:3px;font-size:14px;background-color:ghostWhite;}.syntaxhighlighter code{font-size:13px;}.footer{text-align:center;}</style><script type="text/javascript">/*!
  * jQuery JavaScript Library v1.4.4
  * http://jquery.com/
  *
@@ -2242,345 +2271,825 @@ return sh;
 
 // CommonJS
 typeof(exports) != 'undefined' ? exports['SyntaxHighlighter'] = SyntaxHighlighter : null;
-</script><script type="text/javascript">/*!
- * Copyright ¬© 2010 Sattvik Software & Technology Resources, Ltd. Co.
- * All rights reserved.
- *
- * sh-clojure may be used under the terms of either the GNU Lesser General Public
- * License (LGPL) or the Eclipse Public License (EPL).  As a recipient of
- * sh-clojure, you may choose which license to receive the code under.  See the
- * LICENSE file distributed with sh-clojure for details.
- *
- * Written by Daniel Solano G√≥mez
- *
- * Version 0.9.1 - 10 Apr 2010
- */
+</script><script type="text/javascript">// (inc clojure-brush) ;; an improved SyntaxHighlighter brush for clojure
+//
+// Copyright (C) 2011 Andrew Brehaut
+//
+// Distributed under the Eclipse Public License, the same as Clojure.
+//
+// https://github.com/brehaut/inc-clojure-brush
+//
+// Written by Andrew Brehaut
+// V0.9.1, November 2011
 
-function ClojureRegExp(pattern) {
-	pattern = pattern + '(?=[[\\]{}(),\\s])';
-	this.regex = new RegExp(pattern, 'g');
-	this.lookBehind = /[\[\]{}(),\s]$/;
-}
+if (typeof net == "undefined") net = {};
+if (!(net.brehaut)) net.brehaut = {};
 
-ClojureRegExp.prototype.exec = function (str) {
-	var match, leftContext;
-	while (match=this.regex.exec(str)) {
-		leftContext = str.substring(0, match.index);
-		if (this.lookBehind.test(leftContext)) {
-			return match;
-		}
-		else {
-			this.regex.lastIndex = match.index + 1;
-		}
-	}
-	return null;
-};
+net.brehaut.ClojureTools = (function (SH) {
+  "use strict";
+  // utiliies
+  if (!Object.create) Object.create = function object(o) {
+    function F() {};
+    F.prototype = o;  
+    return new F();
+  };
+        
+  // data
+  
+  function Token(value, index, tag, length) {
+    this.value = value;
+    this.index = index;
+    this.length = length || value.length;
+    this.tag = tag;
+    this.secondary_tags = {};
+  }
+  
+  // null_token exists so that LispNodes that have not had a closing tag attached
+  // can have a dummy token to simplify annotation
+  var null_token = new Token("", -1, "null", -1);
+  
+  /* LispNodes are aggregate nodes for sexpressions. 
+   *
+   */
+  function LispNode(tag, children, opening) {
+    this.tag = tag;            // current metadata for syntax inference
+    this.parent = null;        // the parent expression
+    this.list = children;      // all the child forms in order
+    this.opening = opening;    // the token that opens this form.
+    this.closing = null_token; // the token that closes this form.
+    this.meta = null;          // metadata nodes will be attached here if they are found
+  }
 
-SyntaxHighlighter.brushes.Clojure = function () {
-	var special_forms =
-			'. def do fn if let loop monitor-enter monitor-exit new quote recur set! ' +
-			'throw try var',
-	    clojure_core =
-			'* *1 *2 *3 *agent* *allow-unresolved-vars* *assert* *clojure-version* ' +
-			'*command-line-args* *compile-files* *compile-path* *e *err* *file* ' +
-			'*flush-on-newline* *in* *macro-meta* *math-context* *ns* *out* ' +
-			'*print-dup* *print-length* *print-level* *print-meta* *print-readably* ' +
-			'*read-eval* *source-path* *use-context-classloader* ' +
-			'*warn-on-reflection* + - -> -&gt; ->> -&gt;&gt; .. / < &lt; <= &lt;= = ' +
-			'== > &gt; >= &gt;= accessor aclone ' +
-			'add-classpath add-watch agent agent-errors aget alength alias all-ns ' +
-			'alter alter-meta! alter-var-root amap ancestors and apply areduce ' +
-			'array-map aset aset-boolean aset-byte aset-char aset-double aset-float ' +
-			'aset-int aset-long aset-short assert assoc assoc! assoc-in associative? ' +
-			'atom await await-for await1 bases bean bigdec bigint binding bit-and ' +
-			'bit-and-not bit-clear bit-flip bit-not bit-or bit-set bit-shift-left ' +
-			'bit-shift-right bit-test bit-xor boolean boolean-array booleans ' +
-			'bound-fn bound-fn* butlast byte byte-array bytes cast char char-array ' +
-			'char-escape-string char-name-string char? chars chunk chunk-append ' +
-			'chunk-buffer chunk-cons chunk-first chunk-next chunk-rest chunked-seq? ' +
-			'class class? clear-agent-errors clojure-version coll? comment commute ' +
-			'comp comparator compare compare-and-set! compile complement concat cond ' +
-			'condp conj conj! cons constantly construct-proxy contains? count ' +
-			'counted? create-ns create-struct cycle dec decimal? declare definline ' +
-			'defmacro defmethod defmulti defn defn- defonce defstruct delay delay? ' +
-			'deliver deref derive descendants destructure disj disj! dissoc dissoc! ' +
-			'distinct distinct? doall doc dorun doseq dosync dotimes doto double ' +
-			'double-array doubles drop drop-last drop-while empty empty? ensure ' +
-			'enumeration-seq eval even? every? false? ffirst file-seq filter find ' +
-			'find-doc find-ns find-var first float float-array float? floats flush ' +
-			'fn fn? fnext for force format future future-call future-cancel ' +
-			'future-cancelled? future-done? future? gen-class gen-interface gensym ' +
-			'get get-in get-method get-proxy-class get-thread-bindings get-validator ' +
-			'hash hash-map hash-set identical? identity if-let if-not ifn? import ' +
-			'in-ns inc init-proxy instance? int int-array integer? interleave intern ' +
-			'interpose into into-array ints io! isa? iterate iterator-seq juxt key ' +
-			'keys keyword keyword? last lazy-cat lazy-seq let letfn line-seq list ' +
-			'list* list? load load-file load-reader load-string loaded-libs locking ' +
-			'long long-array longs loop macroexpand macroexpand-1 make-array ' +
-			'make-hierarchy map map? mapcat max max-key memfn memoize merge ' +
-			'merge-with meta method-sig methods min min-key mod name namespace neg? ' +
-			'newline next nfirst nil? nnext not not-any? not-empty not-every? not= ' +
-			'	ns ns-aliases ns-imports ns-interns ns-map ns-name ns-publics ' +
-			'ns-refers ns-resolve ns-unalias ns-unmap nth nthnext num number? odd? ' +
-			'or parents partial partition pcalls peek persistent! pmap pop pop! ' +
-			'pop-thread-bindings pos? pr pr-str prefer-method prefers ' +
-			'primitives-classnames print print-ctor print-doc print-dup print-method ' +
-			'print-namespace-doc print-simple print-special-doc print-str printf ' +
-			'println println-str prn prn-str promise proxy proxy-call-with-super ' +
-			'proxy-mappings proxy-name proxy-super push-thread-bindings pvalues quot ' +
-			'rand rand-int range ratio? rational? rationalize re-find re-groups ' +
-			're-matcher re-matches re-pattern re-seq read read-line read-string ' +
-			'reduce ref ref-history-count ref-max-history ref-min-history ref-set ' +
-			'refer refer-clojure release-pending-sends rem remove remove-method ' +
-			'remove-ns remove-watch repeat repeatedly replace replicate require ' +
-			'reset! reset-meta! resolve rest resultset-seq reverse reversible? rseq ' +
-			'rsubseq second select-keys send send-off seq seq? seque sequence ' +
-			'sequential? set set-validator! set? short short-array shorts ' +
-			'shutdown-agents slurp some sort sort-by sorted-map sorted-map-by ' +
-			'sorted-set sorted-set-by sorted? special-form-anchor special-symbol? ' +
-			'split-at split-with str stream? string? struct struct-map subs subseq ' +
-			'subvec supers swap! symbol symbol? sync syntax-symbol-anchor take ' +
-			'take-last take-nth take-while test the-ns time to-array to-array-2d ' +
-			'trampoline transient tree-seq true? type unchecked-add unchecked-dec ' +
-			'unchecked-divide unchecked-inc unchecked-multiply unchecked-negate ' +
-			'unchecked-remainder unchecked-subtract underive unquote ' +
-			'unquote-splicing update-in update-proxy use val vals var-get var-set ' +
-			'var? vary-meta vec vector vector? when when-first when-let when-not ' +
-			'while with-bindings with-bindings* with-in-str with-loading-context ' +
-			'with-local-vars with-meta with-open with-out-str with-precision xml-seq ' +
-			'zero? zipmap ';
+  var null_lispnode = new LispNode("null", [], null_token);
 
-	this.getKeywords = function (keywordStr) {
-		// quote special characters
-		keywordStr = keywordStr.replace(/[\-\[\]{}()*+?.\\\^$|,#]/g, "\\$&");
-		// trim whitespace and convert to alternatives
-		keywordStr = keywordStr.replace(/^\s+|\s+$/g, '').replace(/\s+/g, '|');
-		// create pattern
-		return '(?:' + keywordStr + ')';
-	};
+  
+  function PrefixNode(tag, token, attached_node) {
+    this.tag = tag;
+    this.token = token;
+    this.attached_node = attached_node;
+    this.parent = null;
+  }
 
-	this.regexList = [
-		// comments
-		{ regex: new RegExp(';.*$', 'gm'),
-			css: 'comments' },
-		// strings
-		{ regex: SyntaxHighlighter.regexLib.multiLineDoubleQuotedString,
-			css: 'string' },
-		// regular expressions
-		{ regex: /#"(?:\.|(\\\")|[^\""\n])*"/g,
-			css: 'string' },
-		// vectors
-		{ regex: /\[|\]/g,
-			css: 'keyword' },
-		// amperstands
-		{ regex: /&(amp;)?/g,
-			css: 'keyword' },
-		// sets and maps
-		{ regex: /#?\{|\}/g,
-			css: 'keyword' },
-		// metadata
-		{ regex: /#\^\{/g,
-			css: 'keyword' },
-		// anonymous fn syntactic sugar
-		{ regex: /#\(|%/g,
-			css: 'keyword' },
-		// deref reader macro
-		{ regex: /@/g,
-			css: 'keyword' },
-		// (un)quoted sexprs
-		{ regex: /(['`]|~@?)[\[({]/g,
-			css: 'keyword' },
-		// lists
-		{ regex: /\(|\)/g,
-			css: 'keyword' },
-		// character literals
-		{ regex: /\\.\b/g,
-			css: 'value' },
-		// hexadecimal literals
-		{ regex: /[+\-]?\b0x[0-9A-F]+\b/gi,
-			css: 'value' },
-		// integer/octal/float/bigdecimal literals
-		{ regex: new ClojureRegExp("[+-]?\\b\\d+(\\.\\d*)?([eE][+-]?\\d+|M)?\\b"),
-			css: 'value' },
-		{ regex: /^[+\-]?\b\d+(\.\d*)?([eE][+\-]?\d+|M)?\b/g,
-			css: 'value' },
-		// booleans+nil
-		{ regex: /\b(true|false|nil)\b/g,
-			css: 'value' },
-		// (un)quoted symbols
-		{ regex: /(`|#?'|~@?)[\w-.A-Za-z0-9_&lt;&gt;\-]+/g,
-			css: 'color1' },
-		// keywords
-		{ regex: /:[A-Za-z0-9_\-]+/g,
-			css: 'constants' },
-		// special forms
-		{ regex: new ClojureRegExp(this.getKeywords(special_forms)),
-			css: 'preprocessor' },
-		// type hints
-		{ regex: /\#\^[A-Za-z]\w*/g,
-			css: 'preprocessor' },
-		// clojure.core
-		{ regex: new ClojureRegExp(this.getKeywords(clojure_core)),
-			css: 'functions' },
-                { regex: /[A-Za-z0-9_&lt;&gt;\-]+/g,  css: 'plain'}
-	];
+  
+  
+  // tokenize
 
-	this.forHtmlScript(SyntaxHighlighter.regexLib.scriptScriptTags);
-};
-
-SyntaxHighlighter.brushes.Clojure.prototype = new SyntaxHighlighter.Highlighter();
-SyntaxHighlighter.brushes.Clojure.aliases   = ['clojure', 'Clojure', 'clj'];
-
-// vim: ts=2 sw=2 noet
-</script><script type="text/javascript">
-// hackity-hack
-
-$(document).ready(function() {
-    var ft = $("#floating-toc")
-    var ul = ft.find('ul')
-    var lis = ft.find('li')
-
-    ul.css('maring', '0px')
-
-    var liHeight = $(lis.get(0)).height()
-
-    ft.css('height', (liHeight) + 'px')
-
-
-    showNs = function(ns) {
-        //this is killing performance, lookup table.
-        //var el = $("[id='floating-toc_" + ns + "']")
-        //var index = lis.index(el)
-
-        var index = 0
-
-        for(i in nsPositions.nss) {
-            if(ns == nsPositions.nss[i]) index = i
-        }
-
-        console.log(index)
-
-        if(index == lastNsIndex) return;
-
-        lastNsIndex = index
-
-
-        ul.animate({marginTop: (-1 * liHeight * index) + 'px'},
-               300)
-        //        ul.css('margin-top', (-1 * liHeight * index) + 'px')
-
-    }
-
-    var calcNsPositions = function() {
-        var nss = []
-        var anchors = []
-        var positions = []
-        $.each(lis, function(i, el) {
-            var ns = $(el).attr('id').split('_')[1]
-            nss.push(ns)
-            var a = $("a[name='"+ns+"']")
-            anchors.push(a)
-            positions.push(a.offset().top)
-            console.log(a.offset().top)
-        });
-
-        return {nss: nss, positions: positions}
-    }
-
-    var nsPositions = calcNsPositions()
-
-    console.log(nsPositions)
-
-    var lastNsIndex = -1
-
-    var $window = $(window)
-
-    var currentSection = function(nsp) {
-
-        var ps = nsp.positions
-        var nss = nsp.nss
-        var scroll = $window.scrollTop() + 300
-        var nsIndex = -1
-        for(var i in ps) {
-            var p = ps[i]
-            if(p >= scroll) {
-                nsIndex = i-1
-                break;
-            }
+  function tokenize(code) {
+    var tokens = [];
+    var tn = 0;
+    
+    var zero = "0".charCodeAt(0);
+    var nine = "9".charCodeAt(0); 
+    var lower_a = "a".charCodeAt(0);
+    var lower_f = "f".charCodeAt(0);    
+    var upper_a = "A".charCodeAt(0);
+    var upper_f = "F".charCodeAt(0);
+    
+    var dispatch = false; // have we just seen a # character?
+    
+    // i tracks the start of the current window
+    // extent is the window for slicing
+    
+    for (var i = 0, 
+             extent = i, 
+             j = code.length; 
+             i < j && extent <= j;) {          
                 
+      var c = code[i];
+      
+      // we care about capturing the whole token when dispatch is used, so back up the
+      // starting index by 1
+      if (dispatch) i--; 
+      
+      switch (c) {
+        // dispatch alters the value of the next thing read
+        case "#":
+          dispatch = true;
+          i++;
+          extent++;
+          continue;
+          
+        case " ":    // ignore whitespace
+        case "\t":
+        case "\n":
+        case "\r":
+        case ",":   
+          extent++
+          break; 
+          
+        // simple terms
+        case "^":
+        case "`":
+        case ")":
+        case "[":
+        case "]":
+        case "}":
+        case "@":
+          tokens[tn++] = new Token(c, i, c, ++extent - i);
+          break;
+        
+        case "'":
+          tokens[tn++] = new Token(code.slice(i, ++extent), i, dispatch ? "#'" : "'", extent - i);
+          break
+        
+        case "(":
+          tokens[tn++] = new Token(code.slice(i, ++extent), i, "(", extent - i);
+          break;          
+          
+        case "{":
+          tokens[tn++] = new Token(code.slice(i, ++extent), i, dispatch ? "#{" : "{", extent - i);
+          break;  
+        
+        case "\\":
+          if (code.slice(i + 1, i + 8) === "newline") {
+            tokens[tn++] = new Token("\\newline", i, "value", 8);
+            extent = i + 9; 
+          }
+          else if (code.slice(i + 1, i + 6) === "space") {
+            tokens[tn++] = new Token("\\space", i, "value", 6);
+            extent = i + 6;
+          }
+          else if (code.slice(i + 1, i + 4) === "tab") {
+            tokens[tn++] = new Token("\\tab", i, "value", 4);
+            extent = i + 5;
+          } // work around fun bug with &,>,< in character literals
+          else if (code.slice(i + 1, i + 6) === "&amp;") {
+            tokens[tn++] = new Token("\\&amp;", i, "value", 6);
+            extent = i + 6; 
+          }
+          else if (code.slice(i + 1, i + 5) === "&lt;") {
+            tokens[tn++] = new Token("\\&lt;", i, "value", 5);
+            extent = i + 5;
+          }
+          else if (code.slice(i + 1, i + 5) === "&gt;") {
+            tokens[tn++] = new Token("\\&gt;", i, "value", 5);
+            extent = i + 5;
+          }
+          
+          else {
+            extent += 2;
+            tokens[tn++] = new Token(code.slice(i, extent), i, "value", 2);
+          }
+          break;
+        
+        case "~": // slice
+          if (code[i + 1] === "@") {
+            extent += 2;
+            tokens[tn++] = new Token(code.slice(i, extent), i, "splice", 2);
+          }
+          else {
+            tokens[tn++] = new Token(code.slice(i, ++extent), i, "unquote", 2);
+          }
+          break;
+        
+        // complicated terms
+        case "\"": // strings and regexps
+          for (extent++; extent <= j; extent++) {
+            if (code[extent] === "\\") extent++;
+            else if (code[extent] === "\"") break;
+          }
+          tokens[tn++] = new Token(code.slice(i, ++extent), i, dispatch ? "regexp" : "string", extent - i);       
+          break;
+          
+        case ";":
+          for (; extent <= j && code[extent] !== "\n" && code[extent] !== "\r"; extent++);
+          tokens[tn++] = new Token(code.slice(i, ++extent), i, "comments", extent - i);   
+          break;
+        
+        case "+": // numbers; fall through to symbol for + and - not prefixing a number
+        case "-":
+        case "0":
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+        case "6":
+        case "7":
+        case "8":
+        case "9":
+        // todo: exponents, hex
+        // http://my.safaribooksonline.com/9781449310387/14?reader=pf&readerfullscreen=&readerleftmenu=1
+          var c2 = code.charCodeAt(i + 1);
+          if (((c === "+" || c === "-") && (c2 >= zero && c2 <= nine)) // prefixes
+              || (c !== "+" && c !== "-")) {
+            if (c === "+" || c === "-") extent++; 
+            for (; extent <= j; extent++) {
+              var charCode = code.charCodeAt(extent);
+              if (charCode < zero || charCode > nine) break;
+            }
+            
+            c = code[extent];
+            c2 = code.charCodeAt(extent + 1);
+            if ((c === "r" || c === "R" || c === "/" || c === ".") // interstitial characters
+                && (c2 >= zero && c2 <= nine)) {
+              for (extent++; extent <= j; extent++) {
+                var charCode = code.charCodeAt(extent);
+                if (charCode < zero || charCode > nine) break;
+              }
+            }
+            
+            c = code[extent];
+            c2 = code.charCodeAt(extent + 1);
+            if ((c === "x" || c === "X") && 
+                ((c2 >= zero && c2 <= nine) 
+                 || (c2 >= lower_a && c2 <= lower_f)
+                 || (c2 >= upper_a && c2 <= upper_f))) {
+              for (extent++; extent <= j; extent++) {
+                var charCode = code.charCodeAt(extent);
+                if (((charCode >= zero && charCode <= nine) 
+                    || (charCode >= lower_a && charCode <= lower_f)
+                    || (charCode >= upper_a && charCode <= upper_f))) continue;
+                break;
+              }
+            }
+            
+            c = code[extent];
+            c2 = code.charCodeAt(extent + 1);
+            if ((c === "e" || c === "E") 
+                && (c2 >= zero && c2 <= nine)) {
+              for (extent++; extent <= j; extent++) {
+                var charCode = code.charCodeAt(extent);
+                if (charCode < zero || charCode > nine) break;
+              }
+            }
+            
+            c = code[extent];
+            if (c === "N" || c === "M") extent++;
+
+            tokens[tn++] = new Token(code.slice(i, extent), i, "value", extent - i);
+            break;
+          }
+
+        case "_":
+          if (dispatch && c === "_") {
+            tokens[tn++] = new Token(code.slice(i, ++extent), i, "skip", extent - i);
+            break;
+          } // if not a skip, fall through to symbols
+        
+        // Allow just about any other symbol as a symbol. This is far more permissive than 
+        // clojure actually allows, but should catch any weirdo crap that accidentally gets
+        // into the code.
+        default: 
+          for (extent++; extent <= j; extent++) {
+            switch (code[extent]) {
+              case " ":
+              case "\t":
+              case "\n":
+              case "\r":
+              case "\\":
+              case ",":
+              case "{":
+              case "}":
+              case "(":
+              case ")":
+              case "[":
+              case "]":
+              case "^":
+              case "`":
+              case "@":   
+                break;
+              case ";":   
+                // theres a weird bug via syntax highligher that gives us escaped entities.
+                // need to watch out for these
+                if (code.slice(extent-3, extent+1) === "&lt;"
+                    ||code.slice(extent-3, extent+1) === "&gt;"
+                    ||code.slice(extent-4, extent+1) === "&amp;") {
+                  continue;
+                }
+                break;
+              default:
+                continue;
+            }
+            break;
+          }
+          
+          var value = code.slice(i, extent);
+          var tag = "symbol";
+          if (value[0] == ":") {
+            tag = "keyword";
+          }
+          else if (value === "true" || value === "false" || value === "nil") {
+            tag = "value";
+          }
+          tokens[tn++] = new Token(value, i, tag, extent - i);
+      }
+      
+      dispatch = false;
+      i = extent;
+    } 
+
+    return tokens;
+  }
+
+
+  function build_tree(tokens) {
+    var toplevel = {
+      list: [], 
+      tag: "toplevel", 
+      parent: null, 
+      opening: null,
+      closing: null,
+      depth: -1
+    };
+    
+    // loop variables hoisted out as semi globals to track position in token stream
+    var i = -1;
+    var j = tokens.length;
+    
+    function parse_one(t) {
+      // ignore special tokens and forms that dont belong in the tree
+      for (; t && (t.tag === "comments" || t.tag === "invalid" || t.tag == "skip") && i < j; ) {
+        if (t.tag === "skip") {
+          t.tag = "preprocessor";
+          annotate_comment(parse_one(tokens[++i]));
         }
-
-        if(nsIndex == -1 && scroll >= ps[0]) {
-            nsIndex = ps.length-1
-        }
-
-        if(nsIndex == -1) nsIndex = 0
-
-        return nss[nsIndex]
+        t = tokens[++i];
+      }
+      
+      if (!t) return {}; // hackity hack
+      
+      switch (t.tag) {
+        case "{":
+          return build_aggregate(new LispNode("map", [], t), "}");
+        case "(":
+          return build_aggregate(new LispNode("list", [], t), ")");
+        case "#{":
+          return build_aggregate(new LispNode("set", [], t), "}");
+        case "[":
+          return build_aggregate(new LispNode("vector", [], t), "]");
+        case "'":
+          return new PrefixNode("quote", t, parse_one(tokens[++i]));
+        case "#'":
+          return new PrefixNode("varquote", t, parse_one(tokens[++i]));  
+        case "@":
+          return new PrefixNode("deref", t, parse_one(tokens[++i]));  
+        case "`":
+          return new PrefixNode("quasiquote", t, parse_one(tokens[++i]));  
+        case "unquote":
+          return new PrefixNode("unquote", t, parse_one(tokens[++i]));
+        case "splice":
+          return new PrefixNode("splice", t, parse_one(tokens[++i]));  
+        case "^":
+          t.tag = "meta";
+          var meta = parse_one(tokens[++i]);
+          var next = parse_one(tokens[++i]);
+          next.meta = meta;
+          return next;
+      }
+      
+      return t;
     }
+    
+    // build_aggregate collects to ether sub forms for one aggregate for. 
+    function build_aggregate(current, expected_closing) {
+      for (i++; i < j; i++) {
+        var t = tokens[i];
 
-    $(window).scroll(function(e) {
-        showNs(currentSection(nsPositions))
-    })
+        if (t.tag === "}" || t.tag === ")" || t.tag === "]") {
+          if (t.tag !== expected_closing) t.tag = "invalid";
+          current.closing = t;
+          if (expected_closing) return current;
+        }
+        var node = parse_one(t);
 
-    ul.css('margin-top', '0px')
+        node.parent = current;
+        current.list[current.list.length] = node;
+      }
+      
+      return current;
+    }
+    
+    build_aggregate(toplevel, null);
+    
+    return toplevel;
+  }
 
-})
+  // annotation rules to apply to a form based on its head
+
+  var show_locals = true;  // HACK. would rather not use a (semi)-global.
+
+  /* annotate_comment is a special case annotation. 
+   * in addition to its role in styling specific forms, it is called by parse_one to
+   * ignore any forms skipped with #_
+   */ 
+  function annotate_comment(exp) {
+    exp.tag = "comments";
+
+    if (exp.list) {
+      exp.opening.tag = "comments";
+      exp.closing.tag = "comments";
+    
+      for (var i = 0; i < exp.list.length; i++) {
+        var child = exp.list[i];
+        if (child.list) {
+          annotate_comment(child);
+        }
+        if (child.attached_node) {
+          annotate_comment(child.attached_node);
+        }
+        else {
+          child.tag = "comments";
+        }
+      }
+    }
+  }
+
+  /* custom annotation rules are stored here */
+  var annotation_rules = {};
+  
+  // this function is exposed to allow ad hoc extension of the customisation rules
+  function register_annotation_rule(names, rule) {
+    for (var i = 0; i < names.length; i++) {
+      annotation_rules[names[i]] = rule;
+    }
+  }
+
+
+  function annotate_destructuring (exp, scope) {
+    if (exp.list) {
+      if (exp.tag === "vector") {
+        for (var i = 0; i < exp.list.length; i++) {
+          annotate_destructuring(exp.list[i], scope);
+        }
+      } 
+      else if (exp.tag === "map") {
+        for (var i = 0; i < exp.list.length; i += 2) {
+          var key = exp.list[i];
+          var val = exp.list[i + 1];
+          
+          if (key.tag === "keyword" && val.tag === "vector") {
+            for (var ii = 0, jj = val.list.length; ii < jj; ii++) {
+              if (val.list[ii].tag !== "symbol") continue;
+              val.list[ii].tag = "variable";
+              scope[val.list[ii].value] = true;
+            }
+          }
+          else {
+            annotate_destructuring(key, scope);
+            annotate_expressions(val, scope);
+          }
+        } 
+      }
+    } 
+    else if (exp.tag === "symbol" && (exp.value !== "&" && exp.value !== "&amp;")){
+      exp.tag = "variable";
+      scope[exp.value] = true;
+    }
+  }
+
+  function _annotate_binding_vector (exp, scope) {
+    if (exp.tag !== "vector") return;
+  
+    var bindings = exp.list;
+
+    if (bindings.length % 2 === 1) return;
+    
+    for (var i = 0; i < bindings.length; i += 2) {
+      annotate_destructuring(bindings[i], scope);
+      annotate_expressions(bindings[i + 1], scope);
+    }    
+  }
+
+  function annotate_binding (exp, scope) {
+    var bindings = exp.list[1];
+    if (!show_locals) return; // HACK
+
+    if (bindings) {
+      scope = Object.create(scope);
+      _annotate_binding_vector(bindings, scope);
+    }
+    for (var i = 2; i < exp.list.length; i++) {
+      annotate_expressions(exp.list[i], scope);
+    }
+  }
+  
+  function _annotate_function_body (exp, scope, start_idx) {
+    var argvec = exp.list[start_idx];
+    if (argvec.tag !== "vector") return;
+
+    scope = Object.create(scope);
+
+    for (var i = 0, j = argvec.list.length; i < j; i++) {
+      annotate_destructuring(argvec.list[i], scope);
+    }
+    
+    for (var i = start_idx, j = exp.list.length; i < j; i++) {
+      annotate_expressions(exp.list[i], scope);
+    }
+  }
+  
+  function annotate_function (exp, scope) {
+    for (var i = 1, j = exp.list.length; i < j; i++) {
+      var child = exp.list[i];
+      
+      if (child.tag === "vector") {
+        _annotate_function_body (exp, scope, i);
+        return;
+      }
+      else if (child.tag === "list") {
+        _annotate_function_body(child, scope, 0)
+      }
+    }
+  }
+  
+  function annotate_letfn (exp, scope) {
+    scope = Object.create(scope);
+    var bindings = exp.list[1];
+    
+    var fn;
+    for (var i = 0, j = bindings.list.length; i < j; i++) {
+      fn = bindings.list[i];
+      if (!fn.list[0]) continue;
+      fn.list[0].tag = "variable";
+      scope[fn.list[0].value] = true;
+    }
+    
+    for (i = 0, j = bindings.list.length; i < j; i++) {
+      var fn = bindings.list[i];
+      annotate_function(fn, scope);
+    }
+    
+    for (i = 2, j = exp.list.length; i < j; i++) {
+      annotate_expressions(exp.list[i], scope);
+    }
+  }
+
+  register_annotation_rule(
+    ["comment"],
+    annotate_comment
+  );
+  
+  register_annotation_rule(
+    ["let", "when-let", "if-let", "binding", "doseq", "for", "dotimes", "let*"],
+    annotate_binding
+  );
+  
+  register_annotation_rule(
+    ["defn", "defn-", "fn", "bound-fn", "defmacro", "fn*", "defmethod"],
+    annotate_function
+  );
+  
+  register_annotation_rule(
+    ["letfn"],
+    annotate_letfn
+  );
+
+  // standard annotations
+
+  function _annotate_metadata_recursive(meta, scope) {
+    if (!meta) return;
+
+    if (meta.list !== undefined && meta.list !== null) {
+      for (var i = 0, j = meta.list.length; i < j; i++) {
+        meta.opening.secondary_tags.meta = true
+        meta.closing.secondary_tags.meta = true
+        _annotate_metadata_recursive(meta.list[i], scope);
+      }
+    }
+    else if (meta.attached_node) {
+      meta.token.secondary_tags.meta = true;
+      _annotate_metadata_recursive(meta.attached_node, scope);
+    }
+    else {
+      meta.secondary_tags.meta = true;
+    }
+  }
+  
+  function annotate_metadata(exp) {
+    if (!(exp && exp.meta)) return;
+    var meta = exp.meta;
+    
+     annotate_expressions(meta, {});    
+    _annotate_metadata_recursive(meta, {});
+  }
+
+
+  function annotate_quoted(exp, scope) {
+    if (!exp) return;
+
+    if (exp.list !== undefined && exp.list !== null) {
+      for (var i = 0, j = exp.list.length; i < j; i++) {
+        exp.opening.secondary_tags.quoted = true
+        exp.closing.secondary_tags.quoted = true
+        annotate_quoted(exp.list[i], scope);
+      }
+    }
+    else if (exp.attached_node) {
+      if (exp.tag === "unquote" || exp.tag === "splice") return;
+      exp.token.secondary_tags.quoted = true;
+      annotate_quoted(exp.attached_node, scope);
+    }
+    else {
+      exp.secondary_tags.quoted = true;
+    }
+  }
+
+
+  function annotate_expressions(exp, scope) {
+    annotate_metadata(exp);
+    
+    switch (exp.tag) {
+      case "toplevel": 
+        for (var i = 0; i < exp.list.length; i++) {
+          annotate_expressions(exp.list[i], scope);
+        }
+        break;
+      
+      case "list": // functions, macros, special forms, comments
+        var head = exp.list[0];
+      
+        if (head) {
+          if (head.tag === "list" || head.tag === "vector" 
+           || head.tag === "map" || head.tag === "set") {
+            annotate_expressions(head, scope);
+          }
+          else if (head.attached_node) {
+            annotate_expressions(head.attached_node, scope);
+          }
+          else {
+            head.tag = (head.value.match(/(^\.)|(\.$)|[A-Z].*\//)
+                        ? "method"
+                        : "function");
+          }
+
+          // apply specific rules
+          if (annotation_rules.hasOwnProperty(head.value)) {
+            annotation_rules[head.value](exp, scope);
+          } 
+          else {
+            for (var i = 1; i < exp.list.length; i++) {
+              annotate_expressions(exp.list[i], scope);
+            }
+          } 
+        }
+        else { // empty list
+          exp.opening.tag = "value";
+          exp.closing.tag = "value";
+        }
+      
+        break;
+      
+      case "vector": // data
+      case "map":
+      case "set":
+        for (var i = 0; i < exp.list.length; i++) {
+          annotate_expressions(exp.list[i], scope);
+        }
+        break;
+      
+      case "symbol":
+        if (exp.value.match(/[A-Z].*\/[A-Z_]+/)) {
+          exp.tag = "constant";
+        }
+        else if (show_locals && scope[exp.value]) {
+          exp.tag = "variable";
+        }
+        else if (exp.tag === "symbol" && exp.value.match(/([A-Z].*\/)?[A-Z_]+/)) {
+          exp.tag = "type";
+        }
+        break;
+      
+      case "quote":
+      case "quasiquote":
+        annotate_quoted(exp.attached_node, scope);
+        
+      default:
+        if (exp.attached_node) annotate_expressions(exp.attached_node, scope);
+    }
+  }
+
+  // translation of tag to css:
+  var css_translation = {
+    "constant":     "constants",
+    "keyword":      "constants",
+    "method":       "color1",
+    "type":         "color3", 
+    "function":     "functions",
+    "string":       "string",
+    "regexp":       "string",
+    "value":        "value",
+    "comments":     "comments",
+    "symbol":       "symbol",
+    "variable":     "variable",
+    "splice":       "preprocessor", 
+    "unquote":      "preprocessor",     
+    "preprocessor": "preprocessor",
+    "meta":         "preprocessor", 
+    "'":            "preprocessor", 
+    "#'":           "preprocessor",    
+    "(":            "plain",
+    ")":            "plain",
+    "{":            "keyword",
+    "}":            "keyword",
+    "#{":           "keyword",   
+    "[":            "keyword",
+    "]":            "keyword",
+    "invalid":      "invalid",
+    "@":            "plain" 
+  };
+  
+  function translate_tags_to_css(tokens) {
+    for (var i = 0, j = tokens.length; i < j; i++) {
+      var token = tokens[i];
+      token.css = css_translation[token.tag];
+      for (var k in token.secondary_tags) if (token.secondary_tags.hasOwnProperty(k))
+        token.css += " " + k ;
+    };
+  }
+  
+  
+  // create the new brush
+
+  SH.brushes.Clojure = function () {};
+  SH.brushes.Clojure.prototype = new SyntaxHighlighter.Highlighter();
+  
+  SH.brushes.Clojure.prototype.findMatches = function find_matches (regexpList, code) {
+    // this is a nasty global hack. need to resolve this
+    if (this.params && this.params.locals) {
+      show_locals = this.params.locals === true || this.params.locals === "true"; 
+    }
+    else {
+      show_locals = true;
+    }
+    
+    var tokens = tokenize(code);
+    annotate_expressions(build_tree(tokens), {});
+    translate_tags_to_css(tokens);
+
+    return tokens;
+  };
+  
+  SH.brushes.Clojure.aliases = ['clojure', 'Clojure', 'clj'];
+  SH.brushes.Clojure.register_annotation_rule = register_annotation_rule;
+
+  return {
+    tokenize: tokenize,
+    build_tree: build_tree
+  };
+})(SyntaxHighlighter);
 </script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.4.0-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.2.1</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2-SNAPSHOT</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">appengine-magic</td><td class="dotted"><hr /></td><td class="dep-version">0.4.7</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.6.1</td></tr><tr><td class="dep-name">lein-midje</td><td class="dotted"><hr /></td><td class="dep-version">1.0.8</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#gtjbot.core">gtjbot.core</a></li><li><a href="#gtjbot.models.user">gtjbot.models.user</a></li><li><a href="#gtjbot.utils.parser">gtjbot.utils.parser</a></li><li><a href="#gtjbot.utils.user">gtjbot.utils.user</a></li><li><a href="#gtjbot.utils.xmpp">gtjbot.utils.xmpp</a></li><li><a href="#gtjbot.views.common">gtjbot.views.common</a></li><li><a href="#gtjbot.views.user">gtjbot.views.user</a></li><li><a href="#gtjbot.views.admin">gtjbot.views.admin</a></li><li><a href="#gtjbot.views.xmpp">gtjbot.views.xmpp</a></li><li><a href="#gtjbot.test.core">gtjbot.test.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.core" name="gtjbot.core"><h1 class="project-name">gtjbot.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definition of an app</h2>
-</td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.core
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.2.1</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2-SNAPSHOT</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">appengine-magic</td><td class="dotted"><hr /></td><td class="dep-version">0.5.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.0</td></tr><tr><td class="dep-name">lein-midje</td><td class="dotted"><hr /></td><td class="dep-version">1.0.9</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#gtjbot.core">gtjbot.core</a></li><li><a href="#gtjbot.models.user">gtjbot.models.user</a></li><li><a href="#gtjbot.utils.parser">gtjbot.utils.parser</a></li><li><a href="#gtjbot.utils.user">gtjbot.utils.user</a></li><li><a href="#gtjbot.utils.xmpp">gtjbot.utils.xmpp</a></li><li><a href="#gtjbot.views.common">gtjbot.views.common</a></li><li><a href="#gtjbot.views.user">gtjbot.views.user</a></li><li><a href="#gtjbot.views.admin">gtjbot.views.admin</a></li><li><a href="#gtjbot.views.xmpp">gtjbot.views.xmpp</a></li><li><a href="#gtjbot.test.core">gtjbot.test.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.core" name="gtjbot.core"><h1 class="project-name">gtjbot.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definition of an app</h2>
+</td><td class="codes"><pre class="brush: clojure">(ns gtjbot.core
   (:require [appengine-magic.core :as gae]
             [noir.util.gae :as noir-gae])
   (:use [ring.middleware params]
-        [appengine-magic.multipart-params :only [wrap-multipart-params]]))</pre></tr><tr><td class="docs"><p>Prelooads existing routes (pages).</p>
-</td><td class="codes" /><pre class="brush: clojure">(require 'gtjbot.views.admin)
+        [appengine-magic.multipart-params :only [wrap-multipart-params]]))</pre></td></tr><tr><td class="docs"><p>Prelooads existing routes (pages).</p>
+</td><td class="codes"><pre class="brush: clojure">(require 'gtjbot.views.admin)
 (require 'gtjbot.views.user)
-(require 'gtjbot.views.xmpp)</pre></tr><tr><td class="docs"><p>Define the appengine app from noir handler (GAE-compatible one).</p>
-</td><td class="codes" /><pre class="brush: clojure">(gae/def-appengine-app gtjbot-app
-  (wrap-multipart-params (wrap-params (noir-gae/gae-handler nil))))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.models.user" name="gtjbot.models.user"><h1 class="project-name">gtjbot.models.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>GoogleUser entity</h2>
+(require 'gtjbot.views.xmpp)</pre></td></tr><tr><td class="docs"><p>Define the appengine app from noir handler (GAE-compatible one).</p>
+</td><td class="codes"><pre class="brush: clojure">(gae/def-appengine-app gtjbot-app
+  (wrap-multipart-params (wrap-params (noir-gae/gae-handler nil))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.models.user" name="gtjbot.models.user"><h1 class="project-name">gtjbot.models.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>GoogleUser entity</h2>
 
 <p>Definition of user model used in app and functions to use with it.</p>
-</td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.models.user
+</td><td class="codes"><pre class="brush: clojure">(ns gtjbot.models.user
   (:require [appengine-magic.services.datastore :as ds])
   (:use [appengine-magic.services.user :only [current-user]]
-        [gtjbot.utils.user :only [get-user-id get-user-email]]))</pre></tr><tr><td class="docs"><p>Message sent to unsubscribed users who try to use a bot.</p>
-</td><td class="codes" /><pre class="brush: clojure">(def message-to-unsubscribed (str &quot;You need to subscribe to an app in order to use this&quot;
-&quot; feature. More details could be found at http://gtjbot.appspot.com&quot;))</pre></tr><tr><td class="docs"><p>Main entity of an app - subscribed user. Consists of user's unique
+        [gtjbot.utils.user :only [get-user-id get-user-email]]))</pre></td></tr><tr><td class="docs"><p>String with all existing handlers (default setting for new users).</p>
+</td><td class="codes"><pre class="brush: clojure">(def default-handlers (str &quot;HTTP Status Code - httpsc; &quot;
+                           &quot;Current Weather - weather&quot;))</pre></td></tr><tr><td class="docs"><p>Message sent to unsubscribed users who try to use a bot.</p>
+</td><td class="codes"><pre class="brush: clojure">(def message-to-unsubscribed (str &quot;You need to subscribe to an app in order to use this&quot;
+&quot; feature. More details could be found at http://gtjbot.appspot.com&quot;))</pre></td></tr><tr><td class="docs"><p>Main entity of an app - subscribed user. Consists of user's unique
 identifier, user itself (instance of Google's User class), user's
 mail (for easier filtering) and string with message handlers list.</p>
-</td><td class="codes" /><pre class="brush: clojure">(ds/defentity GoogleUser [^:key id, user, mail, handlers])</pre></tr><tr><td class="docs"><p>Saves current user to a DataStore (if it not presented in it already).
+</td><td class="codes"><pre class="brush: clojure">(ds/defentity GoogleUser [^:key id, user, mail, handlers])</pre></td></tr><tr><td class="docs"><p>Saves current user to a DataStore (if it not presented in it already).
 Returns user just created from a current user's ID or retrieves user saved
 in a DataStore earlier.</p>
 
 <p>TODO correct handlers list</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn save-user-to-ds
+</td><td class="codes"><pre class="brush: clojure">(defn save-user-to-ds
   []
   (let [id (get-user-id)]
     (or (ds/retrieve GoogleUser id)
         (ds/save! (GoogleUser. id (current-user) (get-user-email)
-                               (str &quot;HTTP Status Code - httpsc; &quot;
-                                    &quot;Current Weather - weather&quot;))))))</pre></tr><tr><td class="docs"><p>Retrieves a list of all GoogleUsers saved in a DS.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn get-gusers
-  [] (ds/query :kind GoogleUser))</pre></tr><tr><td class="docs"><p>Retrieves a list of all Users (User class instances) saved as a
+                               default-handlers)))))</pre></td></tr><tr><td class="docs"><p>Retrieves a list of all GoogleUsers saved in a DS.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-gusers
+  [] (ds/query :kind GoogleUser))</pre></td></tr><tr><td class="docs"><p>Retrieves a list of all Users (User class instances) saved as a
 GoogleUsers in a DS.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn get-users
-  [] (let [gusers (get-gusers)] (map #(:user %) gusers)))</pre></tr><tr><td class="docs"><p>Checks whether the user specified by an ID exists in a DataStore.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn check-user-by-id
+</td><td class="codes"><pre class="brush: clojure">(defn get-users
+  [] (let [gusers (get-gusers)] (map #(:user %) gusers)))</pre></td></tr><tr><td class="docs"><p>Checks whether the user specified by an ID exists in a DataStore.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn check-user-by-id
   ([] (check-user-by-id (current-user)))
   ([user] (if (nil? (ds/retrieve GoogleUser (get-user-id user)))
             false
-            true)))</pre></tr><tr><td class="docs"><p>Checks whether the user specified by a mail exists in a DataStore.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn check-user-by-mail
+            true)))</pre></td></tr><tr><td class="docs"><p>Checks whether the user specified by a mail exists in a DataStore.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn check-user-by-mail
   ([] (check-user-by-mail (get-user-email)))
   ([mail] (if (empty? (ds/query :kind GoogleUser :filter (= :mail mail)))
             false
-            true)))</pre></tr><tr><td class="docs"><p>Returns list of handlers user wishes to use for a given user.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn get-user-handlers
+            true)))</pre></td></tr><tr><td class="docs"><p>Returns list of handlers user wishes to use for a given user.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-user-handlers
   ([] (get-user-handlers (current-user)))
   ([user] (let [user (ds/retrieve GoogleUser (get-user-id user))]
             (if (nil? user)
               nil
-              (:handlers user)))))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.parser" name="gtjbot.utils.parser"><h1 class="project-name">gtjbot.utils.parser</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>XMPP message parsing</h2>
+              (:handlers user)))))</pre></td></tr><tr><td class="docs"><p>Saves a given string as a user's new handlers.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn update-user-handlers
+  ([handlers-string] (update-user-handlers (current-user) handlers-string))
+  ([user handlers-string] (let [user (ds/retrieve GoogleUser (get-user-id user))]
+                            (if (nil? user)
+                              nil
+                              (ds/save! (assoc user :handlers handlers-string))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.parser" name="gtjbot.utils.parser"><h1 class="project-name">gtjbot.utils.parser</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>XMPP message parsing</h2>
 
 <p>A set of functions to process incoming XMPP messages (requests) and
 generate answers for them.
@@ -2588,43 +3097,43 @@ In order to be processed by a bot, messages should follow a basic
 pattern: [command] [optional arguments].
 If bot receives empty or malformed (incorrect command or arguments)
 message it will send a help message to user.</p>
-</td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.utils.parser
+</td><td class="codes"><pre class="brush: clojure">(ns gtjbot.utils.parser
   [:require [clojure.string :as cs]]
   [:use [appengine-magic.services.url-fetch :only [fetch]]
-        [gtjbot.models.user :only [get-user-handlers]]])</pre></tr><tr><td class="docs"><h2>Service functions</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Adds meta-data name and help to an object.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defmacro create-object-with-help [obj name help]
-  `(with-meta ~obj {:name ~name :help ~help}))</pre></tr><tr><td class="docs"><p>Retrieves 'command' word from the incoming message. 'Command' is a first word in a message.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- retrieve-command
+        [gtjbot.models.user :only [get-user-handlers]]])</pre></td></tr><tr><td class="docs"><h2>Service functions</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Adds meta-data name and help to an object.</p>
+</td><td class="codes"><pre class="brush: clojure">(defmacro create-object-with-help [obj name help]
+  `(with-meta ~obj {:name ~name :help ~help}))</pre></td></tr><tr><td class="docs"><p>Retrieves 'command' word from the incoming message. 'Command' is a first word in a message.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- retrieve-command
   [message] (let [results (re-matches #&quot;^([a-zA-Z0-9]+)\s?.*$&quot; message)]
               (if (nil? results)
                 &quot;&quot;
-                (last results))))</pre></tr><tr><td class="docs"><p>Retrieves list of command's arguments from the incoming message. Arguments are all words in a message except first.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- retrieve-arguments
+                (last results))))</pre></td></tr><tr><td class="docs"><p>Retrieves list of command's arguments from the incoming message. Arguments are all words in a message except first.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- retrieve-arguments
   [message] (let [results (re-matches #&quot;[a-zA-Z0-9]+\s?(.*)&quot; message)
                   args-string (if (nil? results) &quot;&quot; (results 1))]
-              (filter #(not (= % &quot;&quot;)) (seq (. args-string split &quot;, &quot;)))))</pre></tr><tr><td class="docs"><h2>Message handlers protocol</h2>
+              (filter #(not (= % &quot;&quot;)) (seq (. args-string split &quot;, &quot;)))))</pre></td></tr><tr><td class="docs"><h2>Message handlers protocol</h2>
 
 <p>Message handler is a function that generates answer based on the
 incoming message.
 Protocol defines basic handler interface.</p>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Interface for message handlers.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defprotocol MessageHandler
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Interface for message handlers.</p>
+</td><td class="codes"><pre class="brush: clojure">(defprotocol MessageHandler
   ;; Checks whether the handler can generate an answer for a given
   ;; message (i. e. whether handler's commad word is equal to a
   ;; message's one).
   (processable? [self message])
   ;; Generates answer based on an incoming message. Returns nil if a
   ;; given handler can't process message.
-  (generate-answer [self message]))</pre></tr><tr><td class="docs"><h2>Helper functions for reply building</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Checks whether the command word contains the given word.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- check-command-word
+  (generate-answer [self message]))</pre></td></tr><tr><td class="docs"><h2>Helper functions for reply building</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Checks whether the command word contains the given word.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- check-command-word
   [command-word message]
   (not (nil? (re-matches (re-pattern (str &quot;^&quot; command-word &quot;$&quot;))
-                         (retrieve-command message)))))</pre></tr><tr><td class="docs"><p>Removes all occurrences of a HTML tag or a [...] from a given string.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- sanitize-html-and-brackets
-  [string] (cs/replace string #&quot;&lt;.*?&gt;|\[.*?\]&quot; &quot;&quot;))</pre></tr><tr><td class="docs"><p>Generates answer for a given message using a given function.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- generate-answer-using-function
+                         (retrieve-command message)))))</pre></td></tr><tr><td class="docs"><p>Removes all occurrences of a HTML tag or a [...] from a given string.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- sanitize-html-and-brackets
+  [string] (cs/replace string #&quot;&lt;.*?&gt;|\[.*?\]&quot; &quot;&quot;))</pre></td></tr><tr><td class="docs"><p>Generates answer for a given message using a given function.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- generate-answer-using-function
   [message answer-generator]
   (let [arguments (retrieve-arguments message)]
     (if (empty? arguments)
@@ -2635,29 +3144,29 @@ Protocol defines basic handler interface.</p>
                    (if (empty? arg)
                      &quot;Empty argument.&quot;
                      (answer-generator arg)))
-                arguments)))))</pre></tr><tr><td class="docs"><p>Retrieves content of a given HTTP page.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- retrieve-contents-of-page
+                arguments)))))</pre></td></tr><tr><td class="docs"><p>Retrieves content of a given HTTP page.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- retrieve-contents-of-page
   [link]
-  (String. (:content (fetch link :headers {&quot;User-Agent&quot; &quot;gtjbot&quot;}))))</pre></tr><tr><td class="docs"><p>Retrieves first match (if any) of a given pattern (as string) on a given page.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- get-first-matched
+  (String. (:content (fetch link :headers {&quot;User-Agent&quot; &quot;gtjbot&quot;}))))</pre></td></tr><tr><td class="docs"><p>Retrieves first match (if any) of a given pattern (as string) on a given page.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- get-first-matched
   [pattern-string page]
-  (first (re-seq (re-pattern pattern-string) page)))</pre></tr><tr><td class="docs"><h2>Hello Reply</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Sends greetings in return to user's ones.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defrecord HiMessage []
+  (first (re-seq (re-pattern pattern-string) page)))</pre></td></tr><tr><td class="docs"><h2>Hello Reply</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Sends greetings in return to user's ones.</p>
+</td><td class="codes"><pre class="brush: clojure">(defrecord HiMessage []
   MessageHandler
   (processable? [self message]
     (check-command-word
      #&quot;[hH]ello[\.\s\?\!]*|[Hh]i[\.\s\?\!]*|[Gg]reetings[\.\s\?\!]*|[Hh]ail[\.\s\?\!]*&quot;
      message))
-  (generate-answer [self _] &quot;Hello!&quot;))</pre></tr><tr><td class="docs"><h2>HTTP Status Code Reply</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Helper functions for HttpStatusCodeMessage</p>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Retrieves page with HTTP status codes definitions.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- get-http-status-code-definitions
+  (generate-answer [self _] &quot;Hello!&quot;))</pre></td></tr><tr><td class="docs"><h2>HTTP Status Code Reply</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Helper functions for HttpStatusCodeMessage</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Retrieves page with HTTP status codes definitions.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- get-http-status-code-definitions
   []
   (retrieve-contents-of-page
    (str &quot;https://secure.wikimedia.org/wikipedia/en/w/index.php?&quot;
-        &quot;title=List_of_HTTP_status_codes&amp;printable=yes&quot;)))</pre></tr><tr><td class="docs"><p>Returns meaning of a given numeric HTTP status code.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- get-http-status-code-meaning
+        &quot;title=List_of_HTTP_status_codes&amp;printable=yes&quot;)))</pre></td></tr><tr><td class="docs"><p>Returns meaning of a given numeric HTTP status code.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- get-http-status-code-meaning
   [code] (let [source-page (get-http-status-code-definitions)
                definition-html
                (get-first-matched
@@ -2668,32 +3177,32 @@ Protocol defines basic handler interface.</p>
            (if (nil? definition-html)
              (str code &quot; - No such code.&quot;)
              (sanitize-html-and-brackets
-              (str (definition-html 1) &quot;\n&quot; (definition-html 2))))))</pre></tr><tr><td class="docs"><p>'Replier' itself</p>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Gives a description of a given numeric HTTP status code.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defrecord HttpStatusCodeMessage [command-word]
+              (str (definition-html 1) &quot;\n&quot; (definition-html 2))))))</pre></td></tr><tr><td class="docs"><p>'Replier' itself</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Gives a description of a given numeric HTTP status code.</p>
+</td><td class="codes"><pre class="brush: clojure">(defrecord HttpStatusCodeMessage [command-word]
   MessageHandler
   (processable? [self message]
     (check-command-word command-word message))
   (generate-answer [self message]
-    (generate-answer-using-function message get-http-status-code-meaning)))</pre></tr><tr><td class="docs"><h2>Current Weather Reply</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Helper functions for a CurrentWeatherMessage</p>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Returns a HTML page with given city's WOEID on it.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- get-page-with-city-woeid
+    (generate-answer-using-function message get-http-status-code-meaning)))</pre></td></tr><tr><td class="docs"><h2>Current Weather Reply</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Helper functions for a CurrentWeatherMessage</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Returns a HTML page with given city's WOEID on it.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- get-page-with-city-woeid
   [city]
   (if (empty? city)
     &quot;error&quot;
     (retrieve-contents-of-page
      (str &quot;http://sigizmund.info/woeidinfo/?woeid=&quot;
-          (cs/replace (sanitize-html-and-brackets city) &quot; &quot; &quot;+&quot;)))))</pre></tr><tr><td class="docs"><p>Returns WOEID for a given city.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- get-woeid-for-city
+          (cs/replace (sanitize-html-and-brackets city) &quot; &quot; &quot;+&quot;)))))</pre></td></tr><tr><td class="docs"><p>Returns WOEID for a given city.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- get-woeid-for-city
   [city]
   (let [page-with-woeid (get-page-with-city-woeid city)
         woeid-search-result
         (get-first-matched &quot;&lt;h3&gt;.*?&lt;/h3&gt;WOEID: (\\d+)&quot; page-with-woeid)]
     (if (nil? woeid-search-result)
       0
-      (woeid-search-result 1))))</pre></tr><tr><td class="docs"><p>Returns a XML page with a forecast for a given WOEID (optional second argument specifies whether temperature must be in a Fahrenheits).</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- get-weather-page-for-city
+      (woeid-search-result 1))))</pre></td></tr><tr><td class="docs"><p>Returns a XML page with a forecast for a given WOEID (optional second argument specifies whether temperature must be in a Fahrenheits).</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- get-weather-page-for-city
   ([woeid] (get-weather-page-for-city woeid false))
   ([woeid isFahrenheit]
      (if (not (= woeid 0))
@@ -2701,8 +3210,8 @@ Protocol defines basic handler interface.</p>
              link (str &quot;http://weather.yahooapis.com/forecastrss?w=&quot;
                        woeid &quot;&amp;u=&quot; units)]
          (retrieve-contents-of-page link))
-       &quot;error&quot;)))</pre></tr><tr><td class="docs"><p>Extracts string with a forecast from a source page.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- extract-forecast-string
+       &quot;error&quot;)))</pre></td></tr><tr><td class="docs"><p>Extracts string with a forecast from a source page.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- extract-forecast-string
   [source]
   (let [forecast-html
         (get-first-matched &quot;(Current Conditions:.*?)&lt;br /&gt;&lt;br /&gt;&lt;a&quot;
@@ -2712,23 +3221,23 @@ Protocol defines basic handler interface.</p>
       (sanitize-html-and-brackets
        (cs/replace
         (cs/replace (forecast-html 1) #&quot;(&lt;[bB][rR]\s?/&gt;){2}&quot; &quot;\n&quot;)
-        #&quot;&lt;[bB][rR]\s?/&gt;&quot; &quot;\n&quot;)))))</pre></tr><tr><td class="docs"><p>Returns a weather report summary for a given city.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- get-weather-for-city
+        #&quot;&lt;[bB][rR]\s?/&gt;&quot; &quot;\n&quot;)))))</pre></td></tr><tr><td class="docs"><p>Returns a weather report summary for a given city.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- get-weather-for-city
   [city]
   (let [woeid (get-woeid-for-city city)
         forecast-source (get-weather-page-for-city woeid)
         forecast (extract-forecast-string forecast-source)
         proper-city-name (cs/join &quot; &quot; (map cs/capitalize (cs/split city #&quot;\s&quot;)))]
-    (str &quot;Weather for &quot; proper-city-name &quot; from Yahoo!\n&quot; forecast)))</pre></tr><tr><td class="docs"><p>'Replier' itself</p>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Gives a current weather for a specified city.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defrecord CurrentWeatherMessage [command-word]
+    (str &quot;Weather for &quot; proper-city-name &quot; from Yahoo!\n&quot; forecast)))</pre></td></tr><tr><td class="docs"><p>'Replier' itself</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Gives a current weather for a specified city.</p>
+</td><td class="codes"><pre class="brush: clojure">(defrecord CurrentWeatherMessage [command-word]
   MessageHandler
   (processable? [self message]
     (check-command-word command-word message))
   (generate-answer [self message]
-    (generate-answer-using-function message get-weather-for-city)))</pre></tr><tr><td class="docs"><h2>Currently enabled reply plugins</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>List with all 'main' message handlers instances.</p>
-</td><td class="codes" /><pre class="brush: clojure">(def handlers-list [(create-object-with-help
+    (generate-answer-using-function message get-weather-for-city)))</pre></td></tr><tr><td class="docs"><h2>Currently enabled reply plugins</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>List with all 'main' message handlers instances.</p>
+</td><td class="codes"><pre class="brush: clojure">(def handlers-list [(create-object-with-help
                       (HttpStatusCodeMessage. &quot;httpsc&quot;)
                       &quot;HTTP Status Code&quot;
                       (str &quot;prints a description of a given HTTP status code. &quot;
@@ -2746,8 +3255,8 @@ Protocol defines basic handler interface.</p>
                            &quot;accurate results (e.g., &quot;
                            &quot;\&quot;kiyevka russia novosibirsk oblast\&quot; for small &quot;
                            &quot;town near Novosibirsk, but for capital of Ukraine &quot;
-                           &quot;simply \&quot;Kyiv\&quot; is enough).&quot;))])</pre></tr><tr><td class="docs"><p>Removes handlers which names aren't present in a handlers-string from a handlers-list, sets handler's command word to one specified in a handlers-string.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn- generate-user-handlers
+                           &quot;simply \&quot;Kyiv\&quot; is enough).&quot;))])</pre></td></tr><tr><td class="docs"><p>Removes handlers which names aren't present in a handlers-string from a handlers-list, sets handler's command word to one specified in a handlers-string.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- generate-user-handlers
   [handlers-string handlers-list]
   (if (nil? handlers-string)
     handlers-list
@@ -2758,9 +3267,9 @@ Protocol defines basic handler interface.</p>
           (map #(second (cs/split % #&quot; \- &quot;)) (cs/split handlers-string #&quot;; &quot;))]
       (map #(assoc %1 :command-word %2)
            (filter #(contains? user-handlers (:name (meta %))) handlers-list)
-           user-commands))))</pre></tr><tr><td class="docs"><h2>Help message generator</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Generates help information for enabled plugins.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn get-help-message
+           user-commands))))</pre></td></tr><tr><td class="docs"><h2>Help message generator</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Generates help information for enabled plugins.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-help-message
   [handlers]
   (str &quot;Please use one of those commands:\n&quot;
        (cs/trim-newline
@@ -2771,9 +3280,9 @@ Protocol defines basic handler interface.</p>
                              (str (:command-word o)
                                   &quot; &lt;args&gt; - &quot;
                                   (meta-data :help)))))
-                  handlers)))))</pre></tr><tr><td class="docs"><h2>Actual answer generation</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Generates answer to an incoming message using existing message handlers. If none of the 'main' handlers could produce a message then help is generated.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn generate-answer
+                  handlers)))))</pre></td></tr><tr><td class="docs"><h2>Actual answer generation</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Generates answer to an incoming message using existing message handlers. If none of the 'main' handlers could produce a message then help is generated.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn generate-answer
   [message]
   (let [user-handlers
         (conj (generate-user-handlers (get-user-handlers) handlers-list)
@@ -2782,60 +3291,60 @@ Protocol defines basic handler interface.</p>
         answers (map #(generate-answer % message) applicable-handlers)]
     (if (empty? answers)
       (get-help-message user-handlers)
-      (apply str answers))))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.user" name="gtjbot.utils.user"><h1 class="project-name">gtjbot.utils.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Wrappers around Google's User java class</h2>
-</td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.utils.user
-  (:use [appengine-magic.services.user :only [current-user]]))</pre></tr><tr><td class="docs"><p>Returns ID of a specified user (or current user if no argument
+      (apply str answers))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.user" name="gtjbot.utils.user"><h1 class="project-name">gtjbot.utils.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Wrappers around Google's User java class</h2>
+</td><td class="codes"><pre class="brush: clojure">(ns gtjbot.utils.user
+  (:use [appengine-magic.services.user :only [current-user]]))</pre></td></tr><tr><td class="docs"><p>Returns ID of a specified user (or current user if no argument
  is supplied).</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn get-user-id
+</td><td class="codes"><pre class="brush: clojure">(defn get-user-id
   ([] (get-user-id (current-user)))
-  ([user] (. user getUserId)))</pre></tr><tr><td class="docs"><p>Returns email of a specified user (or current user if no argument
+  ([user] (. user getUserId)))</pre></td></tr><tr><td class="docs"><p>Returns email of a specified user (or current user if no argument
  is supplied).</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn get-user-email
+</td><td class="codes"><pre class="brush: clojure">(defn get-user-email
   ([] (get-user-email (current-user)))
-  ([user] (. user getEmail)))</pre></tr><tr><td class="docs"><p>Returns nickname of a specified user (or current user if no argument
+  ([user] (. user getEmail)))</pre></td></tr><tr><td class="docs"><p>Returns nickname of a specified user (or current user if no argument
  is supplied).</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn get-user-nick
+</td><td class="codes"><pre class="brush: clojure">(defn get-user-nick
   ([] (get-user-nick (current-user)))
-  ([user] (. user getNickname)))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.xmpp" name="gtjbot.utils.xmpp"><h1 class="project-name">gtjbot.utils.xmpp</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Wrappers around Google's XMPP API</h2>
-</td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.utils.xmpp
+  ([user] (. user getNickname)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.xmpp" name="gtjbot.utils.xmpp"><h1 class="project-name">gtjbot.utils.xmpp</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Wrappers around Google's XMPP API</h2>
+</td><td class="codes"><pre class="brush: clojure">(ns gtjbot.utils.xmpp
   (:use [gtjbot.models.user :only [check-user-by-mail message-to-unsubscribed]]
         [gtjbot.utils.parser :only [generate-answer]])
   (:import [com.google.appengine.api.xmpp JID Message MessageBuilder MessageType
-            XMPPService XMPPServiceFactory]))</pre></tr><tr><td class="docs"><h2>General XMPP functions</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Returns an instance of XMPPService - basic interface for XMPP interaction.</p>
-</td><td class="codes" /><pre class="brush: clojure">(def xmpp-service (XMPPServiceFactory/getXMPPService))</pre></tr><tr><td class="docs"><p>Sends an invite (to a chat with an app) to a specified user.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn send-invite
-  [jid] (. xmpp-service sendInvitation (JID. jid)))</pre></tr><tr><td class="docs"><p>Forms an instance of a Message class from a jids list (jids as strings)
+            XMPPService XMPPServiceFactory]))</pre></td></tr><tr><td class="docs"><h2>General XMPP functions</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Returns an instance of XMPPService - basic interface for XMPP interaction.</p>
+</td><td class="codes"><pre class="brush: clojure">(def xmpp-service (XMPPServiceFactory/getXMPPService))</pre></td></tr><tr><td class="docs"><p>Sends an invite (to a chat with an app) to a specified user.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn send-invite
+  [jid] (. xmpp-service sendInvitation (JID. jid)))</pre></td></tr><tr><td class="docs"><p>Forms an instance of a Message class from a jids list (jids as strings)
 and a message string.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn form-message
+</td><td class="codes"><pre class="brush: clojure">(defn form-message
   [jids message] (. (. (. (. (MessageBuilder.) withRecipientJids
                             (into-array JID (map #(JID. %) jids)))
                          withBody message)
                       withMessageType (. MessageType NORMAL))
-                   build))</pre></tr><tr><td class="docs"><p>Sends a message over XMPP to a specified jids list (jids as strings).</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn send-message
+                   build))</pre></td></tr><tr><td class="docs"><p>Sends a message over XMPP to a specified jids list (jids as strings).</p>
+</td><td class="codes"><pre class="brush: clojure">(defn send-message
   [jids message] (if (and (not (empty? jids)) (not (nil? message)))
                    (. xmpp-service sendMessage
-                      (form-message jids message))))</pre></tr><tr><td class="docs"><h2>App specific XMPP functions</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Cuts redundant info if jid is in a full form to make an 'email'
+                      (form-message jids message))))</pre></td></tr><tr><td class="docs"><h2>App specific XMPP functions</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Cuts redundant info if jid is in a full form to make an 'email'
 (bare form) from it.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn jid-to-mail
+</td><td class="codes"><pre class="brush: clojure">(defn jid-to-mail
   [jid] (if-let [search-results (re-matches #&quot;(.*)/.*&quot; jid)]
           (last search-results)
-          jid))</pre></tr><tr><td class="docs"><p>Sends a message to the users subscribed for the app. If the user
+          jid))</pre></td></tr><tr><td class="docs"><p>Sends a message to the users subscribed for the app. If the user
  is unsubscribed to an app they will receive an offer to subscribe.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defn send-message-to-subscribed
+</td><td class="codes"><pre class="brush: clojure">(defn send-message-to-subscribed
   [jids message] (let [predicate #(check-user-by-mail (jid-to-mail %))
                        subscribed-jids (filter predicate jids)
                        unsubscribed-jids (remove predicate jids)]
                    (send-message subscribed-jids (generate-answer message))
-                   (send-message unsubscribed-jids message-to-unsubscribed)))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.common" name="gtjbot.views.common"><h1 class="project-name">gtjbot.views.common</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the elements common to all pages</h2>
-</td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.views.common
+                   (send-message unsubscribed-jids message-to-unsubscribed)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.common" name="gtjbot.views.common"><h1 class="project-name">gtjbot.views.common</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the elements common to all pages</h2>
+</td><td class="codes"><pre class="brush: clojure">(ns gtjbot.views.common
   (:use [noir.core :only [defpartial]]
         [hiccup.page-helpers :only [include-css include-js html5 link-to]]
         [appengine-magic.services.user :only [logout-url login-url
-                                              user-logged-in?]]))</pre></tr><tr><td class="docs"><p>Ribbon for a GitHub page</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial gh-ribbon []
+                                              user-logged-in?]]))</pre></td></tr><tr><td class="docs"><p>Ribbon for a GitHub page</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial gh-ribbon []
   [:a {:href &quot;https://github.com/gsnewmark/gtjbot&quot;}
    [:image
     {:style &quot;position: absolute; top: 0; right: 0; border: 0;&quot;
@@ -2844,32 +3353,32 @@ and a message string.</p>
                &quot;f2f73332e616d617a6f6e6177732e636f6d2f6769746875622&quot;
                &quot;f726962626f6e732f666f726b6d655f72696768745f6772617&quot;
                &quot;95f3664366436642e706e67&quot;)
-     :alt &quot;Fork me on GitHub&quot;}]])</pre></tr><tr><td class="docs"><p>Element of a HTML list.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial item [e] [:li e])</pre></tr><tr><td class="docs"><p>HTML unordered list.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial u-list [elems] [:ul (map item elems)])</pre></tr><tr><td class="docs"><p>Fancy button to use for a link.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial button [link text]
-  [:a {:href link} [:button text]])</pre></tr><tr><td class="docs"><p>Basic header.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial header [text] [:header [:h1 text]])</pre></tr><tr><td class="docs"><p>Login link.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial login-link [text]
-  (link-to (login-url :destination &quot;/user/profile&quot;) text))</pre></tr><tr><td class="docs"><p>Logout link.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial logout-link [text] (link-to (logout-url) text))</pre></tr><tr><td class="docs"><p>Basic bar with logo and links (elems - list of links to show in menu).</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial links-menu [&amp; elems]
+     :alt &quot;Fork me on GitHub&quot;}]])</pre></td></tr><tr><td class="docs"><p>Element of a HTML list.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial item [e] [:li e])</pre></td></tr><tr><td class="docs"><p>HTML unordered list.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial u-list [elems] [:ul (map item elems)])</pre></td></tr><tr><td class="docs"><p>Fancy button to use for a link.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial button [link text]
+  [:a {:href link} [:button text]])</pre></td></tr><tr><td class="docs"><p>Basic header.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial header [text] [:header [:h1 text]])</pre></td></tr><tr><td class="docs"><p>Login link.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial login-link [text]
+  (link-to (login-url :destination &quot;/user/profile&quot;) text))</pre></td></tr><tr><td class="docs"><p>Logout link.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial logout-link [text] (link-to (logout-url) text))</pre></td></tr><tr><td class="docs"><p>Basic bar with logo and links (elems - list of links to show in menu).</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial links-menu [&amp; elems]
   [:ul#menu
    (map item elems)
    [:li (link-to &quot;/doc.html&quot; &quot;Documentation&quot;)]
    [:li (if (user-logged-in?)
           (logout-link &quot;Logout&quot;)
-          (login-link &quot;Login&quot;))]])</pre></tr><tr><td class="docs"><p>Basic block with main page content.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial main-block [&amp; content]
-  [:div#content content])</pre></tr><tr><td class="docs"><p>Basic footer.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial footer []
+          (login-link &quot;Login&quot;))]])</pre></td></tr><tr><td class="docs"><p>Basic block with main page content.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial main-block [&amp; content]
+  [:div#content content])</pre></td></tr><tr><td class="docs"><p>Basic footer.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial footer []
   [:footer
    (link-to &quot;mailto:gildraug@gmail.com?subject=gtjbot&quot; &quot;gsnewmark&quot;)
    &quot; | Color palette from &quot;
-   (link-to &quot;http://ethanschoonover.com/solarized&quot; &quot;Solarized&quot;)])</pre></tr><tr><td class="docs"><p>Basic page layout.
+   (link-to &quot;http://ethanschoonover.com/solarized&quot; &quot;Solarized&quot;)])</pre></td></tr><tr><td class="docs"><p>Basic page layout.
 :links argument - links to put in a sidebar
 :content argument - content to put in a main block</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpartial layout [&amp; {:keys [links content]}]
+</td><td class="codes"><pre class="brush: clojure">(defpartial layout [&amp; {:keys [links content]}]
   (html5
    [:head
     [:title &quot;gtjbot&quot;]
@@ -2881,15 +3390,15 @@ and a message string.</p>
      (apply links-menu links)
      (apply main-block content)]
     (footer)
-    (gh-ribbon)]))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.user" name="gtjbot.views.user"><h1 class="project-name">gtjbot.views.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the pages for basic users</h2>
-</td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.views.user
+    (gh-ribbon)]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.user" name="gtjbot.views.user"><h1 class="project-name">gtjbot.views.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the pages for basic users</h2>
+</td><td class="codes"><pre class="brush: clojure">(ns gtjbot.views.user
     (:require [gtjbot.views.common :as common])
     (:use [noir.core :only [defpage url-for]]
           [hiccup.page-helpers :only [link-to]]
           [gtjbot.models.user :only [save-user-to-ds]]
           [gtjbot.utils.user :only [get-user-nick]]
-          [appengine-magic.services.user :only [user-logged-in? user-admin?]]))</pre></tr><tr><td class="docs"><p>Index page of a site.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpage index [:get &quot;/&quot;] []
+          [appengine-magic.services.user :only [user-logged-in? user-admin?]]))</pre></td></tr><tr><td class="docs"><p>Index page of a site.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpage index [:get &quot;/&quot;] []
   (let [links (if (user-logged-in?)
                 (let [links [(link-to (url-for user-main) &quot;Profile&quot;)]]
                   (if (user-admin?)
@@ -2907,8 +3416,8 @@ and a message string.</p>
                (when-not (user-logged-in?)
                  [:p &quot;More details could be found after &quot;
                   (common/login-link &quot;logging in&quot;) &quot;.&quot;])]
-     :links links)))</pre></tr><tr><td class="docs"><p>Main page of a site for the logged user.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpage user-main [:get &quot;/user/profile&quot;] []
+     :links links)))</pre></td></tr><tr><td class="docs"><p>Main page of a site for the logged user.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpage user-main [:get &quot;/user/profile&quot;] []
   (save-user-to-ds)
   (let [links [(link-to (url-for index) &quot;Main&quot;)
                (link-to (url-for user-main) &quot;Profile&quot;)]
@@ -2929,49 +3438,52 @@ and a message string.</p>
                [:h2 &quot;Bot Modules&quot;]
                [:p &quot;Here you can choose wich modules the bot uses.&quot;]
                [:h3 &quot;Not yet available.&quot;]]
-     :links links)))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.admin" name="gtjbot.views.admin"><h1 class="project-name">gtjbot.views.admin</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the admin panel pages</h2>
-</td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.views.admin
+     :links links)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.admin" name="gtjbot.views.admin"><h1 class="project-name">gtjbot.views.admin</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the admin panel pages</h2>
+</td><td class="codes"><pre class="brush: clojure">(ns gtjbot.views.admin
   (:require [gtjbot.views.common :as common]
             [gtjbot.models.user :as user]
             [gtjbot.views.user :as user-views])
   (:use [noir.core :only [defpage url-for]]
-        [hiccup.page-helpers :only [link-to]]))</pre></tr><tr><td class="docs"><p>Main page of an admin panel.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpage admin-panel [:get &quot;/admin/main&quot;] []
+        [hiccup.page-helpers :only [link-to]]))</pre></td></tr><tr><td class="docs"><p>Main page of an admin panel.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpage admin-panel [:get &quot;/admin/main&quot;] []
   (common/layout
    :content [[:h1 &quot;Welcome to gtjbot admin panel!&quot;]
              [:h2 &quot;Users list:&quot;]
              (common/u-list (user/get-users))]
    :links [(link-to (url-for user-views/index) &quot;Main&quot;)
            (link-to (url-for user-views/user-main) &quot;Profile&quot;)
-           (link-to (url-for admin-panel) &quot;Admin Panel&quot;)]))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.xmpp" name="gtjbot.views.xmpp"><h1 class="project-name">gtjbot.views.xmpp</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the handlers for XMPP operations</h2>
-</td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.views.xmpp
+           (link-to (url-for admin-panel) &quot;Admin Panel&quot;)]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.xmpp" name="gtjbot.views.xmpp"><h1 class="project-name">gtjbot.views.xmpp</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the handlers for XMPP operations</h2>
+</td><td class="codes"><pre class="brush: clojure">(ns gtjbot.views.xmpp
   (:use [noir.core :only [defpage url-for]]
         [noir.response :only [redirect status]]
         [gtjbot.utils.user :only [get-user-email]]
         [gtjbot.utils.xmpp :only [send-invite send-message-to-subscribed]]
-        [gtjbot.views.user :only [user-main]]))</pre></tr><tr><td class="docs"><p>Sends an invite to current user to participate in a chat with a bot.</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpage subscribe [:get &quot;/xmpp/register/&quot;] []
+        [gtjbot.views.user :only [user-main]]))</pre></td></tr><tr><td class="docs"><p>Sends an invite to current user to participate in a chat with a bot.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpage subscribe [:get &quot;/xmpp/register/&quot;] []
   (send-invite (get-user-email))
-  (redirect (url-for user-main)))</pre></tr><tr><td class="docs"><p>Main handler for incoming XMPP messages (sends an answer and returns OK status).</p>
-</td><td class="codes" /><pre class="brush: clojure">(defpage [:post &quot;/_ah/xmpp/message/chat/&quot;] {:keys [body from]}
+  (redirect (url-for user-main)))</pre></td></tr><tr><td class="docs"><p>Main handler for incoming XMPP messages (sends an answer and returns OK status).</p>
+</td><td class="codes"><pre class="brush: clojure">(defpage [:post &quot;/_ah/xmpp/message/chat/&quot;] {:keys [body from]}
   (send-message-to-subscribed [from] body)
-  (status 200 nil))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.test.core" name="gtjbot.test.core"><h1 class="project-name">gtjbot.test.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Main tests namespace</h2>
+  (status 200 nil))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.test.core" name="gtjbot.test.core"><h1 class="project-name">gtjbot.test.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Main tests namespace</h2>
 
 <p>Bunch of tests for the bot (mainly its parser part).</p>
-</td><td class="codes" /><pre class="brush: clojure">(ns gtjbot.test.core
+</td><td class="codes"><pre class="brush: clojure">(ns gtjbot.test.core
   (:require [gtjbot.utils.parser :as parser]
             [appengine-magic.testing :as ae-testing])
   (:use [midje.sweet]
-        [clojure.test]))</pre></tr><tr><td class="docs"><p>Makes possible testing appengine-magic functionality.</p>
-</td><td class="codes" /><pre class="brush: clojure">(use-fixtures :each (ae-testing/local-services :all))</pre></tr><tr><td class="docs"><h2>Testing basic parser functionality</h2>
-</td><td class="codes" /></tr><tr><td class="docs"><p>Tests for a help message.</p>
-</td><td class="codes" /><pre class="brush: clojure">(fact (parser/generate-answer &quot;helloads&quot;) =&gt; (parser/get-help-message))
-(fact (parser/generate-answer &quot;&quot;) =&gt; (parser/get-help-message))</pre></tr><tr><td class="docs"><p>Tests for a greetings message.</p>
-</td><td class="codes" /><pre class="brush: clojure">(fact (parser/generate-answer &quot;hi&quot;) =&gt; &quot;Hello!&quot;)
+        [clojure.test]
+        [gtjbot.models.user :only [default-handlers]]))</pre></td></tr><tr><td class="docs"><p>Makes possible testing appengine-magic functionality.</p>
+</td><td class="codes"><pre class="brush: clojure">(use-fixtures :each (ae-testing/local-services :all))</pre></td></tr><tr><td class="docs"><h2>Testing basic parser functionality</h2>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Tests for a help message.</p>
+</td><td class="codes"><pre class="brush: clojure">(fact (parser/generate-answer &quot;helloads&quot;) =&gt; (parser/get-help-message
+                                              default-handlers))
+(fact (parser/generate-answer &quot;&quot;) =&gt; (parser/get-help-message
+                                      default-handlers))</pre></td></tr><tr><td class="docs"><p>Tests for a greetings message.</p>
+</td><td class="codes"><pre class="brush: clojure">(fact (parser/generate-answer &quot;hi&quot;) =&gt; &quot;Hello!&quot;)
 (fact (parser/generate-answer &quot;Hello, bot!! 1337&quot;) =&gt; &quot;Hello!&quot;)
 (fact (parser/generate-answer &quot;Hail&quot;) =&gt; &quot;Hello!&quot;)
-(fact (parser/generate-answer &quot;greetings... i think..&quot;) =&gt; &quot;Hello!&quot;)</pre></tr><tr><td class="docs"><p>Tests for a HTTP status code message.</p>
-</td><td class="codes" /><pre class="brush: clojure">(deftest http-status-code
+(fact (parser/generate-answer &quot;greetings... i think..&quot;) =&gt; &quot;Hello!&quot;)</pre></td></tr><tr><td class="docs"><p>Tests for a HTTP status code message.</p>
+</td><td class="codes"><pre class="brush: clojure">(deftest http-status-code
   (tabular
    (fact &quot;Meanings of HTTP status codes&quot;
                 (parser/generate-answer ?request) =&gt; ?meaning)
@@ -2981,5 +3493,5 @@ and a message string.</p>
    &quot;httpsc 301&quot;      &quot;301 Moved Permanently\nThis and all future requests should be directed to the given URI.&quot;
    &quot;httpsc 404&quot;      &quot;404 Not Found\nThe requested resource could not be found but may be available again in the future. Subsequent requests by the client are permissible.&quot;
    &quot;httpsc 502&quot;      &quot;502 Bad Gateway\nThe server was acting as a gateway or proxy and received an invalid response from the upstream server.&quot;
-   &quot;httpsc 783&quot;      &quot;783 - No such code.&quot;))</pre></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_gtjbot.core">gtjbot.core</li><li class="floating-toc-li" id="floating-toc_gtjbot.models.user">gtjbot.models.user</li><li class="floating-toc-li" id="floating-toc_gtjbot.utils.parser">gtjbot.utils.parser</li><li class="floating-toc-li" id="floating-toc_gtjbot.utils.user">gtjbot.utils.user</li><li class="floating-toc-li" id="floating-toc_gtjbot.utils.xmpp">gtjbot.utils.xmpp</li><li class="floating-toc-li" id="floating-toc_gtjbot.views.common">gtjbot.views.common</li><li class="floating-toc-li" id="floating-toc_gtjbot.views.user">gtjbot.views.user</li><li class="floating-toc-li" id="floating-toc_gtjbot.views.admin">gtjbot.views.admin</li><li class="floating-toc-li" id="floating-toc_gtjbot.views.xmpp">gtjbot.views.xmpp</li><li class="floating-toc-li" id="floating-toc_gtjbot.test.core">gtjbot.test.core</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+   &quot;httpsc 783&quot;      &quot;783 - No such code.&quot;))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/fogus/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
        SyntaxHighlighter.all()</script></body></html>

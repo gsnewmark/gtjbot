@@ -4,16 +4,20 @@
   (:require [gtjbot.utils.parser :as parser]
             [appengine-magic.testing :as ae-testing])
   (:use [midje.sweet]
-        [clojure.test]))
+        [clojure.test]
+        [gtjbot.models.user :only [default-handlers]]))
 
 ;; Makes possible testing appengine-magic functionality.
 (use-fixtures :each (ae-testing/local-services :all))
 
 ;; ## Testing basic parser functionality
 
+;; TODO fix tests
 ;; Tests for a help message.
-(fact (parser/generate-answer "helloads") => (parser/get-help-message))
-(fact (parser/generate-answer "") => (parser/get-help-message))
+(fact (parser/generate-answer "helloads") => (parser/get-help-message
+                                              default-handlers))
+(fact (parser/generate-answer "") => (parser/get-help-message
+                                      default-handlers))
 
 ;; Tests for a greetings message.
 (fact (parser/generate-answer "hi") => "Hello!")
