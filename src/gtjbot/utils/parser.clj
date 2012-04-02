@@ -219,17 +219,17 @@
 
 (defn generate-user-handlers
   "Removes handlers which names aren't present in a handlers-string from a handlers-list, sets handler's command word to one specified in a handlers-string."
-  [handlers-string handlers-list]
-  (if (nil? handlers-string)
-    handlers-list
-    (let [user-handlers
-          (set (map #(first (cs/split % #" \- "))
-                    (cs/split handlers-string #"; ")))
-          user-commands
-          (map #(second (cs/split % #" \- ")) (cs/split handlers-string #"; "))]
-      (map #(assoc %1 :command-word %2)
-           (filter #(contains? user-handlers (:name (meta %))) handlers-list)
-           user-commands))))
+  ([handlers-string] (generate-user-handlers handlers-string handlers-list))
+  ([handlers-string handlers-list]
+     (if (nil? handlers-string)
+       handlers-list
+       (let [user-prefs (map #(cs/split % #" \- ")
+                             (cs/split handlers-string #"; "))
+             user-handlers (set (map #(first %) user-prefs))
+             user-commands (map #(second %) user-prefs)]
+         (map #(assoc %1 :command-word %2)
+              (filter #(contains? user-handlers (:name (meta %))) handlers-list)
+              user-commands)))))
 
 ;; ## Help message generator
 

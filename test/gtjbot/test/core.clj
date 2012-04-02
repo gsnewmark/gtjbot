@@ -6,7 +6,7 @@
   (:use [midje.sweet]
         [clojure.test]
         [gtjbot.models.user :only [default-handlers get-user-handlers]]
-        [gtjbot.utils.parser :only [generate-user-handlers handlers-list]]))
+        [gtjbot.utils.parser :only [generate-user-handlers]]))
 
 ;; Makes possible testing appengine-magic functionality.
 (use-fixtures :each (ae-testing/local-services :all))
@@ -18,10 +18,10 @@
  ;; Tests for a help message.
  (fact (parser/generate-answer "helloads") =>
        (parser/get-help-message
-        (generate-user-handlers (get-user-handlers) handlers-list)))
+        (generate-user-handlers (get-user-handlers))))
  (fact (parser/generate-answer "") =>
        (parser/get-help-message
-        (generate-user-handlers (get-user-handlers) handlers-list)))
+        (generate-user-handlers (get-user-handlers))))
 
  ;; Tests for a greetings message.
  (fact (parser/generate-answer "hi") => "Hello!")

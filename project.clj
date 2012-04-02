@@ -3,10 +3,8 @@
             :url "https://gtjbot.appspot.com/"
             :dependencies [[org.clojure/clojure "1.3.0"]
                            [noir "1.2.2"]
-                           [midje "1.3.2-SNAPSHOT"]
-                           [com.stuartsierra/lazytest "1.2.3"]]
+                           [midje "1.3.2-SNAPSHOT"]]
             :dev-dependencies [[appengine-magic "0.5.0"]
                                [lein-marginalia "0.7.0"]
                                [lein-midje "1.0.9"]]
-            :repositories {"stuart" "http://stuartsierra.com/maven2"})
-
+)

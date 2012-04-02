@@ -18,7 +18,6 @@
 ;; mail (for easier filtering) and string with message handlers list.
 (ds/defentity GoogleUser [^:key id, user, mail, handlers])
 
-;; TODO correct handlers list
 (defn save-user-to-ds
   "Saves current user to a DataStore (if it not presented in it already).
 Returns user just created from a current user's ID or retrieves user saved

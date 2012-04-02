@@ -6,7 +6,7 @@
         [appengine-magic.multipart-params :only [wrap-multipart-params]]))
 
 
-;; Prelooads existing routes (pages).
+;; Preloads existing routes (pages).
 (require 'gtjbot.views.admin)
 (require 'gtjbot.views.user)
 (require 'gtjbot.views.xmpp)
