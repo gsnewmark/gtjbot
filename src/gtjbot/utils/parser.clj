@@ -217,7 +217,7 @@
                            "town near Novosibirsk, but for capital of Ukraine "
                            "simply \"Kyiv\" is enough)."))])
 
-(defn- generate-user-handlers
+(defn generate-user-handlers
   "Removes handlers which names aren't present in a handlers-string from a handlers-list, sets handler's command word to one specified in a handlers-string."
   [handlers-string handlers-list]
   (if (nil? handlers-string)
@@ -239,13 +239,14 @@
   (str "Please use one of those commands:\n"
        (cs/trim-newline
         (cs/join "\n\n"
-                 (map
-                  (fn [o] (let [meta-data (meta o)]
-                           (when (not (nil? meta-data))
-                             (str (:command-word o)
-                                  " <args> - "
-                                  (meta-data :help)))))
-                  handlers)))))
+                 (remove #(nil? %)
+                         (map
+                          (fn [o] (let [meta-data (meta o)]
+                                   (when (not (nil? meta-data))
+                                     (str (:command-word o)
+                                          " <args> - "
+                                          (meta-data :help)))))
+                          handlers))))))
 
 ;; ## Actual answer generation
 

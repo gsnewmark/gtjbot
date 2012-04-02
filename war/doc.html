@@ -3028,8 +3028,8 @@ net.brehaut.ClojureTools = (function (SH) {
     build_tree: build_tree
   };
 })(SyntaxHighlighter);
-</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.4.0-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.2.1</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2-SNAPSHOT</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">appengine-magic</td><td class="dotted"><hr /></td><td class="dep-version">0.5.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.0</td></tr><tr><td class="dep-name">lein-midje</td><td class="dotted"><hr /></td><td class="dep-version">1.0.9</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#gtjbot.core">gtjbot.core</a></li><li><a href="#gtjbot.models.user">gtjbot.models.user</a></li><li><a href="#gtjbot.utils.parser">gtjbot.utils.parser</a></li><li><a href="#gtjbot.utils.user">gtjbot.utils.user</a></li><li><a href="#gtjbot.utils.xmpp">gtjbot.utils.xmpp</a></li><li><a href="#gtjbot.views.common">gtjbot.views.common</a></li><li><a href="#gtjbot.views.user">gtjbot.views.user</a></li><li><a href="#gtjbot.views.admin">gtjbot.views.admin</a></li><li><a href="#gtjbot.views.xmpp">gtjbot.views.xmpp</a></li><li><a href="#gtjbot.test.core">gtjbot.test.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.core" name="gtjbot.core"><h1 class="project-name">gtjbot.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definition of an app</h2>
+</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.4.1-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.2.2</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2-SNAPSHOT</td></tr><tr><td class="dep-name">com.stuartsierra/lazytest</td><td class="dotted"><hr /></td><td class="dep-version">1.2.3</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">appengine-magic</td><td class="dotted"><hr /></td><td class="dep-version">0.5.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.0</td></tr><tr><td class="dep-name">lein-midje</td><td class="dotted"><hr /></td><td class="dep-version">1.0.9</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#gtjbot.core">gtjbot.core</a></li><li><a href="#gtjbot.models.user">gtjbot.models.user</a></li><li><a href="#gtjbot.utils.parser">gtjbot.utils.parser</a></li><li><a href="#gtjbot.utils.user">gtjbot.utils.user</a></li><li><a href="#gtjbot.utils.xmpp">gtjbot.utils.xmpp</a></li><li><a href="#gtjbot.views.common">gtjbot.views.common</a></li><li><a href="#gtjbot.views.user">gtjbot.views.user</a></li><li><a href="#gtjbot.views.admin">gtjbot.views.admin</a></li><li><a href="#gtjbot.views.xmpp">gtjbot.views.xmpp</a></li><li><a href="#gtjbot.test.core">gtjbot.test.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.core" name="gtjbot.core"><h1 class="project-name">gtjbot.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definition of an app</h2>
 </td><td class="codes"><pre class="brush: clojure">(ns gtjbot.core
   (:require [appengine-magic.core :as gae]
             [noir.util.gae :as noir-gae])
@@ -3256,7 +3256,7 @@ Protocol defines basic handler interface.</p>
                            &quot;\&quot;kiyevka russia novosibirsk oblast\&quot; for small &quot;
                            &quot;town near Novosibirsk, but for capital of Ukraine &quot;
                            &quot;simply \&quot;Kyiv\&quot; is enough).&quot;))])</pre></td></tr><tr><td class="docs"><p>Removes handlers which names aren't present in a handlers-string from a handlers-list, sets handler's command word to one specified in a handlers-string.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn- generate-user-handlers
+</td><td class="codes"><pre class="brush: clojure">(defn generate-user-handlers
   [handlers-string handlers-list]
   (if (nil? handlers-string)
     handlers-list
@@ -3274,13 +3274,14 @@ Protocol defines basic handler interface.</p>
   (str &quot;Please use one of those commands:\n&quot;
        (cs/trim-newline
         (cs/join &quot;\n\n&quot;
-                 (map
-                  (fn [o] (let [meta-data (meta o)]
-                           (when (not (nil? meta-data))
-                             (str (:command-word o)
-                                  &quot; &lt;args&gt; - &quot;
-                                  (meta-data :help)))))
-                  handlers)))))</pre></td></tr><tr><td class="docs"><h2>Actual answer generation</h2>
+                 (remove #(nil? %)
+                         (map
+                          (fn [o] (let [meta-data (meta o)]
+                                   (when (not (nil? meta-data))
+                                     (str (:command-word o)
+                                          &quot; &lt;args&gt; - &quot;
+                                          (meta-data :help)))))
+                          handlers))))))</pre></td></tr><tr><td class="docs"><h2>Actual answer generation</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Generates answer to an incoming message using existing message handlers. If none of the 'main' handlers could produce a message then help is generated.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn generate-answer
   [message]
@@ -3472,17 +3473,24 @@ and a message string.</p>
             [appengine-magic.testing :as ae-testing])
   (:use [midje.sweet]
         [clojure.test]
-        [gtjbot.models.user :only [default-handlers]]))</pre></td></tr><tr><td class="docs"><p>Makes possible testing appengine-magic functionality.</p>
+        [gtjbot.models.user :only [default-handlers get-user-handlers]]
+        [gtjbot.utils.parser :only [generate-user-handlers handlers-list]]))</pre></td></tr><tr><td class="docs"><p>Makes possible testing appengine-magic functionality.</p>
 </td><td class="codes"><pre class="brush: clojure">(use-fixtures :each (ae-testing/local-services :all))</pre></td></tr><tr><td class="docs"><h2>Testing basic parser functionality</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Tests for a help message.</p>
-</td><td class="codes"><pre class="brush: clojure">(fact (parser/generate-answer &quot;helloads&quot;) =&gt; (parser/get-help-message
-                                              default-handlers))
-(fact (parser/generate-answer &quot;&quot;) =&gt; (parser/get-help-message
-                                      default-handlers))</pre></td></tr><tr><td class="docs"><p>Tests for a greetings message.</p>
-</td><td class="codes"><pre class="brush: clojure">(fact (parser/generate-answer &quot;hi&quot;) =&gt; &quot;Hello!&quot;)
-(fact (parser/generate-answer &quot;Hello, bot!! 1337&quot;) =&gt; &quot;Hello!&quot;)
-(fact (parser/generate-answer &quot;Hail&quot;) =&gt; &quot;Hello!&quot;)
-(fact (parser/generate-answer &quot;greetings... i think..&quot;) =&gt; &quot;Hello!&quot;)</pre></td></tr><tr><td class="docs"><p>Tests for a HTTP status code message.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>TODO fix tests</p>
+</td><td class="codes"><pre class="brush: clojure">(against-background [(get-user-handlers) =&gt; default-handlers]
+                    ;; Tests for a help message.
+                    (fact (parser/generate-answer &quot;helloads&quot;) =&gt;
+                          (parser/get-help-message (generate-user-handlers (get-user-handlers) handlers-list)))
+                    (fact (parser/generate-answer &quot;&quot;) =&gt;
+                          (parser/get-help-message (generate-user-handlers (get-user-handlers) handlers-list)))
+
+                    ;; Tests for a greetings message.
+                    (fact (parser/generate-answer &quot;hi&quot;) =&gt; &quot;Hello!&quot;)
+                    (fact (parser/generate-answer &quot;Hello, bot!! 1337&quot;) =&gt;
+                          &quot;Hello!&quot;)
+                    (fact (parser/generate-answer &quot;Hail&quot;) =&gt; &quot;Hello!&quot;)
+                    (fact (parser/generate-answer &quot;greetings... aow&quot;) =&gt;
+                          &quot;Hello!&quot;))</pre></td></tr><tr><td class="docs"><p>Tests for a HTTP status code message.</p>
 </td><td class="codes"><pre class="brush: clojure">(deftest http-status-code
   (tabular
    (fact &quot;Meanings of HTTP status codes&quot;
