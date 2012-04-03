@@ -1,13 +1,17 @@
 ;; ## Definitions of the pages for basic users
 (ns gtjbot.views.user
-    (:require [gtjbot.views.common :as common])
-    (:use [noir.core :only [defpage url-for defpartial]]
-          [hiccup.page-helpers :only [link-to]]
-          [hiccup.form-helpers]
-          [gtjbot.models.user :only [save-user-to-ds get-user-handlers]]
-          [gtjbot.utils.user :only [get-user-nick]]
-          [gtjbot.utils.parser :only [generate-user-handlers handlers-list]]
-          [appengine-magic.services.user :only [user-logged-in? user-admin?]]))
+  (:require [gtjbot.views.common :as common]
+            [noir.validation :as vali])
+  (:use [clojure.string :only [join]]
+        [noir.core :only [defpage url-for defpartial render]]
+        [noir.response :only [redirect]]
+        [hiccup.page-helpers :only [link-to]]
+        [hiccup.form-helpers]
+        [gtjbot.models.user :only [save-user-to-ds get-user-handlers
+                                   update-user-handlers]]
+        [gtjbot.utils.user :only [get-user-nick]]
+        [gtjbot.utils.parser :only [generate-user-handlers handlers-list]]
+        [appengine-magic.services.user :only [user-logged-in? user-admin?]]))
 
 
 ;; Index page of a site.
@@ -32,24 +36,41 @@
      :links links)))
 
 ;; Element in a customization menu.
-(defpartial handlers-edit-menu-element [handler]
+(defpartial handlers-edit-menu-element [handler selected]
   (let [handler-name (:name (meta handler))]
     [:div#customization-menu
-     (check-box handler-name true handler-name)
+     (check-box handler-name selected "on")
      [:b handler-name]
      [:br]
-     (label handler-name "Command ")
-     (text-field handler-name (:command-word handler))]))
+     (label (str handler-name " command") "Command ")
+     (text-field (str handler-name " command") (:command-word handler))]))
 
-;; TODO style tweaks needed: remove bullets, add tint to a textfield
+;; TODO style tweaks needed: remove bullets, add tint to a textfield,
+;; center submit
 ;; Customization menu: list with editable user's handlers.
 (defpartial handlers-edit-menu []
   (let [user-handlers (generate-user-handlers (get-user-handlers))
-        handlers handlers-list]
-    (common/u-list (map handlers-edit-menu-element handlers))))
+        handler-name (fn [h] (:name (meta h)))
+        ;; Creates a map with pairs <Handler name> - <Actual handler>
+        create-handlers-map (fn [hl] (apply hash-map
+                                 (flatten
+                                  (map #(conj (conj [] (handler-name %)) %) hl))))
+        user-hm (create-handlers-map user-handlers)
+        all-hm (create-handlers-map handlers-list)
+        ;; Use command words from user preferences
+        customized-handlers (vec (merge all-hm user-hm))
+        ;; Names of currently activated handlers
+        selected-handlers-names (set
+                           (map first (filter #(contains? user-hm (first %))
+                                              customized-handlers)))
+        handlers-states
+        (map #(contains? selected-handlers-names (first %)) customized-handlers)]
+    (common/u-list
+     (map handlers-edit-menu-element
+          (map second customized-handlers) handlers-states))))
 
 ;; Main page of a site for the logged user.
-(defpage user-main [:get "/user/profile"] []
+(defpage user-main [:get "/user/profile"] {:as prefs}
   (save-user-to-ds)
   (let [links [(link-to (url-for index) "Main")
                (link-to (url-for user-main) "Profile")]
@@ -68,8 +89,33 @@
                 "bot. You can find it in your XMPP client's contact list "
                 "under a nickname " [:b "gtjbot@appspot.com"]]
                [:h2 "Bot Modules"]
-               [:p "Here you can choose which modules the bot uses."]
-               ;; TODO add menu inside of form and process it
-               (handlers-edit-menu)]
+               [:p "Here you can choose which modules the bot uses:"]
+               (form-to [:post "/user/profile"]
+                        (handlers-edit-menu)
+                        (submit-button "Save preferences"))]
      :links links)))
+
+(comment (defn valid?
+   "Checks whether the user's input was correct (commands consist of one word, each symbol of which is an alphanumeric character)."
+   [{:keys [firstname lastname]}]
+   (vali/rule (vali/min-length? firstname 5)
+              [:firstname "Your first name must have more than 5 letters."])
+   (vali/rule (vali/has-value? lastname)
+              [:lastname "You must have a last name"])
+   (not (vali/errors? :lastname :firstname))))
+
+(defn- generate-user-prefs-string [{:as prefs}]
+  "Generates string with user's preferences used in a DataStore from a submitted form."
+  (let [handlers-names (set (map #(:name (meta %)) handlers-list))
+        selected-handlers-names (filter #(contains? handlers-names %)
+                                        (map first prefs))
+        selected-prefs-list (map #(str % " - " (prefs (str % " command")))
+                                 selected-handlers-names)
+        selected-prefs-string (join "; " selected-prefs-list)]
+    selected-prefs-string))
+
+;; Page that saves submitted preferences and redirects back to profile page.
+(defpage user-save [:post "/user/profile"] {:as prefs}
+  (do (update-user-handlers (generate-user-prefs-string prefs))
+      (redirect (url-for user-main))))
 

@@ -223,13 +223,15 @@
   ([handlers-string handlers-list]
      (if (nil? handlers-string)
        handlers-list
-       (let [user-prefs (map #(cs/split % #" \- ")
-                             (cs/split handlers-string #"; "))
-             user-handlers (set (map #(first %) user-prefs))
-             user-commands (map #(second %) user-prefs)]
-         (map #(assoc %1 :command-word %2)
-              (filter #(contains? user-handlers (:name (meta %))) handlers-list)
-              user-commands)))))
+       (if (empty? handlers-string)
+         []
+         (let [user-prefs (apply hash-map
+                                 (flatten
+                                  (map #(cs/split % #" \- ")
+                                       (cs/split handlers-string #"; "))))]
+           (map #(assoc % :command-word (user-prefs (:name (meta %))))
+                (filter #(contains? user-prefs (:name (meta %)))
+                        handlers-list)))))))
 
 ;; ## Help message generator
 
@@ -246,7 +248,8 @@
                                      (str (:command-word o)
                                           " <args> - "
                                           (meta-data :help)))))
-                          handlers))))))
+                          handlers))))
+       "\n\nCommands could be customized at https://gtjbot.appspot.com."))
 
 ;; ## Actual answer generation
 

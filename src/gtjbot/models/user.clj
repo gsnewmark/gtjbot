@@ -11,7 +11,7 @@
 
 ;; Message sent to unsubscribed users who try to use a bot.
 (def message-to-unsubscribed (str "You need to subscribe to an app in order to use this"
-" feature. More details could be found at http://gtjbot.appspot.com"))
+" feature. More details could be found at https://gtjbot.appspot.com"))
 
 ;; Main entity of an app - subscribed user. Consists of user's unique
 ;; identifier, user itself (instance of Google's User class), user's
