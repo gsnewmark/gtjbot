@@ -33,17 +33,17 @@ and a message string."
 ;; ## App specific XMPP functions
 
 (defn jid-to-mail
-  "Cuts redundant info if jid is in a full form to make an 'email'
-(bare form) from it."
+  "Cuts redundant info if jid is in a full form to make an 'email' (bare form) from it."
   [jid] (if-let [search-results (re-matches #"(.*)/.*" jid)]
           (last search-results)
           jid))
 
 (defn send-message-to-subscribed
-  "Sends a message to the users subscribed for the app. If the user
- is unsubscribed to an app they will receive an offer to subscribe."
+  "Sends a message to the users subscribed for the app. If the user is unsubscribed to an app they will receive an offer to subscribe."
   [jids message] (let [predicate #(check-user-by-mail (jid-to-mail %))
                        subscribed-jids (filter predicate jids)
                        unsubscribed-jids (remove predicate jids)]
-                   (send-message subscribed-jids (generate-answer message))
+                   (send-message subscribed-jids
+                                 (generate-answer
+                                  (jid-to-mail (first jids)) message))
                    (send-message unsubscribed-jids message-to-unsubscribed)))

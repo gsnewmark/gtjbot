@@ -8,7 +8,7 @@
 (ns gtjbot.utils.parser
   [:require [clojure.string :as cs]]
   [:use [appengine-magic.services.url-fetch :only [fetch]]
-        [gtjbot.models.user :only [get-user-handlers]]])
+        [gtjbot.models.user :only [get-guser-handlers-for-mail]]])
 
 
 ;; ## Service functions
@@ -253,15 +253,21 @@
 
 ;; ## Actual answer generation
 
-(defn generate-answer
-  "Generates answer to an incoming message using existing message handlers. If none of the 'main' handlers could produce a message then help is generated."
-  [message]
-  (let [user-handlers
-        (conj (generate-user-handlers (get-user-handlers) handlers-list)
-              (HiMessage.))
+(defn- generate-answer-for-handlers
+  "Actually creates an answer for a given message using a given handlers."
+  [handlers message]
+  (let [user-handlers (conj handlers (HiMessage.))
         applicable-handlers (filter #(processable? % message) user-handlers)
         answers (map #(generate-answer % message) applicable-handlers)]
     (if (empty? answers)
       (get-help-message user-handlers)
       (apply str answers))))
+
+(defn generate-answer
+  "Generates answer to an incoming message using applicable message handlers. If none of the handlers could produce a message then help is generated. If mail is given uses a handlers of a user with this mail, otherwise uses all handlers."
+  ([message] (generate-answer-for-handlers handlers-list message))
+  ([mail message]
+     (let [user-handlers (generate-user-handlers
+                          (get-guser-handlers-for-mail mail))]
+       (do (generate-answer-for-handlers user-handlers message)))))
 

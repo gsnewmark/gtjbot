@@ -7,7 +7,6 @@
   "Returns ID of a specified user (or current user if no argument
  is supplied)."
   ([] (get-user-id (current-user)))
-  ;; TODO remove or (hack to work in repl)
   ([user] (. user getUserId)))
 
 (defn get-user-email

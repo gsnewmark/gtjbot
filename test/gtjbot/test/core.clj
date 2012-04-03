@@ -5,7 +5,7 @@
             [appengine-magic.testing :as ae-testing])
   (:use [midje.sweet]
         [clojure.test]
-        [gtjbot.models.user :only [default-handlers get-user-handlers]]
+        [gtjbot.models.user :only [default-handlers get-guser-handlers]]
         [gtjbot.utils.parser :only [generate-user-handlers]]))
 
 ;; Makes possible testing appengine-magic functionality.
@@ -14,14 +14,14 @@
 ;; ## Testing basic parser functionality
 
 (against-background
- [(get-user-handlers) => default-handlers]
+ [(get-guser-handlers) => default-handlers]
  ;; Tests for a help message.
  (fact (parser/generate-answer "helloads") =>
        (parser/get-help-message
-        (generate-user-handlers (get-user-handlers))))
+        (generate-user-handlers (get-guser-handlers))))
  (fact (parser/generate-answer "") =>
        (parser/get-help-message
-        (generate-user-handlers (get-user-handlers))))
+        (generate-user-handlers (get-guser-handlers))))
 
  ;; Tests for a greetings message.
  (fact (parser/generate-answer "hi") => "Hello!")
@@ -32,7 +32,7 @@
 ;; TODO stub call to wikipedia page
 ;; Tests for a HTTP status code message.
 (deftest http-status-code
-  (background (get-user-handlers) => default-handlers)
+  (background (get-guser-handlers) => default-handlers)
   (tabular
    (fact "Meanings of HTTP status codes"
          (parser/generate-answer ?request) => ?meaning)

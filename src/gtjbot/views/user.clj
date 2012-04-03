@@ -7,8 +7,8 @@
         [noir.response :only [redirect]]
         [hiccup.page-helpers :only [link-to]]
         [hiccup.form-helpers]
-        [gtjbot.models.user :only [save-user-to-ds get-user-handlers
-                                   update-user-handlers]]
+        [gtjbot.models.user :only [save-user-to-ds get-guser-handlers
+                                   update-guser-handlers]]
         [gtjbot.utils.user :only [get-user-nick]]
         [gtjbot.utils.parser :only [generate-user-handlers handlers-list]]
         [appengine-magic.services.user :only [user-logged-in? user-admin?]]))
@@ -56,7 +56,7 @@
 ;; center submit
 ;; Customization menu: list with editable user's handlers.
 (defpartial handlers-edit-menu []
-  (let [user-handlers (generate-user-handlers (get-user-handlers))
+  (let [user-handlers (generate-user-handlers (get-guser-handlers))
         handler-name (fn [h] (:name (meta h)))
         ;; Creates a map with pairs <Handler name> - <Actual handler>
         create-handlers-map (fn [hl] (apply hash-map
@@ -145,6 +145,6 @@
 (defpage user-save [:post "/user/profile"] {:as prefs}
   (do
     (if (valid? prefs)
-      (do (update-user-handlers (generate-user-prefs-string prefs))
+      (do (update-guser-handlers (generate-user-prefs-string prefs))
           (redirect (url-for user-main)))
       (render user-main prefs))))

@@ -3075,19 +3075,36 @@ GoogleUsers in a DS.</p>
   ([] (check-user-by-mail (get-user-email)))
   ([mail] (if (empty? (ds/query :kind GoogleUser :filter (= :mail mail)))
             false
-            true)))</pre></td></tr><tr><td class="docs"><p>Returns list of handlers user wishes to use for a given user.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn get-user-handlers
-  ([] (get-user-handlers (current-user)))
-  ([user] (let [user (ds/retrieve GoogleUser (get-user-id user))]
-            (if (nil? user)
-              nil
-              (:handlers user)))))</pre></td></tr><tr><td class="docs"><p>Saves a given string as a user's new handlers.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn update-user-handlers
-  ([handlers-string] (update-user-handlers (current-user) handlers-string))
-  ([user handlers-string] (let [user (ds/retrieve GoogleUser (get-user-id user))]
-                            (if (nil? user)
-                              nil
-                              (ds/save! (assoc user :handlers handlers-string))))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.parser" name="gtjbot.utils.parser"><h1 class="project-name">gtjbot.utils.parser</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>XMPP message parsing</h2>
+            true)))</pre></td></tr><tr><td class="docs"><p>Returns user with a given mail.</p>
+
+<p>TODO maybe use user not guser (test on dev_server)</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-guser-by-mail
+  [mail]
+  (let [guser (ds/query :kind GoogleUser :filter (= :mail mail))]
+    (do
+      (if (empty? guser)
+       nil
+       (first guser)))))</pre></td></tr><tr><td class="docs"><p>Returns list of handlers user wishes to use for a given user.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-guser-handlers
+  ([] (get-guser-handlers (get-guser-by-mail (get-user-email (current-user)))))
+  ([user]
+     (if (nil? user)
+       nil
+       (:handlers user))))</pre></td></tr><tr><td class="docs"><p>Returns list of handlers for a user with a given mail.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn get-guser-handlers-for-mail
+  [mail]
+  (get-guser-handlers (get-guser-by-mail mail)))</pre></td></tr><tr><td class="docs"><p>Saves a given string as a user's new handlers.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn update-guser-handlers
+  ([handlers-string] (update-guser-handlers
+                      (get-guser-by-mail (get-user-email (current-user)))
+                      handlers-string))
+  ([user handlers-string]
+     (if (nil? user)
+       nil
+       (ds/save! (assoc user :handlers handlers-string)))))</pre></td></tr><tr><td class="docs"><p>Saves a given string as a new handlers for a user with a given mail.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn update-guser-handlers-for-mail
+  [mail handlers-string]
+  (update-guser-handlers (get-guser-by-mail mail) handlers-string))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.parser" name="gtjbot.utils.parser"><h1 class="project-name">gtjbot.utils.parser</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>XMPP message parsing</h2>
 
 <p>A set of functions to process incoming XMPP messages (requests) and
 generate answers for them.
@@ -3098,7 +3115,7 @@ message it will send a help message to user.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns gtjbot.utils.parser
   [:require [clojure.string :as cs]]
   [:use [appengine-magic.services.url-fetch :only [fetch]]
-        [gtjbot.models.user :only [get-user-handlers]]])</pre></td></tr><tr><td class="docs"><h2>Service functions</h2>
+        [gtjbot.models.user :only [get-guser-handlers-for-mail]]])</pre></td></tr><tr><td class="docs"><h2>Service functions</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Adds meta-data name and help to an object.</p>
 </td><td class="codes"><pre class="brush: clojure">(defmacro create-object-with-help [obj name help]
   `(with-meta ~obj {:name ~name :help ~help}))</pre></td></tr><tr><td class="docs"><p>Retrieves 'command' word from the incoming message. 'Command' is a first word in a message.</p>
@@ -3283,23 +3300,26 @@ Protocol defines basic handler interface.</p>
                                           (meta-data :help)))))
                           handlers))))
        &quot;\n\nCommands could be customized at https://gtjbot.appspot.com.&quot;))</pre></td></tr><tr><td class="docs"><h2>Actual answer generation</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Generates answer to an incoming message using existing message handlers. If none of the 'main' handlers could produce a message then help is generated.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn generate-answer
-  [message]
-  (let [user-handlers
-        (conj (generate-user-handlers (get-user-handlers) handlers-list)
-              (HiMessage.))
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Actually creates an answer for a given message using a given handlers.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- generate-answer-for-handlers
+  [handlers message]
+  (let [user-handlers (conj handlers (HiMessage.))
         applicable-handlers (filter #(processable? % message) user-handlers)
         answers (map #(generate-answer % message) applicable-handlers)]
     (if (empty? answers)
       (get-help-message user-handlers)
-      (apply str answers))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.user" name="gtjbot.utils.user"><h1 class="project-name">gtjbot.utils.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Wrappers around Google's User java class</h2>
+      (apply str answers))))</pre></td></tr><tr><td class="docs"><p>Generates answer to an incoming message using applicable message handlers. If none of the handlers could produce a message then help is generated. If mail is given uses a handlers of a user with this mail, otherwise uses all handlers.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn generate-answer
+  ([message] (generate-answer-for-handlers handlers-list message))
+  ([mail message]
+     (let [user-handlers (generate-user-handlers
+                          (get-guser-handlers-for-mail mail))]
+       (do (generate-answer-for-handlers user-handlers message)))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.user" name="gtjbot.utils.user"><h1 class="project-name">gtjbot.utils.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Wrappers around Google's User java class</h2>
 </td><td class="codes"><pre class="brush: clojure">(ns gtjbot.utils.user
   (:use [appengine-magic.services.user :only [current-user]]))</pre></td></tr><tr><td class="docs"><p>Returns ID of a specified user (or current user if no argument
  is supplied).</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-user-id
   ([] (get-user-id (current-user)))
-  ;; TODO remove or (hack to work in repl)
   ([user] (. user getUserId)))</pre></td></tr><tr><td class="docs"><p>Returns email of a specified user (or current user if no argument
  is supplied).</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-user-email
@@ -3329,18 +3349,18 @@ and a message string.</p>
   [jids message] (if (and (not (empty? jids)) (not (nil? message)))
                    (. xmpp-service sendMessage
                       (form-message jids message))))</pre></td></tr><tr><td class="docs"><h2>App specific XMPP functions</h2>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Cuts redundant info if jid is in a full form to make an 'email'
-(bare form) from it.</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Cuts redundant info if jid is in a full form to make an 'email' (bare form) from it.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn jid-to-mail
   [jid] (if-let [search-results (re-matches #&quot;(.*)/.*&quot; jid)]
           (last search-results)
-          jid))</pre></td></tr><tr><td class="docs"><p>Sends a message to the users subscribed for the app. If the user
- is unsubscribed to an app they will receive an offer to subscribe.</p>
+          jid))</pre></td></tr><tr><td class="docs"><p>Sends a message to the users subscribed for the app. If the user is unsubscribed to an app they will receive an offer to subscribe.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn send-message-to-subscribed
   [jids message] (let [predicate #(check-user-by-mail (jid-to-mail %))
                        subscribed-jids (filter predicate jids)
                        unsubscribed-jids (remove predicate jids)]
-                   (send-message subscribed-jids (generate-answer message))
+                   (send-message subscribed-jids
+                                 (generate-answer
+                                  (jid-to-mail (first jids)) message))
                    (send-message unsubscribed-jids message-to-unsubscribed)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.common" name="gtjbot.views.common"><h1 class="project-name">gtjbot.views.common</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the elements common to all pages</h2>
 </td><td class="codes"><pre class="brush: clojure">(ns gtjbot.views.common
   (:use [noir.core :only [defpartial]]
@@ -3402,8 +3422,8 @@ and a message string.</p>
         [noir.response :only [redirect]]
         [hiccup.page-helpers :only [link-to]]
         [hiccup.form-helpers]
-        [gtjbot.models.user :only [save-user-to-ds get-user-handlers
-                                   update-user-handlers]]
+        [gtjbot.models.user :only [save-user-to-ds get-guser-handlers
+                                   update-guser-handlers]]
         [gtjbot.utils.user :only [get-user-nick]]
         [gtjbot.utils.parser :only [generate-user-handlers handlers-list]]
         [appengine-magic.services.user :only [user-logged-in? user-admin?]]))</pre></td></tr><tr><td class="docs"><p>Index page of a site.</p>
@@ -3442,7 +3462,7 @@ Error message.</p>
 center submit
 Customization menu: list with editable user's handlers.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpartial handlers-edit-menu []
-  (let [user-handlers (generate-user-handlers (get-user-handlers))
+  (let [user-handlers (generate-user-handlers (get-guser-handlers))
         handler-name (fn [h] (:name (meta h)))
         ;; Creates a map with pairs &lt;Handler name&gt; - &lt;Actual handler&gt;
         create-handlers-map (fn [hl] (apply hash-map
@@ -3519,7 +3539,7 @@ Customization menu: list with editable user's handlers.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpage user-save [:post &quot;/user/profile&quot;] {:as prefs}
   (do
     (if (valid? prefs)
-      (do (update-user-handlers (generate-user-prefs-string prefs))
+      (do (update-guser-handlers (generate-user-prefs-string prefs))
           (redirect (url-for user-main)))
       (render user-main prefs))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.admin" name="gtjbot.views.admin"><h1 class="project-name">gtjbot.views.admin</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the admin panel pages</h2>
 </td><td class="codes"><pre class="brush: clojure">(ns gtjbot.views.admin
@@ -3555,19 +3575,19 @@ Customization menu: list with editable user's handlers.</p>
             [appengine-magic.testing :as ae-testing])
   (:use [midje.sweet]
         [clojure.test]
-        [gtjbot.models.user :only [default-handlers get-user-handlers]]
+        [gtjbot.models.user :only [default-handlers get-guser-handlers]]
         [gtjbot.utils.parser :only [generate-user-handlers]]))</pre></td></tr><tr><td class="docs"><p>Makes possible testing appengine-magic functionality.</p>
 </td><td class="codes"><pre class="brush: clojure">(use-fixtures :each (ae-testing/local-services :all))</pre></td></tr><tr><td class="docs"><h2>Testing basic parser functionality</h2>
 </td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(against-background
- [(get-user-handlers) =&gt; default-handlers]
+ [(get-guser-handlers) =&gt; default-handlers]
  ;; Tests for a help message.
  (fact (parser/generate-answer &quot;helloads&quot;) =&gt;
        (parser/get-help-message
-        (generate-user-handlers (get-user-handlers))))
+        (generate-user-handlers (get-guser-handlers))))
  (fact (parser/generate-answer &quot;&quot;) =&gt;
        (parser/get-help-message
-        (generate-user-handlers (get-user-handlers))))
+        (generate-user-handlers (get-guser-handlers))))
 
  ;; Tests for a greetings message.
  (fact (parser/generate-answer &quot;hi&quot;) =&gt; &quot;Hello!&quot;)
@@ -3576,7 +3596,7 @@ Customization menu: list with editable user's handlers.</p>
  (fact (parser/generate-answer &quot;greetings... aow&quot;) =&gt; &quot;Hello!&quot;))</pre></td></tr><tr><td class="docs"><p>TODO stub call to wikipedia page
 Tests for a HTTP status code message.</p>
 </td><td class="codes"><pre class="brush: clojure">(deftest http-status-code
-  (background (get-user-handlers) =&gt; default-handlers)
+  (background (get-guser-handlers) =&gt; default-handlers)
   (tabular
    (fact &quot;Meanings of HTTP status codes&quot;
          (parser/generate-answer ?request) =&gt; ?meaning)

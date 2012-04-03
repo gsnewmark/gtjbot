@@ -51,19 +51,40 @@ GoogleUsers in a DS."
             false
             true)))
 
-;; TODO get user by mail (for xmpp message send)
-(defn get-user-handlers
-  "Returns list of handlers user wishes to use for a given user."
-  ([] (get-user-handlers (current-user)))
-  ([user] (let [user (ds/retrieve GoogleUser (get-user-id user))]
-            (if (nil? user)
-              nil
-              (:handlers user)))))
+;; TODO maybe use user not guser (test on dev_server)
+(defn get-guser-by-mail
+  "Returns user with a given mail."
+  [mail]
+  (let [guser (ds/query :kind GoogleUser :filter (= :mail mail))]
+    (do
+      (if (empty? guser)
+       nil
+       (first guser)))))
 
-(defn update-user-handlers
+(defn get-guser-handlers
+  "Returns list of handlers user wishes to use for a given user."
+  ([] (get-guser-handlers (get-guser-by-mail (get-user-email (current-user)))))
+  ([user]
+     (if (nil? user)
+       nil
+       (:handlers user))))
+
+(defn get-guser-handlers-for-mail
+  "Returns list of handlers for a user with a given mail."
+  [mail]
+  (get-guser-handlers (get-guser-by-mail mail)))
+
+(defn update-guser-handlers
   "Saves a given string as a user's new handlers."
-  ([handlers-string] (update-user-handlers (current-user) handlers-string))
-  ([user handlers-string] (let [user (ds/retrieve GoogleUser (get-user-id user))]
-                            (if (nil? user)
-                              nil
-                              (ds/save! (assoc user :handlers handlers-string))))))
+  ([handlers-string] (update-guser-handlers
+                      (get-guser-by-mail (get-user-email (current-user)))
+                      handlers-string))
+  ([user handlers-string]
+     (if (nil? user)
+       nil
+       (ds/save! (assoc user :handlers handlers-string)))))
+
+(defn update-guser-handlers-for-mail
+  "Saves a given string as a new handlers for a user with a given mail."
+  [mail handlers-string]
+  (update-guser-handlers (get-guser-by-mail mail) handlers-string))
