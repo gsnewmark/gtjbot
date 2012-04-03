@@ -51,6 +51,7 @@ GoogleUsers in a DS."
             false
             true)))
 
+;; TODO get user by mail (for xmpp message send)
 (defn get-user-handlers
   "Returns list of handlers user wishes to use for a given user."
   ([] (get-user-handlers (current-user)))

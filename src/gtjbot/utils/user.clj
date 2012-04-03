@@ -8,7 +8,7 @@
  is supplied)."
   ([] (get-user-id (current-user)))
   ;; TODO remove or (hack to work in repl)
-  ([user] (or (. user getUserId) 1)))
+  ([user] (. user getUserId)))
 
 (defn get-user-email
   "Returns email of a specified user (or current user if no argument

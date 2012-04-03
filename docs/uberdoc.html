@@ -3049,7 +3049,7 @@ net.brehaut.ClojureTools = (function (SH) {
 </td><td class="codes"><pre class="brush: clojure">(def default-handlers (str &quot;HTTP Status Code - httpsc; &quot;
                            &quot;Current Weather - weather&quot;))</pre></td></tr><tr><td class="docs"><p>Message sent to unsubscribed users who try to use a bot.</p>
 </td><td class="codes"><pre class="brush: clojure">(def message-to-unsubscribed (str &quot;You need to subscribe to an app in order to use this&quot;
-&quot; feature. More details could be found at http://gtjbot.appspot.com&quot;))</pre></td></tr><tr><td class="docs"><p>Main entity of an app - subscribed user. Consists of user's unique
+&quot; feature. More details could be found at https://gtjbot.appspot.com&quot;))</pre></td></tr><tr><td class="docs"><p>Main entity of an app - subscribed user. Consists of user's unique
 identifier, user itself (instance of Google's User class), user's
 mail (for easier filtering) and string with message handlers list.</p>
 </td><td class="codes"><pre class="brush: clojure">(ds/defentity GoogleUser [^:key id, user, mail, handlers])</pre></td></tr><tr><td class="docs"><p>Saves current user to a DataStore (if it not presented in it already).
@@ -3259,13 +3259,15 @@ Protocol defines basic handler interface.</p>
   ([handlers-string handlers-list]
      (if (nil? handlers-string)
        handlers-list
-       (let [user-prefs (map #(cs/split % #&quot; \- &quot;)
-                             (cs/split handlers-string #&quot;; &quot;))
-             user-handlers (set (map #(first %) user-prefs))
-             user-commands (map #(second %) user-prefs)]
-         (map #(assoc %1 :command-word %2)
-              (filter #(contains? user-handlers (:name (meta %))) handlers-list)
-              user-commands)))))</pre></td></tr><tr><td class="docs"><h2>Help message generator</h2>
+       (if (empty? handlers-string)
+         []
+         (let [user-prefs (apply hash-map
+                                 (flatten
+                                  (map #(cs/split % #&quot; \- &quot;)
+                                       (cs/split handlers-string #&quot;; &quot;))))]
+           (map #(assoc % :command-word (user-prefs (:name (meta %))))
+                (filter #(contains? user-prefs (:name (meta %)))
+                        handlers-list)))))))</pre></td></tr><tr><td class="docs"><h2>Help message generator</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Generates help information for enabled plugins.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-help-message
   [handlers]
@@ -3279,7 +3281,8 @@ Protocol defines basic handler interface.</p>
                                      (str (:command-word o)
                                           &quot; &lt;args&gt; - &quot;
                                           (meta-data :help)))))
-                          handlers))))))</pre></td></tr><tr><td class="docs"><h2>Actual answer generation</h2>
+                          handlers))))
+       &quot;\n\nCommands could be customized at https://gtjbot.appspot.com.&quot;))</pre></td></tr><tr><td class="docs"><h2>Actual answer generation</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Generates answer to an incoming message using existing message handlers. If none of the 'main' handlers could produce a message then help is generated.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn generate-answer
   [message]
@@ -3296,6 +3299,7 @@ Protocol defines basic handler interface.</p>
  is supplied).</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-user-id
   ([] (get-user-id (current-user)))
+  ;; TODO remove or (hack to work in repl)
   ([user] (. user getUserId)))</pre></td></tr><tr><td class="docs"><p>Returns email of a specified user (or current user if no argument
  is supplied).</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-user-email
@@ -3391,14 +3395,18 @@ and a message string.</p>
     (footer)
     (gh-ribbon)]))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.user" name="gtjbot.views.user"><h1 class="project-name">gtjbot.views.user</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the pages for basic users</h2>
 </td><td class="codes"><pre class="brush: clojure">(ns gtjbot.views.user
-    (:require [gtjbot.views.common :as common])
-    (:use [noir.core :only [defpage url-for defpartial]]
-          [hiccup.page-helpers :only [link-to]]
-          [hiccup.form-helpers]
-          [gtjbot.models.user :only [save-user-to-ds get-user-handlers]]
-          [gtjbot.utils.user :only [get-user-nick]]
-          [gtjbot.utils.parser :only [generate-user-handlers handlers-list]]
-          [appengine-magic.services.user :only [user-logged-in? user-admin?]]))</pre></td></tr><tr><td class="docs"><p>Index page of a site.</p>
+  (:require [gtjbot.views.common :as common]
+            [noir.validation :as vali])
+  (:use [clojure.string :only [join]]
+        [noir.core :only [defpage url-for defpartial render]]
+        [noir.response :only [redirect]]
+        [hiccup.page-helpers :only [link-to]]
+        [hiccup.form-helpers]
+        [gtjbot.models.user :only [save-user-to-ds get-user-handlers
+                                   update-user-handlers]]
+        [gtjbot.utils.user :only [get-user-nick]]
+        [gtjbot.utils.parser :only [generate-user-handlers handlers-list]]
+        [appengine-magic.services.user :only [user-logged-in? user-admin?]]))</pre></td></tr><tr><td class="docs"><p>Index page of a site.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpage index [:get &quot;/&quot;] []
   (let [links (if (user-logged-in?)
                 (let [links [(link-to (url-for user-main) &quot;Profile&quot;)]]
@@ -3417,22 +3425,44 @@ and a message string.</p>
                (when-not (user-logged-in?)
                  [:p &quot;More details could be found after &quot;
                   (common/login-link &quot;logging in&quot;) &quot;.&quot;])]
-     :links links)))</pre></td></tr><tr><td class="docs"><p>Element in a customization menu.</p>
-</td><td class="codes"><pre class="brush: clojure">(defpartial handlers-edit-menu-element [handler]
-  (let [handler-name (:name (meta handler))]
-    [:div#customization-menu
-     (check-box handler-name true handler-name)
+     :links links)))</pre></td></tr><tr><td class="docs"><p>TODO add styling
+Error message.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial error-item [[first-error]]
+  [:div.error first-error])</pre></td></tr><tr><td class="docs"><p>Element in a customization menu.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpartial handlers-edit-menu-element [handler selected]
+  (let [handler-name (:name (meta handler))
+        command-name (str handler-name &quot; command&quot;)]
+    [:div.customization-menu-element
+     (check-box handler-name selected &quot;on&quot;)
      [:b handler-name]
      [:br]
-     (label handler-name &quot;Command &quot;)
-     (text-field handler-name (:command-word handler))]))</pre></td></tr><tr><td class="docs"><p>TODO style tweaks needed: remove bullets, add tint to a textfield
+     (vali/on-error command-name error-item)
+     (label command-name &quot;Command &quot;)
+     (text-field command-name (:command-word handler))]))</pre></td></tr><tr><td class="docs"><p>TODO style tweaks needed: remove bullets, add tint to a textfield,
+center submit
 Customization menu: list with editable user's handlers.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpartial handlers-edit-menu []
   (let [user-handlers (generate-user-handlers (get-user-handlers))
-        handlers handlers-list]
-    (common/u-list (map handlers-edit-menu-element handlers))))</pre></td></tr><tr><td class="docs"><p>Main page of a site for the logged user.</p>
-</td><td class="codes"><pre class="brush: clojure">(defpage user-main [:get &quot;/user/profile&quot;] []
-  (save-user-to-ds)
+        handler-name (fn [h] (:name (meta h)))
+        ;; Creates a map with pairs &lt;Handler name&gt; - &lt;Actual handler&gt;
+        create-handlers-map (fn [hl] (apply hash-map
+                                 (flatten
+                                  (map #(conj (conj [] (handler-name %)) %) hl))))
+        user-hm (create-handlers-map user-handlers)
+        all-hm (create-handlers-map handlers-list)
+        ;; Use command words from user preferences
+        customized-handlers (vec (merge all-hm user-hm))
+        ;; Names of currently activated handlers
+        selected-handlers-names (set
+                           (map first (filter #(contains? user-hm (first %))
+                                              customized-handlers)))
+        handlers-states
+        (map #(contains? selected-handlers-names (first %)) customized-handlers)]
+    (common/u-list
+     (map handlers-edit-menu-element
+          (map second customized-handlers) handlers-states))))</pre></td></tr><tr><td class="docs"><p>Main page of a site for the logged user.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpage user-main [:get &quot;/user/profile&quot;] {:as prefs}
+  (when (empty? prefs) (save-user-to-ds))
   (let [links [(link-to (url-for index) &quot;Main&quot;)
                (link-to (url-for user-main) &quot;Profile&quot;)]
         links (if (user-admin?)
@@ -3450,10 +3480,48 @@ Customization menu: list with editable user's handlers.</p>
                 &quot;bot. You can find it in your XMPP client's contact list &quot;
                 &quot;under a nickname &quot; [:b &quot;gtjbot@appspot.com&quot;]]
                [:h2 &quot;Bot Modules&quot;]
-               [:p &quot;Here you can choose which modules the bot uses.&quot;]
-               ;; TODO add menu inside of form and process it
-               (handlers-edit-menu)]
-     :links links)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.admin" name="gtjbot.views.admin"><h1 class="project-name">gtjbot.views.admin</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the admin panel pages</h2>
+               [:p &quot;Here you can choose which modules the bot uses:&quot;]
+               (form-to [:post &quot;/user/profile&quot;]
+                        (handlers-edit-menu)
+                        (submit-button &quot;Save preferences&quot;))]
+     :links links)))</pre></td></tr><tr><td class="docs"><p>Returns a set of names of a given handlers.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- get-handlers-names
+  [handlers-list] (set (map #(:name (meta %)) handlers-list)))</pre></td></tr><tr><td class="docs"><p>Returns names presented in both lists</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- get-intersected-names
+  [names-list-1 names-list-2]
+  (filter #(contains? names-list-1 %) names-list-2))</pre></td></tr><tr><td class="docs"><p>Checks whether the user's input was correct (commands consist of one word, each symbol of which is an alphanumeric character).</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- valid?
+  [{:as prefs}]
+  (let [handlers-names (get-handlers-names handlers-list)
+        selected-handlers-names (get-intersected-names handlers-names
+                                                       (map first prefs))]
+    (doall
+     (map #(let [command (str % &quot; command&quot;)]
+             (do
+               (vali/rule
+                (vali/min-length? (prefs command) 1)
+                [command &quot;Command word must have more than 1 character.&quot;])
+               (vali/rule
+                (not (nil? (re-matches #&quot;^[a-zA-Z0-9]+$&quot; (prefs command))))
+                [command
+                 &quot;Command word must contain only alphanumeric characters.&quot;])))
+      selected-handlers-names))
+    (not (apply vali/errors? (keys prefs)))))</pre></td></tr><tr><td class="docs"><p>Generates string with user's preferences used in a DataStore from a submitted form.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- generate-user-prefs-string 
+  [{:as prefs}]
+  (let [handlers-names (get-handlers-names handlers-list)
+        selected-handlers-names (get-intersected-names handlers-names
+                                                       (map first prefs))
+        selected-prefs-list (map #(str % &quot; - &quot; (prefs (str % &quot; command&quot;)))
+                                 selected-handlers-names)
+        selected-prefs-string (join &quot;; &quot; selected-prefs-list)]
+    selected-prefs-string))</pre></td></tr><tr><td class="docs"><p>Page that saves submitted preferences and redirects back to profile page.</p>
+</td><td class="codes"><pre class="brush: clojure">(defpage user-save [:post &quot;/user/profile&quot;] {:as prefs}
+  (do
+    (if (valid? prefs)
+      (do (update-user-handlers (generate-user-prefs-string prefs))
+          (redirect (url-for user-main)))
+      (render user-main prefs))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.views.admin" name="gtjbot.views.admin"><h1 class="project-name">gtjbot.views.admin</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definitions of the admin panel pages</h2>
 </td><td class="codes"><pre class="brush: clojure">(ns gtjbot.views.admin
   (:require [gtjbot.views.common :as common]
             [gtjbot.models.user :as user]
