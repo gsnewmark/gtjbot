@@ -42,14 +42,15 @@
 
 ;; Element in a customization menu.
 (defpartial handlers-edit-menu-element [handler selected]
-  (let [handler-name (:name (meta handler))]
-    [:div#customization-menu
+  (let [handler-name (:name (meta handler))
+        command-name (str handler-name " command")]
+    [:div.customization-menu-element
      (check-box handler-name selected "on")
      [:b handler-name]
      [:br]
-     (vali/on-error (str handler-name " command") error-item)
-     (label (str handler-name " command") "Command ")
-     (text-field (str handler-name " command") (:command-word handler))]))
+     (vali/on-error command-name error-item)
+     (label command-name "Command ")
+     (text-field command-name (:command-word handler))]))
 
 ;; TODO style tweaks needed: remove bullets, add tint to a textfield,
 ;; center submit
@@ -116,7 +117,17 @@
   (let [handlers-names (get-handlers-names handlers-list)
         selected-handlers-names (get-intersected-names handlers-names
                                                        (map first prefs))]
-    (doall (map #(vali/rule (vali/min-length? (prefs (str % " command")) 1) [(str % " command") "Command word must have 1 or more alphanumeric symbols."]) selected-handlers-names))
+    (doall
+     (map #(let [command (str % " command")]
+             (do
+               (vali/rule
+                (vali/min-length? (prefs command) 1)
+                [command "Command word must have more than 1 character."])
+               (vali/rule
+                (not (nil? (re-matches #"^[a-zA-Z0-9]+$" (prefs command))))
+                [command
+                 "Command word must contain only alphanumeric characters."])))
+      selected-handlers-names))
     (not (apply vali/errors? (keys prefs)))))
 
 (defn- generate-user-prefs-string 
