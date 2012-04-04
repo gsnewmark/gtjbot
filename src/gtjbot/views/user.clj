@@ -35,7 +35,6 @@
                   (common/login-link "logging in") "."])]
      :links links)))
 
-;; TODO add styling
 ;; Error message.
 (defpartial error-item [[first-error]]
   [:div.error first-error])
@@ -52,8 +51,6 @@
      (label command-name "Command ")
      (text-field command-name (:command-word handler))]))
 
-;; TODO style tweaks needed: remove bullets, add tint to a textfield,
-;; center submit
 ;; Customization menu: list with editable user's handlers.
 (defpartial handlers-edit-menu []
   (let [user-handlers (generate-user-handlers (get-guser-handlers))
@@ -72,9 +69,10 @@
                                               customized-handlers)))
         handlers-states
         (map #(contains? selected-handlers-names (first %)) customized-handlers)]
-    (common/u-list
-     (map handlers-edit-menu-element
-          (map second customized-handlers) handlers-states))))
+    [:div#customization-menu
+     (common/u-list
+      (map handlers-edit-menu-element
+           (map second customized-handlers) handlers-states))]))
 
 ;; Main page of a site for the logged user.
 (defpage user-main [:get "/user/profile"] {:as prefs}
@@ -99,7 +97,8 @@
                [:p "Here you can choose which modules the bot uses:"]
                (form-to [:post "/user/profile"]
                         (handlers-edit-menu)
-                        (submit-button "Save preferences"))]
+                        [:div#customization-save.button
+                         (submit-button "Save preferences")])]
      :links links)))
 
 (defn- get-handlers-names

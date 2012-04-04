@@ -3028,7 +3028,7 @@ net.brehaut.ClojureTools = (function (SH) {
     build_tree: build_tree
   };
 })(SyntaxHighlighter);
-</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.4.1-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
+</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.4.3-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
 </div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.2.2</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2-SNAPSHOT</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">appengine-magic</td><td class="dotted"><hr /></td><td class="dep-version">0.5.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.0</td></tr><tr><td class="dep-name">lein-midje</td><td class="dotted"><hr /></td><td class="dep-version">1.0.9</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#gtjbot.core">gtjbot.core</a></li><li><a href="#gtjbot.models.user">gtjbot.models.user</a></li><li><a href="#gtjbot.utils.parser">gtjbot.utils.parser</a></li><li><a href="#gtjbot.utils.user">gtjbot.utils.user</a></li><li><a href="#gtjbot.utils.xmpp">gtjbot.utils.xmpp</a></li><li><a href="#gtjbot.views.common">gtjbot.views.common</a></li><li><a href="#gtjbot.views.user">gtjbot.views.user</a></li><li><a href="#gtjbot.views.admin">gtjbot.views.admin</a></li><li><a href="#gtjbot.views.xmpp">gtjbot.views.xmpp</a></li><li><a href="#gtjbot.test.core">gtjbot.test.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.core" name="gtjbot.core"><h1 class="project-name">gtjbot.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definition of an app</h2>
 </td><td class="codes"><pre class="brush: clojure">(ns gtjbot.core
   (:require [appengine-magic.core :as gae]
@@ -3445,8 +3445,7 @@ and a message string.</p>
                (when-not (user-logged-in?)
                  [:p &quot;More details could be found after &quot;
                   (common/login-link &quot;logging in&quot;) &quot;.&quot;])]
-     :links links)))</pre></td></tr><tr><td class="docs"><p>TODO add styling
-Error message.</p>
+     :links links)))</pre></td></tr><tr><td class="docs"><p>Error message.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpartial error-item [[first-error]]
   [:div.error first-error])</pre></td></tr><tr><td class="docs"><p>Element in a customization menu.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpartial handlers-edit-menu-element [handler selected]
@@ -3458,9 +3457,7 @@ Error message.</p>
      [:br]
      (vali/on-error command-name error-item)
      (label command-name &quot;Command &quot;)
-     (text-field command-name (:command-word handler))]))</pre></td></tr><tr><td class="docs"><p>TODO style tweaks needed: remove bullets, add tint to a textfield,
-center submit
-Customization menu: list with editable user's handlers.</p>
+     (text-field command-name (:command-word handler))]))</pre></td></tr><tr><td class="docs"><p>Customization menu: list with editable user's handlers.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpartial handlers-edit-menu []
   (let [user-handlers (generate-user-handlers (get-guser-handlers))
         handler-name (fn [h] (:name (meta h)))
@@ -3478,9 +3475,10 @@ Customization menu: list with editable user's handlers.</p>
                                               customized-handlers)))
         handlers-states
         (map #(contains? selected-handlers-names (first %)) customized-handlers)]
-    (common/u-list
-     (map handlers-edit-menu-element
-          (map second customized-handlers) handlers-states))))</pre></td></tr><tr><td class="docs"><p>Main page of a site for the logged user.</p>
+    [:div#customization-menu
+     (common/u-list
+      (map handlers-edit-menu-element
+           (map second customized-handlers) handlers-states))]))</pre></td></tr><tr><td class="docs"><p>Main page of a site for the logged user.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpage user-main [:get &quot;/user/profile&quot;] {:as prefs}
   (when (empty? prefs) (save-user-to-ds))
   (let [links [(link-to (url-for index) &quot;Main&quot;)
@@ -3503,7 +3501,8 @@ Customization menu: list with editable user's handlers.</p>
                [:p &quot;Here you can choose which modules the bot uses:&quot;]
                (form-to [:post &quot;/user/profile&quot;]
                         (handlers-edit-menu)
-                        (submit-button &quot;Save preferences&quot;))]
+                        [:div#customization-save.button
+                         (submit-button &quot;Save preferences&quot;)])]
      :links links)))</pre></td></tr><tr><td class="docs"><p>Returns a set of names of a given handlers.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn- get-handlers-names
   [handlers-list] (set (map #(:name (meta %)) handlers-list)))</pre></td></tr><tr><td class="docs"><p>Returns names presented in both lists</p>
