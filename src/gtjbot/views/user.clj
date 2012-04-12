@@ -52,7 +52,7 @@
      (text-field command-name (:command-word handler))]))
 
 ;; Customization menu: list with editable user's handlers.
-(defpartial handlers-edit-menu []
+(defpartial handlers-edit-menu [prefs]
   (let [user-handlers (generate-user-handlers (get-guser-handlers))
         handler-name (fn [h] (:name (meta h)))
         ;; Creates a map with pairs <Handler name> - <Actual handler>
@@ -61,8 +61,17 @@
                                   (map #(conj (conj [] (handler-name %)) %) hl))))
         user-hm (create-handlers-map user-handlers)
         all-hm (create-handlers-map handlers-list)
-        ;; Use command words from user preferences
-        customized-handlers (vec (merge all-hm user-hm))
+        ;; Use command words from user preferences.
+        ;; Moreover, If already have command in a HTTP-prefs, use that instead
+        ;; of a command from user-prefs.
+        customized-handlers
+        (map #(let [name (first %)
+                    handler (second %)
+                    prefs-name (str name " command")
+                    command-word (or (prefs prefs-name)
+                                     (:command-word handler))]
+                [name (assoc handler :command-word command-word)])
+             (merge all-hm user-hm))
         ;; Names of currently activated handlers
         selected-handlers-names (set
                            (map first (filter #(contains? user-hm (first %))
@@ -70,6 +79,8 @@
         handlers-states
         (map #(contains? selected-handlers-names (first %)) customized-handlers)]
     [:div#customization-menu
+     (when (vali/errors?)
+       [:h4 (error-item ["Preferences aren't saved. Please correct the mistakes."])])
      (common/u-list
       (map handlers-edit-menu-element
            (map second customized-handlers) handlers-states))]))
@@ -90,13 +101,13 @@
                 "invitation from it. This invitation could be send by "
                 "clicking the button below: "]
                (common/button "/xmpp/register/" "Subscribe to a bot")
-               [:p "After this procedure you can start chatting with a "
+               [:p "After comleting this procedure you can start chatting with a "
                 "bot. You can find it in your XMPP client's contact list "
                 "under a nickname " [:b "gtjbot@appspot.com"]]
                [:h2 "Bot Modules"]
-               [:p "Here you can choose which modules the bot uses:"]
+               [:p "Here you can choose which modules your bot uses:"]
                (form-to [:post "/user/profile"]
-                        (handlers-edit-menu)
+                        (handlers-edit-menu prefs)
                         [:div#customization-save.button
                          (submit-button "Save preferences")])]
      :links links)))
@@ -109,6 +120,11 @@
   "Returns names presented in both lists"
   [names-list-1 names-list-2]
   (filter #(contains? names-list-1 %) names-list-2))
+
+(defn- unique?
+  "Checks whether the given value is unique in a given map."
+  [value dict]
+  (= 1 (count (filter #(= value %) (vals dict)))))
 
 (defn- valid?
   "Checks whether the user's input was correct (commands consist of one word, each symbol of which is an alphanumeric character)."
@@ -125,7 +141,10 @@
                (vali/rule
                 (not (nil? (re-matches #"^[a-zA-Z0-9]+$" (prefs command))))
                 [command
-                 "Command word must contain only alphanumeric characters."])))
+                 "Command word must contain only alphanumeric characters."])
+               (vali/rule
+                (unique? (prefs command) prefs)
+                [command "Command word must be unique."])))
       selected-handlers-names))
     (not (apply vali/errors? (keys prefs)))))
 

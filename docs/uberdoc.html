@@ -3028,7 +3028,7 @@ net.brehaut.ClojureTools = (function (SH) {
     build_tree: build_tree
   };
 })(SyntaxHighlighter);
-</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.4.4-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
+</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.4.5-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
 </div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.2.2</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2-SNAPSHOT</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">appengine-magic</td><td class="dotted"><hr /></td><td class="dep-version">0.5.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.0</td></tr><tr><td class="dep-name">lein-midje</td><td class="dotted"><hr /></td><td class="dep-version">1.0.9</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#gtjbot.core">gtjbot.core</a></li><li><a href="#gtjbot.models.user">gtjbot.models.user</a></li><li><a href="#gtjbot.utils.parser">gtjbot.utils.parser</a></li><li><a href="#gtjbot.utils.user">gtjbot.utils.user</a></li><li><a href="#gtjbot.utils.xmpp">gtjbot.utils.xmpp</a></li><li><a href="#gtjbot.views.common">gtjbot.views.common</a></li><li><a href="#gtjbot.views.user">gtjbot.views.user</a></li><li><a href="#gtjbot.views.admin">gtjbot.views.admin</a></li><li><a href="#gtjbot.views.xmpp">gtjbot.views.xmpp</a></li><li><a href="#gtjbot.test.core">gtjbot.test.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.core" name="gtjbot.core"><h1 class="project-name">gtjbot.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definition of an app</h2>
 </td><td class="codes"><pre class="brush: clojure">(ns gtjbot.core
   (:require [appengine-magic.core :as gae]
@@ -3409,7 +3409,7 @@ and a message string.</p>
 </td><td class="codes"><pre class="brush: clojure">(defpartial links-menu [&amp; elems]
   [:ul#menu
    (map item elems)
-   [:li (link-to &quot;/doc.html&quot; &quot;Documentation&quot;)]
+   [:li (link-to {:target &quot;_blank&quot;} &quot;/doc.html&quot; &quot;Documentation&quot;)]
    [:li (if (user-logged-in?)
           (logout-link &quot;Logout&quot;)
           (login-link &quot;Login&quot;))]])</pre></td></tr><tr><td class="docs"><p>Basic block with main page content.</p>
@@ -3479,7 +3479,7 @@ and a message string.</p>
      (vali/on-error command-name error-item)
      (label command-name &quot;Command &quot;)
      (text-field command-name (:command-word handler))]))</pre></td></tr><tr><td class="docs"><p>Customization menu: list with editable user's handlers.</p>
-</td><td class="codes"><pre class="brush: clojure">(defpartial handlers-edit-menu []
+</td><td class="codes"><pre class="brush: clojure">(defpartial handlers-edit-menu [prefs]
   (let [user-handlers (generate-user-handlers (get-guser-handlers))
         handler-name (fn [h] (:name (meta h)))
         ;; Creates a map with pairs &lt;Handler name&gt; - &lt;Actual handler&gt;
@@ -3488,8 +3488,17 @@ and a message string.</p>
                                   (map #(conj (conj [] (handler-name %)) %) hl))))
         user-hm (create-handlers-map user-handlers)
         all-hm (create-handlers-map handlers-list)
-        ;; Use command words from user preferences
-        customized-handlers (vec (merge all-hm user-hm))
+        ;; Use command words from user preferences.
+        ;; Moreover, If already have command in a HTTP-prefs, use that instead
+        ;; of a command from user-prefs.
+        customized-handlers
+        (map #(let [name (first %)
+                    handler (second %)
+                    prefs-name (str name &quot; command&quot;)
+                    command-word (or (prefs prefs-name)
+                                     (:command-word handler))]
+                [name (assoc handler :command-word command-word)])
+             (merge all-hm user-hm))
         ;; Names of currently activated handlers
         selected-handlers-names (set
                            (map first (filter #(contains? user-hm (first %))
@@ -3497,6 +3506,8 @@ and a message string.</p>
         handlers-states
         (map #(contains? selected-handlers-names (first %)) customized-handlers)]
     [:div#customization-menu
+     (when (vali/errors?)
+       [:h4 (error-item [&quot;Preferences aren't saved. Please correct the mistakes.&quot;])])
      (common/u-list
       (map handlers-edit-menu-element
            (map second customized-handlers) handlers-states))]))</pre></td></tr><tr><td class="docs"><p>Main page of a site for the logged user.</p>
@@ -3515,13 +3526,13 @@ and a message string.</p>
                 &quot;invitation from it. This invitation could be send by &quot;
                 &quot;clicking the button below: &quot;]
                (common/button &quot;/xmpp/register/&quot; &quot;Subscribe to a bot&quot;)
-               [:p &quot;After this procedure you can start chatting with a &quot;
+               [:p &quot;After comleting this procedure you can start chatting with a &quot;
                 &quot;bot. You can find it in your XMPP client's contact list &quot;
                 &quot;under a nickname &quot; [:b &quot;gtjbot@appspot.com&quot;]]
                [:h2 &quot;Bot Modules&quot;]
-               [:p &quot;Here you can choose which modules the bot uses:&quot;]
+               [:p &quot;Here you can choose which modules your bot uses:&quot;]
                (form-to [:post &quot;/user/profile&quot;]
-                        (handlers-edit-menu)
+                        (handlers-edit-menu prefs)
                         [:div#customization-save.button
                          (submit-button &quot;Save preferences&quot;)])]
      :links links)))</pre></td></tr><tr><td class="docs"><p>Returns a set of names of a given handlers.</p>
@@ -3529,7 +3540,10 @@ and a message string.</p>
   [handlers-list] (set (map #(:name (meta %)) handlers-list)))</pre></td></tr><tr><td class="docs"><p>Returns names presented in both lists</p>
 </td><td class="codes"><pre class="brush: clojure">(defn- get-intersected-names
   [names-list-1 names-list-2]
-  (filter #(contains? names-list-1 %) names-list-2))</pre></td></tr><tr><td class="docs"><p>Checks whether the user's input was correct (commands consist of one word, each symbol of which is an alphanumeric character).</p>
+  (filter #(contains? names-list-1 %) names-list-2))</pre></td></tr><tr><td class="docs"><p>Checks whether the given value is unique in a given map.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- unique?
+  [value dict]
+  (= 1 (count (filter #(= value %) (vals dict)))))</pre></td></tr><tr><td class="docs"><p>Checks whether the user's input was correct (commands consist of one word, each symbol of which is an alphanumeric character).</p>
 </td><td class="codes"><pre class="brush: clojure">(defn- valid?
   [{:as prefs}]
   (let [handlers-names (get-handlers-names handlers-list)
@@ -3544,7 +3558,10 @@ and a message string.</p>
                (vali/rule
                 (not (nil? (re-matches #&quot;^[a-zA-Z0-9]+$&quot; (prefs command))))
                 [command
-                 &quot;Command word must contain only alphanumeric characters.&quot;])))
+                 &quot;Command word must contain only alphanumeric characters.&quot;])
+               (vali/rule
+                (unique? (prefs command) prefs)
+                [command &quot;Command word must be unique.&quot;])))
       selected-handlers-names))
     (not (apply vali/errors? (keys prefs)))))</pre></td></tr><tr><td class="docs"><p>Generates string with user's preferences used in a DataStore from a submitted form.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn- generate-user-prefs-string 

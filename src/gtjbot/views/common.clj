@@ -42,7 +42,7 @@
 (defpartial links-menu [& elems]
   [:ul#menu
    (map item elems)
-   [:li (link-to "/doc.html" "Documentation")]
+   [:li (link-to {:target "_blank"} "/doc.html" "Documentation")]
    [:li (if (user-logged-in?)
           (logout-link "Logout")
           (login-link "Login"))]])
