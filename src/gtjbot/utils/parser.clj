@@ -6,9 +6,11 @@
 ;; If bot receives empty or malformed (incorrect command or arguments)
 ;; message it will send a help message to user.
 (ns gtjbot.utils.parser
-  [:require [clojure.string :as cs]]
+  [:require [clojure.string :as cs]
+            [appengine-magic.services.memcache :as memcache]]
   [:use [appengine-magic.services.url-fetch :only [fetch]]
-        [gtjbot.models.user :only [get-guser-handlers-for-mail]]])
+        [gtjbot.models.user :only [get-guser-handlers-for-mail]]]
+  [:import [com.google.appengine.api.memcache Expiration]])
 
 
 ;; ## Service functions
@@ -19,16 +21,18 @@
 
 (defn- retrieve-command
   "Retrieves 'command' word from the incoming message. 'Command' is a first word in a message."
-  [message] (let [results (re-matches #"^([a-zA-Z0-9]+)\s?.*$" message)]
-              (if (nil? results)
-                ""
-                (last results))))
+  [message]
+  (let [results (re-matches #"^([a-zA-Z0-9]+)\s?.*$" message)]
+    (if (nil? results)
+      ""
+      (last results))))
 
 (defn- retrieve-arguments
   "Retrieves list of command's arguments from the incoming message. Arguments are all words in a message except first."
-  [message] (let [results (re-matches #"[a-zA-Z0-9]+\s?(.*)" message)
-                  args-string (if (nil? results) "" (results 1))]
-              (filter #(not (= % "")) (seq (. args-string split ", ")))))
+  [message]
+  (let [results (re-matches #"[a-zA-Z0-9]+\s?(.*)" message)
+        args-string (if (nil? results) "" (results 1))]
+    (filter #(not (= % "")) (seq (. args-string split ", ")))))
 
 ;; ## Message handlers protocol
 ;; Message handler is a function that generates answer based on the
@@ -71,11 +75,21 @@
                      (answer-generator arg)))
                 arguments)))))
 
-; TODO try to cache requested pages (memcache?)
+;; TODO maybe try-catch possible exceptions
+(defn- fetch-page-content
+  "Fetches a given link and returns it's content."
+  [link] (String. (:content (fetch link :headers {"User-Agent" "gtjbot"}))))
+
 (defn- retrieve-contents-of-page
-  "Retrieves content of a given HTTP page."
-  [link]
-  (String. (:content (fetch link :headers {"User-Agent" "gtjbot"}))))
+  "Retrieves content of a given HTTP page from cache or Internet. Optional argument says for how much seconds store the retrieved content in a cache."
+  ([link] (retrieve-contents-of-page link (* 60 60 24 30)))
+  ([link seconds]
+     (let [content
+           (or (memcache/get link) (fetch-page-content link))]
+       (do
+         (memcache/put! link content
+                        :expiration (Expiration/byDeltaSeconds seconds))
+         content))))
 
 (defn- get-first-matched
   "Retrieves first match (if any) of a given pattern (as string) on a given page."
@@ -159,7 +173,7 @@
        (let [units (if (true? isFahrenheit) "f" "c")
              link (str "http://weather.yahooapis.com/forecastrss?w="
                        woeid "&u=" units)]
-         (retrieve-contents-of-page link))
+         (retrieve-contents-of-page link 3600))
        "error")))
 
 (defn- extract-forecast-string
