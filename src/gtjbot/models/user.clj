@@ -1,7 +1,8 @@
 ;; ## GoogleUser entity
 ;; Definition of user model used in app and functions to use with it.
 (ns gtjbot.models.user
-  (:require [appengine-magic.services.datastore :as ds])
+  (:require [appengine-magic.services.datastore :as ds]
+            [appengine-magic.services.memcache :as memcache])
   (:use [appengine-magic.services.user :only [current-user]]
         [gtjbot.utils.user :only [get-user-id get-user-email]]))
 
@@ -69,20 +70,28 @@ GoogleUsers in a DS."
        nil
        (:handlers user))))
 
+(defn- key-for-handlers-cache
+  "Generates a key for a memcache to store handlers from a user's mail."
+  [mail] (str mail "-handlers"))
+
 (defn get-guser-handlers-for-mail
-  "Returns list of handlers for a user with a given mail."
+  "Returns list of handlers for a user with a given mail (either from a cache or a datatore)."
   [mail]
-  (get-guser-handlers (get-guser-by-mail mail)))
+  (let [handlers (or (memcache/get (key-for-handlers-cache mail))
+                     (get-guser-handlers (get-guser-by-mail mail)))]
+    (do (memcache/put! (key-for-handlers-cache mail) handlers) handlers)))
 
 (defn update-guser-handlers
-  "Saves a given string as a user's new handlers."
+  "Saves a given string as a user's new handlers (also stores in a cache)."
   ([handlers-string] (update-guser-handlers
                       (get-guser-by-mail (get-user-email (current-user)))
                       handlers-string))
   ([user handlers-string]
      (if (nil? user)
        nil
-       (ds/save! (assoc user :handlers handlers-string)))))
+       (do
+         (ds/save! (assoc user :handlers handlers-string))
+         (memcache/put! (key-for-handlers-cache (:mail user)) handlers-string)))))
 
 (defn update-guser-handlers-for-mail
   "Saves a given string as a new handlers for a user with a given mail."
