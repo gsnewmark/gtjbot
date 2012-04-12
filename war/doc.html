@@ -3028,7 +3028,7 @@ net.brehaut.ClojureTools = (function (SH) {
     build_tree: build_tree
   };
 })(SyntaxHighlighter);
-</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.4.3-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
+</script><title>gtjbot -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name">gtjbot</h1><h2 class="project-version">0.4.4-SNAPSHOT</h2><br /><p>An extensible XMPP bot for GAE.</p>
 </div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.3.0</td></tr><tr><td class="dep-name">noir</td><td class="dotted"><hr /></td><td class="dep-version">1.2.2</td></tr><tr><td class="dep-name">midje</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2-SNAPSHOT</td></tr></table></div><div class="dependencies"><h3>dev dependencies</h3><table><tr><td class="dep-name">appengine-magic</td><td class="dotted"><hr /></td><td class="dep-version">0.5.0</td></tr><tr><td class="dep-name">lein-marginalia</td><td class="dotted"><hr /></td><td class="dep-version">0.7.0</td></tr><tr><td class="dep-name">lein-midje</td><td class="dotted"><hr /></td><td class="dep-version">1.0.9</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#gtjbot.core">gtjbot.core</a></li><li><a href="#gtjbot.models.user">gtjbot.models.user</a></li><li><a href="#gtjbot.utils.parser">gtjbot.utils.parser</a></li><li><a href="#gtjbot.utils.user">gtjbot.utils.user</a></li><li><a href="#gtjbot.utils.xmpp">gtjbot.utils.xmpp</a></li><li><a href="#gtjbot.views.common">gtjbot.views.common</a></li><li><a href="#gtjbot.views.user">gtjbot.views.user</a></li><li><a href="#gtjbot.views.admin">gtjbot.views.admin</a></li><li><a href="#gtjbot.views.xmpp">gtjbot.views.xmpp</a></li><li><a href="#gtjbot.test.core">gtjbot.test.core</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.core" name="gtjbot.core"><h1 class="project-name">gtjbot.core</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>Definition of an app</h2>
 </td><td class="codes"><pre class="brush: clojure">(ns gtjbot.core
   (:require [appengine-magic.core :as gae]
@@ -3043,7 +3043,8 @@ net.brehaut.ClojureTools = (function (SH) {
 
 <p>Definition of user model used in app and functions to use with it.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns gtjbot.models.user
-  (:require [appengine-magic.services.datastore :as ds])
+  (:require [appengine-magic.services.datastore :as ds]
+            [appengine-magic.services.memcache :as memcache])
   (:use [appengine-magic.services.user :only [current-user]]
         [gtjbot.utils.user :only [get-user-id get-user-email]]))</pre></td></tr><tr><td class="docs"><p>String with all existing handlers (default setting for new users).</p>
 </td><td class="codes"><pre class="brush: clojure">(def default-handlers (str &quot;HTTP Status Code - httpsc; &quot;
@@ -3090,10 +3091,14 @@ GoogleUsers in a DS.</p>
   ([user]
      (if (nil? user)
        nil
-       (:handlers user))))</pre></td></tr><tr><td class="docs"><p>Returns list of handlers for a user with a given mail.</p>
+       (:handlers user))))</pre></td></tr><tr><td class="docs"><p>Generates a key for a memcache to store handlers from a user's mail.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- key-for-handlers-cache
+  [mail] (str mail &quot;-handlers&quot;))</pre></td></tr><tr><td class="docs"><p>Returns list of handlers for a user with a given mail (either from a cache or a datatore).</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-guser-handlers-for-mail
   [mail]
-  (get-guser-handlers (get-guser-by-mail mail)))</pre></td></tr><tr><td class="docs"><p>Saves a given string as a user's new handlers.</p>
+  (let [handlers (or (memcache/get (key-for-handlers-cache mail))
+                     (get-guser-handlers (get-guser-by-mail mail)))]
+    (do (memcache/put! (key-for-handlers-cache mail) handlers) handlers)))</pre></td></tr><tr><td class="docs"><p>Saves a given string as a user's new handlers (also stores in a cache).</p>
 </td><td class="codes"><pre class="brush: clojure">(defn update-guser-handlers
   ([handlers-string] (update-guser-handlers
                       (get-guser-by-mail (get-user-email (current-user)))
@@ -3101,7 +3106,9 @@ GoogleUsers in a DS.</p>
   ([user handlers-string]
      (if (nil? user)
        nil
-       (ds/save! (assoc user :handlers handlers-string)))))</pre></td></tr><tr><td class="docs"><p>Saves a given string as a new handlers for a user with a given mail.</p>
+       (do
+         (ds/save! (assoc user :handlers handlers-string))
+         (memcache/put! (key-for-handlers-cache (:mail user)) handlers-string)))))</pre></td></tr><tr><td class="docs"><p>Saves a given string as a new handlers for a user with a given mail.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn update-guser-handlers-for-mail
   [mail handlers-string]
   (update-guser-handlers (get-guser-by-mail mail) handlers-string))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#gtjbot.utils.parser" name="gtjbot.utils.parser"><h1 class="project-name">gtjbot.utils.parser</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><h2>XMPP message parsing</h2>
@@ -3113,21 +3120,25 @@ pattern: [command] [optional arguments].
 If bot receives empty or malformed (incorrect command or arguments)
 message it will send a help message to user.</p>
 </td><td class="codes"><pre class="brush: clojure">(ns gtjbot.utils.parser
-  [:require [clojure.string :as cs]]
+  [:require [clojure.string :as cs]
+            [appengine-magic.services.memcache :as memcache]]
   [:use [appengine-magic.services.url-fetch :only [fetch]]
-        [gtjbot.models.user :only [get-guser-handlers-for-mail]]])</pre></td></tr><tr><td class="docs"><h2>Service functions</h2>
+        [gtjbot.models.user :only [get-guser-handlers-for-mail]]]
+  [:import [com.google.appengine.api.memcache Expiration]])</pre></td></tr><tr><td class="docs"><h2>Service functions</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>Adds meta-data name and help to an object.</p>
 </td><td class="codes"><pre class="brush: clojure">(defmacro create-object-with-help [obj name help]
   `(with-meta ~obj {:name ~name :help ~help}))</pre></td></tr><tr><td class="docs"><p>Retrieves 'command' word from the incoming message. 'Command' is a first word in a message.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn- retrieve-command
-  [message] (let [results (re-matches #&quot;^([a-zA-Z0-9]+)\s?.*$&quot; message)]
-              (if (nil? results)
-                &quot;&quot;
-                (last results))))</pre></td></tr><tr><td class="docs"><p>Retrieves list of command's arguments from the incoming message. Arguments are all words in a message except first.</p>
+  [message]
+  (let [results (re-matches #&quot;^([a-zA-Z0-9]+)\s?.*$&quot; message)]
+    (if (nil? results)
+      &quot;&quot;
+      (last results))))</pre></td></tr><tr><td class="docs"><p>Retrieves list of command's arguments from the incoming message. Arguments are all words in a message except first.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn- retrieve-arguments
-  [message] (let [results (re-matches #&quot;[a-zA-Z0-9]+\s?(.*)&quot; message)
-                  args-string (if (nil? results) &quot;&quot; (results 1))]
-              (filter #(not (= % &quot;&quot;)) (seq (. args-string split &quot;, &quot;)))))</pre></td></tr><tr><td class="docs"><h2>Message handlers protocol</h2>
+  [message]
+  (let [results (re-matches #&quot;[a-zA-Z0-9]+\s?(.*)&quot; message)
+        args-string (if (nil? results) &quot;&quot; (results 1))]
+    (filter #(not (= % &quot;&quot;)) (seq (. args-string split &quot;, &quot;)))))</pre></td></tr><tr><td class="docs"><h2>Message handlers protocol</h2>
 
 <p>Message handler is a function that generates answer based on the
 incoming message.
@@ -3159,10 +3170,20 @@ Protocol defines basic handler interface.</p>
                    (if (empty? arg)
                      &quot;Empty argument.&quot;
                      (answer-generator arg)))
-                arguments)))))</pre></td></tr><tr><td class="docs"><p>Retrieves content of a given HTTP page.</p>
+                arguments)))))</pre></td></tr><tr><td class="docs"><p>Fetches a given link and returns it's content.</p>
+
+<p>TODO maybe try-catch possible exceptions</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- fetch-page-content
+  [link] (String. (:content (fetch link :headers {&quot;User-Agent&quot; &quot;gtjbot&quot;}))))</pre></td></tr><tr><td class="docs"><p>Retrieves content of a given HTTP page from cache or Internet. Optional argument says for how much seconds store the retrieved content in a cache.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn- retrieve-contents-of-page
-  [link]
-  (String. (:content (fetch link :headers {&quot;User-Agent&quot; &quot;gtjbot&quot;}))))</pre></td></tr><tr><td class="docs"><p>Retrieves first match (if any) of a given pattern (as string) on a given page.</p>
+  ([link] (retrieve-contents-of-page link (* 60 60 24 30)))
+  ([link seconds]
+     (let [content
+           (or (memcache/get link) (fetch-page-content link))]
+       (do
+         (memcache/put! link content
+                        :expiration (Expiration/byDeltaSeconds seconds))
+         content))))</pre></td></tr><tr><td class="docs"><p>Retrieves first match (if any) of a given pattern (as string) on a given page.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn- get-first-matched
   [pattern-string page]
   (first (re-seq (re-pattern pattern-string) page)))</pre></td></tr><tr><td class="docs"><h2>Hello Reply</h2>
@@ -3224,7 +3245,7 @@ Protocol defines basic handler interface.</p>
        (let [units (if (true? isFahrenheit) &quot;f&quot; &quot;c&quot;)
              link (str &quot;http://weather.yahooapis.com/forecastrss?w=&quot;
                        woeid &quot;&amp;u=&quot; units)]
-         (retrieve-contents-of-page link))
+         (retrieve-contents-of-page link 3600))
        &quot;error&quot;)))</pre></td></tr><tr><td class="docs"><p>Extracts string with a forecast from a source page.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn- extract-forecast-string
   [source]
