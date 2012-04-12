@@ -36,7 +36,7 @@ in a DataStore earlier."
 (defn get-users
   "Retrieves a list of all Users (User class instances) saved as a
 GoogleUsers in a DS."
-  [] (let [gusers (get-gusers)] (map #(:user %) gusers)))
+  [] (let [gusers (get-gusers)] (map :user gusers)))
   
 (defn check-user-by-id
   "Checks whether the user specified by an ID exists in a DataStore."
@@ -57,18 +57,13 @@ GoogleUsers in a DS."
   "Returns user with a given mail."
   [mail]
   (let [guser (ds/query :kind GoogleUser :filter (= :mail mail))]
-    (do
-      (if (empty? guser)
-       nil
-       (first guser)))))
+    (when-not (empty? guser) (first guser))))
 
 (defn get-guser-handlers
   "Returns list of handlers user wishes to use for a given user."
   ([] (get-guser-handlers (get-guser-by-mail (get-user-email (current-user)))))
   ([user]
-     (if (nil? user)
-       nil
-       (:handlers user))))
+     (when-not (nil? user) (:handlers user))))
 
 (defn- key-for-handlers-cache
   "Generates a key for a memcache to store handlers from a user's mail."
@@ -87,11 +82,12 @@ GoogleUsers in a DS."
                       (get-guser-by-mail (get-user-email (current-user)))
                       handlers-string))
   ([user handlers-string]
-     (if (nil? user)
-       nil
+     (when-not (nil? user)
        (do
          (ds/save! (assoc user :handlers handlers-string))
-         (memcache/put! (key-for-handlers-cache (:mail user)) handlers-string)))))
+         (memcache/put!
+          (key-for-handlers-cache (:mail user))
+          handlers-string)))))
 
 (defn update-guser-handlers-for-mail
   "Saves a given string as a new handlers for a user with a given mail."

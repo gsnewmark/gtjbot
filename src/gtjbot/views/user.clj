@@ -58,7 +58,7 @@
         ;; Creates a map with pairs <Handler name> - <Actual handler>
         create-handlers-map (fn [hl] (apply hash-map
                                  (flatten
-                                  (map #(conj (conj [] (handler-name %)) %) hl))))
+                                  (map #(conj (vector (handler-name %)) %) hl))))
         user-hm (create-handlers-map user-handlers)
         all-hm (create-handlers-map handlers-list)
         ;; Use command words from user preferences.
@@ -161,8 +161,7 @@
 
 ;; Page that saves submitted preferences and redirects back to profile page.
 (defpage user-save [:post "/user/profile"] {:as prefs}
-  (do
-    (if (valid? prefs)
-      (do (update-guser-handlers (generate-user-prefs-string prefs))
-          (redirect (url-for user-main)))
-      (render user-main prefs))))
+  (if (valid? prefs)
+    (do (update-guser-handlers (generate-user-prefs-string prefs))
+        (redirect (url-for user-main)))
+    (render user-main prefs)))

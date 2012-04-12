@@ -13,22 +13,22 @@
 
 (defn send-invite
   "Sends an invite (to a chat with an app) to a specified user."
-  [jid] (. xmpp-service sendInvitation (JID. jid)))
+  [jid] (.sendInvitation xmpp-service (JID. jid)))
 
 (defn form-message
   "Forms an instance of a Message class from a jids list (jids as strings)
 and a message string."
-  [jids message] (. (. (. (. (MessageBuilder.) withRecipientJids
-                            (into-array JID (map #(JID. %) jids)))
-                         withBody message)
-                      withMessageType (. MessageType NORMAL))
-                   build))
+  [jids message]
+  (.. (MessageBuilder.)
+      (withRecipientJids (into-array JID (map #(JID. %) jids)))
+      (withBody message)
+      (withMessageType MessageType/NORMAL)
+      build))
 
 (defn send-message
   "Sends a message over XMPP to a specified jids list (jids as strings)."
   [jids message] (if (and (not (empty? jids)) (not (nil? message)))
-                   (. xmpp-service sendMessage
-                      (form-message jids message))))
+                   (.sendMessage xmpp-service (form-message jids message))))
 
 ;; ## App specific XMPP functions
 

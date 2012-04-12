@@ -32,7 +32,7 @@
   [message]
   (let [results (re-matches #"[a-zA-Z0-9]+\s?(.*)" message)
         args-string (if (nil? results) "" (results 1))]
-    (filter #(not (= % "")) (seq (. args-string split ", ")))))
+    (filter #(not= % "") (seq (.split args-string ", ")))))
 
 ;; ## Message handlers protocol
 ;; Message handler is a function that generates answer based on the
@@ -169,7 +169,7 @@
   "Returns a XML page with a forecast for a given WOEID (optional second argument specifies whether temperature must be in a Fahrenheits)."
   ([woeid] (get-weather-page-for-city woeid false))
   ([woeid isFahrenheit]
-     (if (not (= woeid 0))
+     (if-not (zero? woeid)
        (let [units (if (true? isFahrenheit) "f" "c")
              link (str "http://weather.yahooapis.com/forecastrss?w="
                        woeid "&u=" units)]
@@ -255,10 +255,10 @@
   (str "Please use one of those commands:\n"
        (cs/trim-newline
         (cs/join "\n\n"
-                 (remove #(nil? %)
+                 (remove nil?
                          (map
                           (fn [o] (let [meta-data (meta o)]
-                                   (when (not (nil? meta-data))
+                                   (when-not (nil? meta-data)
                                      (str (:command-word o)
                                           " <args> - "
                                           (meta-data :help)))))
@@ -283,5 +283,5 @@
   ([mail message]
      (let [user-handlers (generate-user-handlers
                           (get-guser-handlers-for-mail mail))]
-       (do (generate-answer-for-handlers user-handlers message)))))
+       (generate-answer-for-handlers user-handlers message))))
 
