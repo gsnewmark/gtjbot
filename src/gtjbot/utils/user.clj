@@ -7,7 +7,7 @@
   "Returns ID of a specified user (or current user if no argument
  is supplied)."
   ([] (get-user-id (current-user)))
-  ([user] (or (.getUserId user) 1)))
+  ([user] (.getUserId user)))
 
 (defn get-user-email
   "Returns email of a specified user (or current user if no argument

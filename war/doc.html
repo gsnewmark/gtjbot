@@ -3337,7 +3337,7 @@ Protocol defines basic handler interface.</p>
  is supplied).</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-user-id
   ([] (get-user-id (current-user)))
-  ([user] (or (.getUserId user) 1)))</pre></td></tr><tr><td class="docs"><p>Returns email of a specified user (or current user if no argument
+  ([user] (.getUserId user)))</pre></td></tr><tr><td class="docs"><p>Returns email of a specified user (or current user if no argument
  is supplied).</p>
 </td><td class="codes"><pre class="brush: clojure">(defn get-user-email
   ([] (get-user-email (current-user)))
