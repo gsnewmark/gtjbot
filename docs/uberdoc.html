@@ -3159,7 +3159,7 @@ Protocol defines basic handler interface.</p>
   [message answer-generator]
   (let [arguments (retrieve-arguments message)]
     (if (empty? arguments)
-      &quot;No argument is supplied.&quot;
+      &quot;No arguments is supplied.&quot;
       (cs/join &quot;\n\n&quot;
                (map
                 #(let [arg (cs/trim %)]
@@ -3237,7 +3237,7 @@ Protocol defines basic handler interface.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn- get-weather-page-for-city
   ([woeid] (get-weather-page-for-city woeid false))
   ([woeid isFahrenheit]
-     (if-not (zero? woeid)
+     (if-not (= 0 woeid)
        (let [units (if (true? isFahrenheit) &quot;f&quot; &quot;c&quot;)
              link (str &quot;http://weather.yahooapis.com/forecastrss?w=&quot;
                        woeid &quot;&amp;u=&quot; units)]
@@ -3269,25 +3269,26 @@ Protocol defines basic handler interface.</p>
   (generate-answer [self message]
     (generate-answer-using-function message get-weather-for-city)))</pre></td></tr><tr><td class="docs"><h2>Currently enabled reply plugins</h2>
 </td><td class="codes"></td></tr><tr><td class="docs"><p>List with all 'main' message handlers instances.</p>
-</td><td class="codes"><pre class="brush: clojure">(def handlers-list [(create-object-with-help
-                      (HttpStatusCodeMessage. &quot;httpsc&quot;)
-                      &quot;HTTP Status Code&quot;
-                      (str &quot;prints a description of a given HTTP status code. &quot;
-                           &quot;Arguments are either a one numeric status code &quot;
-                           &quot;or a list of the numeric status codes &quot;
-                           &quot;(separated by commas).&quot;))
-                    (create-object-with-help
-                      (CurrentWeatherMessage. &quot;weather&quot;)
-                      &quot;Current Weather&quot;
-                      (str &quot; prints a short weather report for a given &quot;
-                           &quot;area/areas. Arguments are either a one &quot;
-                           &quot;geographic are or a bunch of such &quot;
-                           &quot;(separated by commas). Provide as much &quot;
-                           &quot;info about small area as possible for most &quot;
-                           &quot;accurate results (e.g., &quot;
-                           &quot;\&quot;kiyevka russia novosibirsk oblast\&quot; for small &quot;
-                           &quot;town near Novosibirsk, but for capital of Ukraine &quot;
-                           &quot;simply \&quot;Kyiv\&quot; is enough).&quot;))])</pre></td></tr><tr><td class="docs"><p>Removes handlers which names aren't present in a handlers-string from a handlers-list, sets handler's command word to one specified in a handlers-string.</p>
+</td><td class="codes"><pre class="brush: clojure">(def handlers-list
+  [(create-object-with-help
+     (HttpStatusCodeMessage. &quot;httpsc&quot;)
+     &quot;HTTP Status Code&quot;
+     (str &quot;prints a description of a given HTTP status code. &quot;
+          &quot;Arguments are either a one numeric status code &quot;
+          &quot;or a list of the numeric status codes &quot;
+          &quot;(separated by commas).&quot;))
+   (create-object-with-help
+     (CurrentWeatherMessage. &quot;weather&quot;)
+     &quot;Current Weather&quot;
+     (str &quot;prints a short weather report for a given &quot;
+          &quot;area/areas. Arguments are either a one &quot;
+          &quot;geographic are or a bunch of such &quot;
+          &quot;(separated by commas). Provide as much &quot;
+          &quot;info about small area as possible for most &quot;
+          &quot;accurate results (e.g., &quot;
+          &quot;\&quot;kiyevka russia novosibirsk oblast\&quot; for small &quot;
+          &quot;town near Novosibirsk, but for capital of Ukraine &quot;
+          &quot;simply \&quot;Kyiv\&quot; is enough).&quot;))])</pre></td></tr><tr><td class="docs"><p>Removes handlers which names aren't present in a handlers-string from a handlers-list, sets handler's command word to one specified in a handlers-string.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn generate-user-handlers
   ([handlers-string] (generate-user-handlers handlers-string handlers-list))
   ([handlers-string handlers-list]
@@ -3425,7 +3426,7 @@ and a message string.</p>
     [:link {:rel &quot;stylesheet/less&quot; :type &quot;text/css&quot; :href &quot;/css/gtjbot.less&quot;}]
     (include-js &quot;/js/less-1.2.1.min.js&quot;)]
    [:body
-    (header &quot;GTJBot - useful bot for your XMPP&quot;)
+    (header &quot;GTJBot - useful bot for your GoogleTalk&quot;)
     [:div#container
      (apply links-menu links)
      (apply main-block content)]

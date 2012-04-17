@@ -66,7 +66,7 @@
   [message answer-generator]
   (let [arguments (retrieve-arguments message)]
     (if (empty? arguments)
-      "No argument is supplied."
+      "No arguments is supplied."
       (cs/join "\n\n"
                (map
                 #(let [arg (cs/trim %)]
