@@ -169,7 +169,7 @@
   "Returns a XML page with a forecast for a given WOEID (optional second argument specifies whether temperature must be in a Fahrenheits)."
   ([woeid] (get-weather-page-for-city woeid false))
   ([woeid isFahrenheit]
-     (if-not (zero? woeid)
+     (if-not (= 0 woeid)
        (let [units (if (true? isFahrenheit) "f" "c")
              link (str "http://weather.yahooapis.com/forecastrss?w="
                        woeid "&u=" units)]
@@ -211,25 +211,26 @@
 ;; ## Currently enabled reply plugins
 
 ;; List with all 'main' message handlers instances.
-(def handlers-list [(create-object-with-help
-                      (HttpStatusCodeMessage. "httpsc")
-                      "HTTP Status Code"
-                      (str "prints a description of a given HTTP status code. "
-                           "Arguments are either a one numeric status code "
-                           "or a list of the numeric status codes "
-                           "(separated by commas)."))
-                    (create-object-with-help
-                      (CurrentWeatherMessage. "weather")
-                      "Current Weather"
-                      (str " prints a short weather report for a given "
-                           "area/areas. Arguments are either a one "
-                           "geographic are or a bunch of such "
-                           "(separated by commas). Provide as much "
-                           "info about small area as possible for most "
-                           "accurate results (e.g., "
-                           "\"kiyevka russia novosibirsk oblast\" for small "
-                           "town near Novosibirsk, but for capital of Ukraine "
-                           "simply \"Kyiv\" is enough)."))])
+(def handlers-list
+  [(create-object-with-help
+     (HttpStatusCodeMessage. "httpsc")
+     "HTTP Status Code"
+     (str "prints a description of a given HTTP status code. "
+          "Arguments are either a one numeric status code "
+          "or a list of the numeric status codes "
+          "(separated by commas)."))
+   (create-object-with-help
+     (CurrentWeatherMessage. "weather")
+     "Current Weather"
+     (str "prints a short weather report for a given "
+          "area/areas. Arguments are either a one "
+          "geographic are or a bunch of such "
+          "(separated by commas). Provide as much "
+          "info about small area as possible for most "
+          "accurate results (e.g., "
+          "\"kiyevka russia novosibirsk oblast\" for small "
+          "town near Novosibirsk, but for capital of Ukraine "
+          "simply \"Kyiv\" is enough)."))])
 
 (defn generate-user-handlers
   "Removes handlers which names aren't present in a handlers-string from a handlers-list, sets handler's command word to one specified in a handlers-string."
